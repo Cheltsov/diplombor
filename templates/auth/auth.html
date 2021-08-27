@@ -1,0 +1,27 @@
+
+{% extends 'auth/base.html' %}
+{% load crispy_forms_filters %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="d-flex">
+    <div class="mx-auto">
+        <h1 class="text-center">Авторизация</h1>
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+        <form method="post" novalidate class="mt-4" id="form_auth">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="d-flex mt-3" style="width: 87%;">
+                <button type="submit" class="btn btn-success mx-auto">Войти</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
