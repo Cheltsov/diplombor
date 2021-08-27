@@ -9,6 +9,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/jquery-dateformat.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
@@ -22,7 +24,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" data-name="main">
-                <a class="nav-link" href="{% url 'adminer:home' %}">Главная <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'adminer:home' %}">Опросы <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" data-name="pattern">
+                <a class="nav-link" href="{% url 'adminer:pattern' %}">Шаблоны <span class="sr-only">(current)</span></a>
             </li>
             {% comment %}<li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -43,7 +48,9 @@
         <div class="nav-item">
             <a class="nav-link disabled" href="#">Администратор</a>
         </div>
-        <a href="{% url "adminer:exit" %}" style="margin-left:10px"><button type="button" class="btn btn-secondary">Выход</button></a>
+        <a href="{% url "adminer:exit" %}" style="margin-left:10px">
+            <button type="button" class="btn btn-secondary">Выход</button>
+        </a>
     </div>
 </nav>
 {% block content %}

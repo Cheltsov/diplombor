@@ -3,8 +3,10 @@ from django.http import HttpResponse
 from .forms import AuthForm
 
 
-# Create your views here.
 def auth(request):
+    if 'admin' in request.session:
+        return redirect('adminer:home')
+
     form = AuthForm()
     content = {
         'form': form
@@ -14,8 +16,7 @@ def auth(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        if email=='admin@gmail.com' and password=='11111':
-            request.session['token'] = 'admin'
+        if email == 'admin@gmail.com' and password == '11111':
             request.session['admin'] = 'admin'
             return redirect('adminer:home')
         else:

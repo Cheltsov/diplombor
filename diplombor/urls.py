@@ -8,8 +8,4 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', include("adminer.urls")),
     path('', include("auth.urls")),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-if settings.DEBUG:
-    urlpatterns.append(path('static/<path:path>', never_cache(serve)))
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

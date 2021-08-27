@@ -1,0 +1,23 @@
+.box {
+    display: flex;
+    justify-content: center;
+    margin: 10px -5px;
+}
+
+.item {
+    flex: 1 1 auto;
+    margin: 0 5px;
+}
+
+.box_answer {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.box_answer > button {
+    margin-left: 5px;
+}
+
+.delete_question {
+    margin-right: 5px
+}
