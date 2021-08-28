@@ -5,8 +5,8 @@ from django.utils import timezone
 class Pattern(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50, blank=True, null=True)
-    date_created = models.DateTimeField(auto_now_add=True, db_index=True)
-    date_update = models.DateTimeField(auto_now=True, db_index=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
+    date_update = models.DateTimeField(auto_now=True, db_index=True, null=True)
 
     class Meta:
         managed = True
@@ -19,8 +19,8 @@ class Polls(models.Model):
     description = models.TextField(blank=True, null=True)
     date_start = models.DateTimeField(blank=True, null=True)
     date_end = models.DateTimeField(blank=True, null=True)
-    date_created = models.DateTimeField(auto_now_add=True, db_index=True)
-    date_updated = models.DateTimeField(auto_now=True, db_index=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
+    date_updated = models.DateTimeField(auto_now=True, db_index=True, null=True)
 
     class Meta:
         managed = True
@@ -40,8 +40,8 @@ class PollsPattern(models.Model):
 class Question(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, blank=True, null=True)
-    id_polls = models.ForeignKey(Polls, on_delete=models.DO_NOTHING, default="")
-    id_pattern = models.ForeignKey(Pattern, on_delete=models.DO_NOTHING, default="")
+    id_polls = models.ForeignKey(Polls, on_delete=models.SET_NULL, default="", null=True)
+    id_pattern = models.ForeignKey(Pattern, on_delete=models.SET_NULL, default="", null=True)
 
     class Meta:
         managed = True
@@ -50,8 +50,8 @@ class Question(models.Model):
 
 class Answer(models.Model):
     id = models.AutoField(primary_key=True)
-    id_question = models.ForeignKey(Question, on_delete=models.DO_NOTHING, default="")
-    title = models.IntegerField(blank=True, null=True)
+    id_question = models.ForeignKey(Question, on_delete=models.CASCADE, default="", null=True)
+    title = models.CharField(max_length=100, blank=True, null=True)
     cost = models.IntegerField(blank=True, null=True)
 
     class Meta:

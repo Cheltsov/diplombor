@@ -19,12 +19,12 @@ $(document).ready(function () {
                     <div class="item">
                         <div style="display: flex">
                             <button class="btn btn-danger delete_question" data-id="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
-                            <input type="text" class="form-control" value="" name="question[` + count_box + `]['title']">
+                            <input type="text" required class="form-control" value="" name="question[` + count_box + `]['title']">
                         </div>
                     </div>
                     <div class="item" id="container_answer_` + count_box + `">
                         <div class="box_answer" id="box_answer_1" data-id="1">
-                            <input type="text" class="form-control" value="" name="question[` + count_box + `]['answer'][1]">
+                            <input type="text" required class="form-control" value="" name="question[` + count_box + `]['answer'][1]">
                             <button class="btn btn-danger answer_delete" data-id="1" data-question="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
                             <br>
                         </div>
@@ -57,7 +57,7 @@ $(document).ready(function () {
 
         last_answer.after(`
                 <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
-                    <input type="text" class="form-control" value="" name="question[` + id_question + `]['answer'][`+count_answer+`]">
+                    <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][`+count_answer+`]">
                     <button class="btn btn-danger answer_delete" data-id="` + count_answer + `" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                     <br>
                 </div>`);
@@ -78,15 +78,17 @@ $(document).ready(function () {
                 'answers': answers
             })
         });
-        console.log(data);
         $.ajax({
             headers: { "X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val() },
             type: $(this).attr('method'),
             url: $(this).attr('url'),
             dataType: 'json',
-            data: {'getdata': JSON.stringify(data)},
+            data: {'getdata': JSON.stringify(data), 'pattern_title': $('#pattern_title').val()},
             success: function (response){
-                console.log(response);
+                console.log(response)
+                if(response) {
+                    window.location.href = '/admin/pattern/';
+                }
             }
         })
     })

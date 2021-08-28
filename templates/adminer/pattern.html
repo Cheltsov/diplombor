@@ -3,40 +3,60 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
     <style>
-        table tr td,th:last-child {
+        table tr td, th:last-child {
             text-align: right;
         }
     </style>
-
-    <table class="table" style="width: 70%; text-align: center; margin: 0 auto">
-        <thead class="thead-light">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Название</th>
-            <th scope="col">Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for pattern in patterns %}
-            <tr>
-                <th scope="row">{{ pattern.id }}</th>
-                <td>{{ pattern.title }}</td>
-                <td>
-                    <a href= "/admin/pattern/edit/{{ pattern.id }}" type="button" class="btn btn-success"><i class="fas fa-edit"></i></a>
-                    <a href= "/admin/pattern/delete/{{ pattern.id }}" type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="d-flex">
+        <div class="mx-auto" style="width: 100%">
+            <br>
+            <div style="position: relative; width: 70%; margin: 0 auto">
+                <h1 class="text-center">Шаблоны</h1>
+                <div style="position: absolute; right: 0; top: 5px;">
+                    <a href="{% url 'adminer:pattern_create' %}" class="btn btn-success">Создать шаблон</a>
+                </div>
+            </div>
+            <br>
+            <table class="table" style="width: 70%; text-align: center; margin: 0 auto">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for pattern in patterns %}
+                    <tr>
+                        <th scope="row">{{ pattern.id }}</th>
+                        <td class="text-center">{{ pattern.title }}</td>
+                        <td>
+                            <a href="/admin/pattern/edit/{{ pattern.id }}" type="button" class="btn btn-warning"><i
+                                    class="fas fa-edit"></i></a>
+                            <a href="/admin/pattern/delete/{{ pattern.id }}" type="button"
+                               class="btn btn-danger delete_pattern"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <script>
         $(document).ready(function () {
             $('.nav-item').removeClass('active');
             $('.nav-item').each(function () {
                 if ($(this).attr('data-name') === "pattern") $(this).addClass('active')
+            });
+
+            $('.delete_pattern').click(function (e) {
+                e.preventDefault();
+                let isDeletePattern = confirm("Вы действительно хотите удалить запись?");
+                if (isDeletePattern) {
+                    window.location.href = $(this).attr('href');
+                }
             });
         });
     </script>

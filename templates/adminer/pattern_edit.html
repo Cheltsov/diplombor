@@ -9,32 +9,45 @@
 
     <div class="d-flex">
         <div class="mx-auto" style="width: 50%">
-            <h1 class="text-center">{{ pattern.title }}</h1>
+            <br>
+            <h1 class="text-center">Изменение шаблона #{{ pattern.id }}</h1>
             <br>
             <form method="post" novalidate class="mt-4" id="form_pattern_edit" url="{% url 'adminer:pattern_edit' id=pattern.id %}">
                 {% csrf_token %}
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="pattern_title"
+                           placeholder="Название шаблона" required value="{{ pattern.title }}">
+                </div>
+                <br>
 
                 {% for question in questions %}
 
                     <div class="box" id="question_box_{{ question.id }}" data-id="{{ question.id }}">
                         <div class="item">
                             <div style="display: flex">
-                                <button class="btn btn-danger delete_question" data-id="{{ question.id }}"><i class="fas fa-trash-alt"></i></button>
-                                <input type="text" class="form-control" value="{{ question.title }}" name="question[{{ question.id }}]['title']">
+                                <button class="btn btn-danger delete_question" data-id="{{ question.id }}"><i
+                                        class="fas fa-trash-alt"></i></button>
+                                <input type="text" class="form-control" value="{{ question.title }}"
+                                       name="question[{{ question.id }}]['title']" required>
                             </div>
                         </div>
                         <div class="item" id="container_answer_{{ question.id }}">
                             {% for answer in question.answers %}
                                 <div class="box_answer" id="box_answer_{{ answer.id }}" data-id="{{ answer.id }}">
-                                    <input type="text" class="form-control" value="{{ answer.title }}" name="question[{{ question.id }}]['answer'][{{ answer.id }}]">
-                                    <button class="btn btn-danger answer_delete" data-id="{{ answer.id }}" data-question="{{ question.id }}"><i class="fas fa-trash-alt"></i></button>
+                                    <input type="text" class="form-control" value="{{ answer.title }}"
+                                           name="question[{{ question.id }}]['answer'][{{ answer.id }}]" required>
+                                    <button class="btn btn-danger answer_delete" data-id="{{ answer.id }}"
+                                            data-question="{{ question.id }}"><i class="fas fa-trash-alt"></i></button>
                                     <br>
                                 </div>
                             {% endfor %}
 
 
                             <div class="d-flex mt-3" style="width: 87%;">
-                                <button class="btn btn-success mx-auto add_answer" data-id="{{ question.id }}">Добавить ответ</button>
+                                <button class="btn btn-success mx-auto add_answer" data-id="{{ question.id }}">Добавить
+                                    ответ
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -47,7 +60,8 @@
                 <br>
                 <br>
                 <div class="d-flex mt-3">
-                    <a href="{% url 'adminer:pattern' %}" type="submit" class="btn btn-secondary" style="margin-right: 5px;">Отмена</a>
+                    <a href="{% url 'adminer:pattern' %}" type="submit" class="btn btn-secondary"
+                       style="margin-right: 5px;">Отмена</a>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </div>
             </form>
