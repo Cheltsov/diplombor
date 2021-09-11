@@ -1,0 +1,67 @@
+{% extends 'adminer/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <style>
+        table tr td, th:last-child {
+            text-align: right;
+        }
+    </style>
+    <div class="d-flex">
+        <div class="mx-auto" style="width: 100%">
+            <br>
+            <div style="position: relative; width: 70%; margin: 0 auto">
+                <h1 class="text-center">Категории</h1>
+                <div style="position: absolute; right: 0; top: 5px;">
+                    <a href="{% url 'adminer:category_create' %}" class="btn btn-success">Создать категорию</a>
+                </div>
+            </div>
+            <br>
+            <table class="table" style="width: 70%; text-align: center; margin: 0 auto">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Дата обновления</th>
+                    <th scope="col">Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <th scope="row">{{ category.id }}</th>
+                        <td class="text-center">{{ category.title }}</td>
+                        <td class="text-center">{{ category.date_created|date:'Y-m-d H:i'}}</td>
+                        <td class="text-center">{{ category.date_updated|date:'Y-m-d H:i' }}</td>
+                        <td>
+                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-warning"><i
+                                    class="fas fa-edit"></i></a>
+                            <a href="/admin/category/delete/{{ category.id }}" type="button"
+                               class="btn btn-danger delete_pattern"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.nav-item').removeClass('active');
+            $('.nav-item').each(function () {
+                if ($(this).attr('data-name') === "category") $(this).addClass('active')
+            });
+
+            $('.delete_pattern').click(function (e) {
+                e.preventDefault();
+                let isDeletePattern = confirm("Вы действительно хотите удалить запись?");
+                if (isDeletePattern) {
+                    window.location.href = $(this).attr('href');
+                }
+            });
+        });
+    </script>
+{% endblock %}

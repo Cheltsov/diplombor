@@ -1,0 +1,97 @@
+{% extends 'adminer/base.html' %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <style>
+        .cost-answer {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'adminer/css/edit_pattern.css' %}">
+
+    <div class="d-flex">
+        <div class="mx-auto" style="width: 50%">
+            <br>
+            <h1 class="text-center">Изменение категории #{{ category.id }}</h1>
+            <br>
+            <form method="post" class="mt-4" id="form_category_edit"
+                  url="{% url 'adminer:category_edit' id=category.id %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="category_title"
+                           placeholder="Название категории" required value="{{ category.title }}">
+                </div>
+                <br>
+
+                {% for question in questions %}
+
+                    <div class="box-master" id="question_box_{{ question.id }}" data-id="{{ question.id }}">
+                        <div class="box">
+                            <div class="item">
+                                <div style="display: flex">
+                                    {% comment %}<button class="btn btn-danger delete_question" data-id="{{ question.id }}"><i
+                                            class="fas fa-trash-alt"></i></button>{% endcomment %}
+                                    <input type="text" class="form-control" value="{{ question.title }}"
+                                           name="question[{{ question.id }}]['title']" required
+                                           placeholder="Введите текст вопроса">
+                                </div>
+                            </div>
+                            <div class="item" id="container_answer_{{ question.id }}">
+
+                                {% for answer in question.answers %}
+                                    <div class="box_answer" id="box_answer_{{ answer.id }}"
+                                         data-id="{{ answer.id }}">
+                                        <input type="text" class="form-control" value="{{ answer.title }}"
+                                               name="question[{{ question.id }}]['answer'][{{ answer.id }}]"
+                                               required placeholder="Введите текст ответа">
+                                        <button class="btn btn-danger answer_delete" data-id="{{ answer.id }}"
+                                                data-question="{{ question.id }}"><i class="fas fa-trash-alt"></i>
+                                        </button>
+                                        <span class="cost-answer"
+                                              id="question[{{ question.id }}]['cost'][{{ answer.id }}]">{{ answer.cost }}</span>
+                                        <br>
+                                    </div>
+                                {% endfor %}
+
+                                <div class="d-flex mt-3" style="width: 87%;">
+                                    <button class="btn btn-success mx-auto add_answer" data-id="{{ question.id }}">
+                                        Добавить ответ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+                {% comment %}<br>
+                <div class="d-flex mt-3">
+                    <button class="btn btn-success" id="add_question">Добавить вопрос</button>
+                </div>{% endcomment %}
+                <br>
+                <br>
+                <div class="d-flex mt-3">
+                    <a href="{% url 'adminer:category' %}" type="submit" class="btn btn-secondary"
+                       style="margin-right: 5px;">Отмена</a>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $('.nav-item').removeClass('active');
+            $('.nav-item').each(function () {
+                if ($(this).attr('data-name') === "pattern") $(this).addClass('active')
+            });
+        });
+    </script>
+
+    <script src="{% static 'adminer/js/pattern_edit.js' %}"></script>
+
+{% endblock %}

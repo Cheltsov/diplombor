@@ -60,22 +60,21 @@
                                             <br>
                                         </div>
                                     {% endfor %}
+                                    <div class="d-flex mt-3" style="width: 87%;">
+                                        <button class="btn btn-success mx-auto add_answer" data-id="{{ question.id }}">
+                                            Добавить ответ
+                                        </button>
+                                    </div>
                                 {% else %}
                                     <div class="box_answer" id="box_answer_{{ answer.id }}"
                                          data-id="{{ answer.id }}">
                                         <input type="number" required class="form-control input_number" max="100"
                                                name="question[{{ question.id }}]['answer'][{{ answer.id }}]"
-                                               placeholder="Введите максильную оценку" value="{{ question.answers.last.title }}">
+                                               placeholder="Введите максильную оценку"
+                                               value="{{ question.answers.last.title }}">
                                         <br>
                                     </div>
                                 {% endif %}
-
-
-                                <div class="d-flex mt-3" style="width: 87%;">
-                                    <button class="btn btn-success mx-auto add_answer" data-id="{{ question.id }}">
-                                        Добавить ответ
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>

@@ -15,11 +15,10 @@ def deleteQuestionAnswerByPattern(pattern):
 
 def createQuestionAnswerByPattern(request_pattern, id_pattern):
     try:
-        list_answer = []
         for question in request_pattern:
             ques = Question(title=question['title'], id_pattern_id=id_pattern, is_verbal=question['is_verbal'])
             ques.save()
-
+            list_answer = []
             if ques.is_verbal == '1':
                 for answer in question['answers']:
                     list_answer.append(Answer(title=answer, id_question_id=ques.id))
@@ -44,3 +43,32 @@ def calculateAnswer(id_question):
         answer.cost = step * index
         answer.save()
     return True
+
+
+def deleteQuestionAnswerByCategory(category):
+    try:
+        questions = category.question_set.all()
+        for question in questions:
+            question.answer_set.all().delete()
+        questions.delete()
+        return True
+    except Exception as ex:
+        print(ex)
+        return False
+
+
+def createQuestionAnswerByCategory(request_category, id_category):
+    try:
+        for question in request_category:
+            ques = Question(title=question['title'], id_category_id=id_category)
+            ques.save()
+            list_answer = []
+            for answer in question['answers']:
+                list_answer.append(Answer(title=answer, id_question_id=ques.id))
+            Answer.objects.bulk_create(list_answer)
+            if not calculateAnswer(id_question=ques.id):
+                return False
+        return True
+    except Exception as ex:
+        print(ex)
+        return False

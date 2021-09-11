@@ -37,12 +37,20 @@ class PollsPattern(models.Model):
         db_table = 'polls_pattern'
 
 
+class Category(models.Model):
+    id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100, blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
+    date_updated = models.DateTimeField(auto_now=True, db_index=True, null=True)
+
+
 class Question(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     id_polls = models.ForeignKey(Polls, on_delete=models.SET_NULL, default="", null=True)
     id_pattern = models.ForeignKey(Pattern, on_delete=models.SET_NULL, default="", null=True)
     is_verbal = models.BooleanField(blank=True, null=False, default=False)
+    id_category = models.ForeignKey(Category, on_delete=models.SET_NULL, default="", null=True)
 
     class Meta:
         managed = True

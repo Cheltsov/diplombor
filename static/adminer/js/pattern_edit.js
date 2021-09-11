@@ -19,7 +19,7 @@ $(document).ready(function () {
                 <div class="box-master" id="question_box_` + count_box + `" data-id="` + count_box + `">
                     <div class="form-group d-flex align-items-center">
                         <label for="question[` + count_box + `]['is_verbal']">Система оценивания вопроса</label>
-                        <select id="question[` + count_box + `]['is_verbal']" class="form-control select_verbal" data-id="` + count_box + `" name="question[`+count_box+`]['is_verbal']">
+                        <select id="question[` + count_box + `]['is_verbal']" class="form-control select_verbal" data-id="` + count_box + `" name="question[` + count_box + `]['is_verbal']">
                             <option value="1">Вербальная</option>
                             <option value="0">Числовая</option>
                         </select>
@@ -80,7 +80,7 @@ $(document).ready(function () {
 
         last_answer.after(`
                 <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
-                    <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][`+count_answer+`]"  placeholder="Введите текст ответа">
+                    <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][` + count_answer + `]"  placeholder="Введите текст ответа">
                     <button class="btn btn-danger answer_delete" data-id="` + count_answer + `" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                     <span class="cost-answer" id="question[` + id_question + `]['cost'][` + count_answer + `]"></span>
                     <br>
@@ -90,11 +90,11 @@ $(document).ready(function () {
     }
 
     function recalculateAnswer(id_container_answer) {
-        let arr_cost_answer = $('#container_answer_'+id_container_answer).find('.cost-answer')
+        let arr_cost_answer = $('#container_answer_' + id_container_answer).find('.cost-answer')
         let count_answer = arr_cost_answer.length
         let step = 100 / (parseInt(count_answer) - 1);
 
-        arr_cost_answer.each(function(index){
+        arr_cost_answer.each(function (index) {
             $(this).text(Math.trunc(step * index));
         });
     }
@@ -102,52 +102,51 @@ $(document).ready(function () {
     $('#form_pattern_edit').submit(function (e) {
         e.preventDefault();
         let data = []
-        $(this).find('.box-master').each(function(){
+        $(this).find('.box-master').each(function () {
             let id = $(this).attr('data-id');
             let answers = [];
-            $(this).find('.box_answer').each(function(){
+            $(this).find('.box_answer').each(function () {
                 answers.push($(this).find('input').val())
             });
             data.push({
                 'id': id,
-                'title': $(this).find(`input[name="question[`+id+`]['title']"]`).val(),
+                'title': $(this).find(`input[name="question[` + id + `]['title']"]`).val(),
                 'answers': answers,
-                'is_verbal': $(this).find(`select[name="question[`+id+`]['is_verbal']"]`).val()
+                'is_verbal': $(this).find(`select[name="question[` + id + `]['is_verbal']"]`).val()
             })
         });
 
         $.ajax({
-            headers: { "X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val() },
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val()},
             type: $(this).attr('method'),
             url: $(this).attr('url'),
             dataType: 'json',
             data: {'getdata': JSON.stringify(data), 'pattern_title': $('#pattern_title').val()},
-            success: function (response){
+            success: function (response) {
                 console.log(response);
-                if(response) {
+                if (response) {
                     window.location.href = '/admin/pattern/';
                 }
             }
         })
-    })
-});
+    });
 
-// Изменение системы оценивания
-$(document).on('change', '.select_verbal', function(e) {
-    e.preventDefault();
+    // Изменение системы оценивания
+    $(document).on('change', '.select_verbal', function (e) {
+        e.preventDefault();
 
-    let id_question = $(this).attr('data-id');
-    let count_answer = 1;
+        let id_question = $(this).attr('data-id');
+        let count_answer = 1;
 
-    if ($(this).val() == 0) {
-        $('#container_answer_' + id_question).html(`
+        if ($(this).val() == 0) {
+            $('#container_answer_' + id_question).html(`
             <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
-                <input type="number" required class="form-control input_number" max="100" name="question[` + id_question + `]['answer'][`+count_answer+`]" placeholder="Введите максильную оценку">
+                <input type="number" required class="form-control input_number" max="100" name="question[` + id_question + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
                 <br>
            </div>`);
-        $('#container_answer_' + id_question).parent('.box').css('width', '88%');
-    } else {
-        $('#container_answer_' + id_question).html(`
+            $('#container_answer_' + id_question).parent('.box').css('width', '88%');
+        } else {
+            $('#container_answer_' + id_question).html(`
             <div class="box_answer" id="box_answer_` + count_answer + `" data-id="1">
                 <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][1]"  placeholder="Введите текст ответа">
                 <button class="btn btn-danger answer_delete" data-id="1" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
@@ -163,15 +162,51 @@ $(document).on('change', '.select_verbal', function(e) {
              <div class="d-flex mt-3" style="width: 87%;">
                 <button class="btn btn-success mx-auto add_answer" data-id="` + id_question + `">Добавить ответ</button>
              </div>`);
-        $('#container_answer_' + id_question).parent('.box').css('width', '100%');
-    }
+            $('#container_answer_' + id_question).parent('.box').css('width', '100%');
+        }
+    });
+    // Валидация поле для ввода Числоcлового оценивания
+    $(document).on('keydown', '.input_number', function (e) {
+        if (e.key.length == 1 && e.key.match(/[^0-9'".]/)) {
+            return false;
+        }
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2);
+        }
+    });
 });
-// Валидация поле для ввода Числоcлового оценивания
-$(document).on('keydown', '.input_number', function (e) {
-    if (e.key.length == 1 && e.key.match(/[^0-9'".]/)) {
-        return false;
-    }
-    if (this.value.length > 2) {
-        this.value = this.value.slice(0,2);
-    }
+
+$(document).ready(function(){
+
+    //Отправить категории
+    $('#form_category_edit').submit(function (e) {
+        e.preventDefault();
+        let data = []
+        $(this).find('.box-master').each(function () {
+            let id = $(this).attr('data-id');
+            let answers = [];
+            $(this).find('.box_answer').each(function () {
+                answers.push($(this).find('input').val())
+            });
+            data.push({
+                'id': id,
+                'title': $(this).find(`input[name="question[` + id + `]['title']"]`).val(),
+                'answers': answers
+            })
+        });
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val()},
+            type: $(this).attr('method'),
+            url: $(this).attr('url'),
+            dataType: 'json',
+            data: {'getdata': JSON.stringify(data), 'category_title': $('#category_title').val()},
+            success: function (response) {
+                console.log(response);
+                if (response) {
+                    window.location.href = '/admin/category/';
+                }
+            }
+        })
+    });
 });

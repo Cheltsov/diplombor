@@ -1,0 +1,87 @@
+{% extends 'adminer/base.html' %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'adminer/css/edit_pattern.css' %}">
+    <style>
+        .cost-answer {
+            display: none;
+        }
+    </style>
+
+    <div class="d-flex">
+        <div class="mx-auto" style="width: 50%">
+            <br>
+            <h1 class="text-center">Создание категории</h1>
+            <br>
+            <form method="post" class="mt-4" id="form_category_edit" url="{% url 'adminer:category_create' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="category_title"
+                           placeholder="Название категории" required>
+                </div>
+                <br>
+                <div class="box-master" id="question_box_1" data-id="1">
+                    <div class="box">
+                        <div class="item">
+                            <div style="display: flex">
+                                {% comment %}<button class="btn btn-danger delete_question" data-id="1"><i
+                                        class="fas fa-trash-alt"></i></button>{% endcomment %}
+                                <input type="text" class="form-control" value="" name="question[1]['title']" required placeholder="Введите текст вопроса">
+                            </div>
+                        </div>
+                        <div class="item" id="container_answer_1">
+                            <div class="box_answer" id="box_answer_1" data-id="1">
+                                <input type="text" class="form-control" value="" name="question[1]['answer'][1]"
+                                       required placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="1" data-question="1"><i
+                                        class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[1]['cost'][2]">0</span>
+                                <br>
+                            </div>
+                            <div class="box_answer" id="box_answer_2" data-id="2">
+                                <input type="text" class="form-control" value="" name="question[1]['answer'][2]"
+                                       required placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="2" data-question="1"><i
+                                        class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[1]['cost'][2]">100</span>
+                                <br>
+                            </div>
+                            <div class="d-flex mt-3" style="width: 87%;">
+                                <button class="btn btn-success mx-auto add_answer" data-id="1">Добавить ответ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment %}<br>
+                <div class="d-flex mt-3">
+                    <button class="btn btn-success" id="add_question">Добавить вопрос</button>
+                </div>{% endcomment %}
+                <br>
+                <br>
+                <div class="d-flex mt-3">
+                    <a href="{% url 'adminer:category' %}" type="submit" class="btn btn-secondary"
+                       style="margin-right: 5px;">Отмена</a>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $('.nav-item').removeClass('active');
+            $('.nav-item').each(function () {
+                if ($(this).attr('data-name') === "category") $(this).addClass('active')
+            });
+        });
+    </script>
+
+    <script src="{% static 'adminer/js/pattern_edit.js' %}"></script>
+
+{% endblock %}
