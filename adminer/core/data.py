@@ -13,6 +13,7 @@ def createJsonQuestion(questions):
         ques_json.append({
             "id": question.id,
             "title": question.title,
-            "answers": question.answer_set.all()
+            "answers": question.answer_set.all(),
+            'is_verbal': question.is_verbal,
         })
     return ques_json

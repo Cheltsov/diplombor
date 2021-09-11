@@ -42,6 +42,7 @@ class Question(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     id_polls = models.ForeignKey(Polls, on_delete=models.SET_NULL, default="", null=True)
     id_pattern = models.ForeignKey(Pattern, on_delete=models.SET_NULL, default="", null=True)
+    is_verbal = models.BooleanField(blank=True, null=False, default=False)
 
     class Meta:
         managed = True

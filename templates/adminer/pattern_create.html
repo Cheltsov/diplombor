@@ -10,31 +10,52 @@
     <div class="d-flex">
         <div class="mx-auto" style="width: 50%">
             <br>
-            <h1 class="text-center">Создание шаблона</h1>
+            <h1 class="text-center">Создание шаблона анкеты</h1>
             <br>
             <form method="post" class="mt-4" id="form_pattern_edit" url="{% url 'adminer:pattern_create' %}">
                 {% csrf_token %}
 
                 <div class="form-group">
                     <input type="text" class="form-control" id="pattern_title"
-                           placeholder="Название шаблона" required>
+                           placeholder="Название шаблона анкеты" required>
                 </div>
                 <br>
-                <div class="box" id="question_box_1" data-id="1">
-                    <div class="item">
-                        <div style="display: flex">
-                            <button class="btn btn-danger delete_question" data-id="1"><i class="fas fa-trash-alt"></i></button>
-                            <input type="text" class="form-control" value="" name="question[1]['title']" required>
-                        </div>
+                <div class="box-master" id="question_box_1" data-id="1">
+                    <div class="form-group d-flex align-items-center">
+                        <label for="question_is_verbal_1">Система оценивания вопроса</label>
+                        <select id="question_is_verbal_1" class="form-control select_verbal" data-id="1" name="question[1]['is_verbal']">
+                            <option value="1">Вербальная</option>
+                            <option value="0">Числовая</option>
+                        </select>
                     </div>
-                    <div class="item" id="container_answer_1">
-                        <div class="box_answer" id="box_answer_1" data-id="1">
-                            <input type="text" class="form-control" value="" name="question[1]['answer'][1]" required>
-                            <button class="btn btn-danger answer_delete" data-id="1" data-question="1"><i class="fas fa-trash-alt"></i></button>
-                            <br>
+                    <div class="box">
+                        <div class="item">
+                            <div style="display: flex">
+                                <button class="btn btn-danger delete_question" data-id="1"><i
+                                        class="fas fa-trash-alt"></i></button>
+                                <input type="text" class="form-control" value="" name="question[1]['title']" required placeholder="Введите текст вопроса">
+                            </div>
                         </div>
-                        <div class="d-flex mt-3" style="width: 87%;">
-                            <button class="btn btn-success mx-auto add_answer" data-id="1">Добавить ответ</button>
+                        <div class="item" id="container_answer_1">
+                            <div class="box_answer" id="box_answer_1" data-id="1">
+                                <input type="text" class="form-control" value="" name="question[1]['answer'][1]"
+                                       required placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="1" data-question="1"><i
+                                        class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[1]['cost'][2]">0</span>
+                                <br>
+                            </div>
+                            <div class="box_answer" id="box_answer_2" data-id="2">
+                                <input type="text" class="form-control" value="" name="question[1]['answer'][2]"
+                                       required placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="2" data-question="1"><i
+                                        class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[1]['cost'][2]">100</span>
+                                <br>
+                            </div>
+                            <div class="d-flex mt-3" style="width: 87%;">
+                                <button class="btn btn-success mx-auto add_answer" data-id="1">Добавить ответ</button>
+                            </div>
                         </div>
                     </div>
                 </div>

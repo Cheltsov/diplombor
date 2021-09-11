@@ -1,7 +1,15 @@
+.box-master {
+    margin: 10px -5px;
+}
+
 .box {
     display: flex;
     justify-content: center;
-    margin: 10px -5px;
+}
+
+.select_verbal {
+    width: 20%;
+    margin-left: 10px;
 }
 
 .item {
@@ -12,6 +20,7 @@
 .box_answer {
     display: flex;
     margin-bottom: 5px;
+    align-items: center;
 }
 
 .box_answer > button {
@@ -20,4 +29,10 @@
 
 .delete_question {
     margin-right: 5px
+}
+
+.cost-answer {
+    margin-left: 10px;
+    font-weight: bold;
+    width: 45px;
 }
