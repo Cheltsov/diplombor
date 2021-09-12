@@ -25,6 +25,9 @@ class Polls(models.Model):
     date_created = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
     date_updated = models.DateTimeField(auto_now=True, db_index=True, null=True)
 
+    def get_category_id(self):
+        return self.categorypolls_set.all().values_list('id_category_id', flat=True)
+
     class Meta:
         managed = True
         db_table = 'polls'
@@ -83,3 +86,13 @@ class CategoryPattern(models.Model):
     class Meta:
         managed = True
         db_table = 'category_pattern'
+
+
+class CategoryPolls(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_category = models.ForeignKey(Category, on_delete=models.SET_NULL, default="", null=True)
+    id_polls = models.ForeignKey(Polls, on_delete=models.SET_NULL, default="", null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'category_polls'

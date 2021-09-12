@@ -14,7 +14,7 @@ $(document).ready(function () {
     $(document).on('click', '#add_question', function (e) {
         e.preventDefault();
 
-        let count_box = parseInt($('#form_pattern_edit').children('.box-master').last().attr('data-id')) + 1;
+        let count_box = parseInt($('.box-master').last().attr('data-id')) + 1;
         $('.box-master').last().after(`
                 <div class="box-master" id="question_box_` + count_box + `" data-id="` + count_box + `">
                     <div class="form-group d-flex align-items-center">
@@ -269,6 +269,50 @@ $(document).ready(function(){
                 console.log(response);
                 if (response) {
                     window.location.href = '/admin/category/';
+                }
+            }
+        })
+    });
+});
+
+$(document).ready(function(){
+    $('#form_polls_edit').submit(function (e) {
+        e.preventDefault();
+        let data = []
+        $(this).find('.box-master').each(function () {
+            let id = $(this).attr('data-id');
+            let answers = [];
+            $(this).find('.box_answer').each(function () {
+                answers.push($(this).find('input').val())
+            });
+            data.push({
+                'id': id,
+                'title': $(this).find(`input[name="question[` + id + `]['title']"]`).val(),
+                'answers': answers,
+                'is_verbal': $(this).find(`select[name="question[` + id + `]['is_verbal']"]`).val()
+            })
+        });
+
+        let data_category = [];
+        $(this).find('.box-master-category').each(function(){
+            data_category.push($(this).attr('data-id'));
+        });
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val()},
+            type: $(this).attr('method'),
+            url: $(this).attr('url'),
+            dataType: 'json',
+            data: {
+                'getdata': JSON.stringify(data),
+                'polls_title': $('#pattern_title').val(),
+                'polls_desc': $('#polls_desc').val(),
+                'polls_category': JSON.stringify(data_category),
+            },
+            success: function (response) {
+                console.log(response);
+                if (response) {
+                    window.location.href = '/admin/polls/';
                 }
             }
         })

@@ -46,7 +46,7 @@ def pattern_edit(request, id):
             request_pattern = getPostJson(request, 'getdata')
             obj_pattern.title = request.POST['pattern_title']
             obj_pattern.save()
-            if deleteQuestionAnswerByPattern(obj_pattern) and \
+            if deleteQuestionAnswerByPatternOrPolls(obj_pattern) and \
                     createQuestionAnswerByPattern(request_pattern, id) and \
                     addCategoryInPattern(getPostJson(request, 'pattern_category'), obj_pattern.id):
                 response = 'true'
