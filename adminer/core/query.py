@@ -72,3 +72,16 @@ def createQuestionAnswerByCategory(request_category, id_category):
     except Exception as ex:
         print(ex)
         return False
+
+
+def addCategoryInPattern(request_category, id_pattern):
+    try:
+        CategoryPattern.objects.filter(id_pattern_id=id_pattern).delete()
+        list_category_pattern = []
+        for item in request_category:
+            list_category_pattern.append(CategoryPattern(id_category_id=item, id_pattern_id=id_pattern))
+        if CategoryPattern.objects.bulk_create(list_category_pattern):
+            return True
+    except Exception as ex:
+        print(ex)
+        return False

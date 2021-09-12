@@ -23,10 +23,15 @@ def pattern_create(request):
             request_pattern = getPostJson(request, 'getdata')
             obj_pattern = Pattern.objects.create(title=request.POST['pattern_title'])
             obj_pattern.save()
-            if createQuestionAnswerByPattern(request_pattern, obj_pattern.id):
+            if createQuestionAnswerByPattern(request_pattern, obj_pattern.id) and \
+                    addCategoryInPattern(getPostJson(request, 'pattern_category'), obj_pattern.id):
                 response = 'true'
             return HttpResponse(response)
-        return render(request, 'adminer/pattern/pattern_create.html', {})
+        content = {
+            "categories": createJsonCategory(Category.objects.all())
+        }
+        content["categories_json"] = json.dumps(content['categories'])
+        return render(request, 'adminer/pattern/pattern_create.html', content)
     else:
         return redirect('auth:auth')
 
@@ -41,14 +46,20 @@ def pattern_edit(request, id):
             request_pattern = getPostJson(request, 'getdata')
             obj_pattern.title = request.POST['pattern_title']
             obj_pattern.save()
-            if deleteQuestionAnswerByPattern(obj_pattern) and createQuestionAnswerByPattern(request_pattern, id):
+            if deleteQuestionAnswerByPattern(obj_pattern) and \
+                    createQuestionAnswerByPattern(request_pattern, id) and \
+                    addCategoryInPattern(getPostJson(request, 'pattern_category'), obj_pattern.id):
                 response = 'true'
             return HttpResponse(response)
 
         content = {
             "pattern": obj_pattern,
-            "questions": createJsonQuestion(questions)
+            "category_pattern": createJsonCategory(Category.objects.filter(id__in=obj_pattern.categorypattern_set.all().values_list('id_category_id', flat=True))),
+            "questions": createJsonQuestion(questions),
+            "categories": createJsonCategory(Category.objects.all()),
         }
+
+        content["categories_json"] = json.dumps(content['categories'])
         return render(request, 'adminer/pattern/pattern_edit.html', content)
     else:
         return redirect('auth:auth')

@@ -1,8 +1,11 @@
-.box-master {
+.box-master, .box-master-category {
     margin: 10px -5px;
+    background-color: gainsboro;
+    border-radius: 8px;
+    padding: 10px;
 }
 
-.box {
+.box, .box-category {
     display: flex;
     justify-content: center;
 }
@@ -27,7 +30,7 @@
     margin-left: 5px;
 }
 
-.delete_question {
+.delete_question, .remove_category {
     margin-right: 5px
 }
 
@@ -36,3 +39,10 @@
     font-weight: bold;
     width: 45px;
 }
+
+.block-window {
+    /*border: 1px solid red;*/
+    width: 20%;
+    margin-top: 125px;
+}
+

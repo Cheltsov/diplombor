@@ -116,12 +116,17 @@ $(document).ready(function () {
             })
         });
 
+        let data_category = [];
+        $(this).find('.box-master-category').each(function(){
+            data_category.push($(this).attr('data-id'));
+        });
+
         $.ajax({
             headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val()},
             type: $(this).attr('method'),
             url: $(this).attr('url'),
             dataType: 'json',
-            data: {'getdata': JSON.stringify(data), 'pattern_title': $('#pattern_title').val()},
+            data: {'getdata': JSON.stringify(data), 'pattern_title': $('#pattern_title').val(), 'pattern_category': JSON.stringify(data_category)},
             success: function (response) {
                 console.log(response);
                 if (response) {
@@ -174,6 +179,65 @@ $(document).ready(function () {
             this.value = this.value.slice(0, 2);
         }
     });
+
+    //Добавление категории
+    $('.add_category').click(function(e){
+        e.preventDefault();
+
+        if($(this).attr('disabled') == 'disabled'){
+            return false;
+        }
+
+        let json_category = $('#list_category').text();
+        let arr_category = JSON.parse(json_category.toString());
+        let id_category = parseInt($(this).attr('data-id'));
+        let current_category = arr_category.find((el) => {return el['id'] === id_category});
+
+        //Очистка блока от p
+        $('.box-all-category').find('p').hide();
+
+        //Добаление категории в блок
+        $('.box-all-category').append(`
+            <div class="box-master-category" data-id="`+id_category+`">
+                <div class="box-category">
+                    <div class="item" style="width: 19%;">
+                        <div style="display: flex">
+                            <button class="btn btn-danger remove_category" data-id="`+id_category+`"><i class="fas fa-trash-alt"></i></button>
+                            <input type="text" class="form-control" value="`+current_category['questions'][0]['title']+`" name="category[`+id_category+`]['title']" disabled>
+                        </div>
+                    </div>
+                    <div class="item" id="container_answer_`+id_category+`"></div>
+                </div>
+            </div>
+        `);
+
+        //Заполнить ответы категории
+        current_category['questions'][0]['answers'].forEach(function(el, index){
+            $("#container_answer_"+id_category).append(`
+                <div class="box_answer" id="box_answer_`+(index+1)+`" data-id="`+(index+1)+`" style="width: 80%;">
+                    <input type="text" class="form-control" value="`+el['title']+`" name="category[`+id_category+`]['answer'][`+(index+1)+`]" disabled>
+                    <br>
+                </div>
+            `);
+        });
+
+        $('#btn_add_category_'+id_category).attr('disabled', 'true');
+    });
+
+    // Удаление категории
+    $(document).on('click', '.remove_category', function(e){
+        e.preventDefault();
+        let id_category = parseInt($(this).attr('data-id'));
+        $(".box-master-category[data-id='" + id_category +"']").remove();
+        $('#btn_add_category_'+id_category).bind("click");
+
+        if($('.box-master-category').length == 0) {
+            $(".box-all-category").html(`<p style="text-align: center">Категории еще не добавлены</p>`);
+        }
+
+        $('#btn_add_category_'+id_category).removeAttr('disabled');
+    });
+
 });
 
 $(document).ready(function(){
