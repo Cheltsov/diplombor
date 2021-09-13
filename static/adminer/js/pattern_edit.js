@@ -318,3 +318,94 @@ $(document).ready(function(){
         })
     });
 });
+
+$(document).ready(function(){
+   $('.add_pattern').click(function(e){
+       e.preventDefault();
+       let id_pattern = $(this).attr('data-id');
+
+      $.ajax({
+          type: 'get',
+          url: '/admin/pattern/get/'+id_pattern+'/',
+          success: function(response){
+              if(response){
+                  renderPattern(response);
+              }
+          }
+      });
+   });
+
+   function renderPattern(patterns){
+       pattern = patterns.shift();
+       console.log(pattern);
+
+       pattern.questions.forEach(function(el, index){
+
+           let count_box = parseInt($('.box-master').last().attr('data-id')) + 1;
+            $('.box-master').last().after(`
+                <div class="box-master" id="question_box_` + count_box + `" data-id="` + count_box + `">
+                    <div class="form-group d-flex align-items-center">
+                        <label for="question[` + count_box + `]['is_verbal']">Система оценивания вопроса</label>
+                        <select id="question[` + count_box + `]['is_verbal']" class="form-control select_verbal" data-id="` + count_box + `" name="question[` + count_box + `]['is_verbal']">
+                            <option value="1">Вербальная</option>
+                            <option value="0">Числовая</option>
+                        </select>
+                    </div>
+                    <div class="box">
+                        <div class="item">
+                            <div style="display: flex">
+                                <button class="btn btn-danger delete_question" data-id="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <input type="text" required class="form-control" value="`+el.title+`" name="question[` + count_box + `]['title']" placeholder="Введите текст вопроса">
+                            </div>
+                        </div>
+                        <div class="item" id="container_answer_` + count_box + `"></div> 
+                    </div>
+                </div>`);
+
+               if(el.is_verbal){
+                   $('.box-master').last().find('.select_verbal').val(1);
+
+                   el.answers.forEach(function (answer, index){
+                       let count_answer = index + 1;
+                       $('#container_answer_' + count_box).append(`
+                            <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
+                                <input type="text" required class="form-control" value="` + answer.title + `" name="question[` + count_box + `]['answer'][` + count_answer + `]"  placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="` + count_answer + `" data-question="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[` + count_box + `]['cost'][` + count_answer + `]">0</span>
+                                <br>
+                            </div>`);
+                       $('#container_answer_' + count_box).parent('.box').css('width', '100%');
+                   });
+                   $('#container_answer_' + count_box).append(`
+                        <div class="d-flex mt-3" style="width: 87%;">
+                            <button class="btn btn-success mx-auto add_answer" data-id="` + count_box + `">Добавить ответ</button>
+                        </div>`);
+                   recalculateAnswer(count_box);
+               } else {
+                   $('.box-master').last().find('.select_verbal').val(0);
+
+                   el.answers.forEach(function (answer, index){
+                       let count_answer = index + 1;
+                       $('#container_answer_' + count_box).html(`
+                            <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
+                                <input type="number" required class="form-control input_number" value="` + answer.title + `" max="100" name="question[` + count_box + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
+                                <br>
+                           </div>`);
+                       $('#container_answer_' + count_box).parent('.box').css('width', '88%');
+                   });
+               }
+
+       });
+   }
+
+   function recalculateAnswer(id_container_answer) {
+        let arr_cost_answer = $('#container_answer_' + id_container_answer).find('.cost-answer')
+        let count_answer = arr_cost_answer.length
+        let step = 100 / (parseInt(count_answer) - 1);
+
+        arr_cost_answer.each(function (index) {
+            $(this).text(Math.trunc(step * index));
+        });
+   }
+
+});

@@ -28,7 +28,8 @@ def polls_create(request):
                 response = 'true'
             return HttpResponse(response)
         content = {
-            "categories": createJsonCategory(Category.objects.all())
+            "categories": createJsonCategory(Category.objects.all()),
+            "patterns": createJsonPattern(Pattern.objects.all()),
         }
         content["categories_json"] = json.dumps(content['categories'])
         return render(request, 'adminer/polls/polls_create.html', content)

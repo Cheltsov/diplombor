@@ -42,3 +42,15 @@ def createJsonCategory(categories):
             "questions": createJsonQuestion(category.question_set.all(), True)
         })
     return category_json
+
+
+def createJsonPattern(patterns):
+    pattern_json = []
+    for pattern in patterns:
+        pattern_json.append({
+            "id": pattern.id,
+            "title": pattern.title,
+            "questions": createJsonQuestion(pattern.question_set.all(), True)
+        })
+    return pattern_json
+

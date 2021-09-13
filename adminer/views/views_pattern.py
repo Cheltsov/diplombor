@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
 from adminer.core.data import *
@@ -69,5 +69,13 @@ def pattern_delete(request, id):
     if 'admin' in request.session and id:
         Pattern.objects.get(id=id).delete()
         return redirect('adminer:pattern')
+    else:
+        return redirect('auth:auth')
+
+
+def pattern_get(request, id):
+    if 'admin' in request.session and id:
+        obj_pattern = [Pattern.objects.get(id=id)]
+        return JsonResponse(createJsonPattern(obj_pattern), safe=False)
     else:
         return redirect('auth:auth')
