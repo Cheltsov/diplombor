@@ -9,7 +9,9 @@ from adminer.models import *
 def polls(request):
     if 'admin' in request.session:
         content = {
-            "polls": Polls.objects.all().order_by('-date_created',)
+            "polls": Polls.objects.all().order_by('-date_created'),
+            "polls_start": [],
+            "polls_end": [],
         }
         return render(request, 'adminer/polls/polls.html', content)
     else:
@@ -75,3 +77,11 @@ def polls_delete(request, id):
         return redirect('adminer:polls')
     else:
         return redirect('auth:auth')
+
+
+def polls_copy(request, id):
+    if 'admin' in request.session and id:
+        return HttpResponse(id)
+    else:
+        return redirect('auth:auth')
+

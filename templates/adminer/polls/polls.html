@@ -34,7 +34,7 @@
                 <div class="mx-auto" style="width: 100%">
                     <br>
                     <div style="position: relative; width: 70%; margin: 0 auto">
-                        <h1 class="text-center">Опросы</h1>
+                        <h1 class="text-center">Не начатые опросы</h1>
                         <div style="position: absolute; right: 0; top: 5px;">
                             <a href="{% url 'adminer:polls_create' %}" class="btn btn-success">Создать опрос</a>
                         </div>
@@ -58,6 +58,9 @@
                                 <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i' }}</td>
                                 <td class="text-center">{{ poll.date_updated|date:'Y-m-d H:i' }}</td>
                                 <td>
+                                    <a type="button" class="btn btn-info btn_copy_link" data-link="{% url "adminer:polls_edit" poll.id %}"
+                                       title="Копировать ссылку"><i class="fas fa-link" style="color: white"></i>
+                                    </a>
                                     <a href="/admin/polls/copy/{{ poll.id }}" type="button" class="btn btn-primary"
                                        title="Копировать в шаблон"><i
                                             class="far fa-copy"></i></a>
@@ -75,10 +78,100 @@
             </div>
         </div>
         <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-            Tab 2 content
+            <div class="d-flex">
+                <div class="mx-auto" style="width: 100%">
+                    <br>
+                    <div style="position: relative; width: 70%; margin: 0 auto">
+                        <h1 class="text-center">Начатые опросы</h1>
+                        <div style="position: absolute; right: 0; top: 5px;">
+                            <a href="{% url 'adminer:polls_create' %}" class="btn btn-success">Создать опрос</a>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table" style="width: 70%; text-align: center; margin: 0 auto">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Дата создания</th>
+                            <th scope="col">Дата обновления</th>
+                            <th scope="col">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for poll in polls_start %}
+                            <tr>
+                                <th scope="row">{{ poll.id }}</th>
+                                <td class="text-center">{{ poll.title }}</td>
+                                <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i' }}</td>
+                                <td class="text-center">{{ poll.date_updated|date:'Y-m-d H:i' }}</td>
+                                <td>
+                                    <a type="button" class="btn btn-info btn_copy_link" data-link="{% url "adminer:polls_edit" poll.id %}"
+                                       title="Копировать ссылку"><i class="fas fa-link" style="color: white"></i>
+                                    </a>
+                                    <a href="/admin/polls/copy/{{ poll.id }}" type="button" class="btn btn-primary"
+                                       title="Копировать в шаблон"><i
+                                            class="far fa-copy"></i></a>
+                                    <a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"
+                                       title="Изменить"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a href="/admin/polls/delete/{{ poll.id }}" type="button" title="Удалить"
+                                       class="btn btn-danger delete_polls delete_polls"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-            Tab 3 content
+            <div class="d-flex">
+                <div class="mx-auto" style="width: 100%">
+                    <br>
+                    <div style="position: relative; width: 70%; margin: 0 auto">
+                        <h1 class="text-center">Завершенные опросы</h1>
+                        <div style="position: absolute; right: 0; top: 5px;">
+                            <a href="{% url 'adminer:polls_create' %}" class="btn btn-success">Создать опрос</a>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table" style="width: 70%; text-align: center; margin: 0 auto">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Дата создания</th>
+                            <th scope="col">Дата обновления</th>
+                            <th scope="col">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for poll in polls_end %}
+                            <tr>
+                                <th scope="row">{{ poll.id }}</th>
+                                <td class="text-center">{{ poll.title }}</td>
+                                <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i' }}</td>
+                                <td class="text-center">{{ poll.date_updated|date:'Y-m-d H:i' }}</td>
+                                <td>
+                                    <a type="button" class="btn btn-info btn_copy_link" data-link="{% url "adminer:polls_edit" poll.id %}"
+                                       title="Копировать ссылку"><i class="fas fa-link" style="color: white"></i>
+                                    </a>
+                                    <a href="/admin/polls/copy/{{ poll.id }}" type="button" class="btn btn-primary"
+                                       title="Копировать в шаблон"><i
+                                            class="far fa-copy"></i></a>
+                                    <a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"
+                                       title="Изменить"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a href="/admin/polls/delete/{{ poll.id }}" type="button" title="Удалить"
+                                       class="btn btn-danger delete_polls delete_polls"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Tabs content -->
@@ -95,6 +188,17 @@
                 if (confirm("Вы действительно хотите удалить запись?")) {
                     window.location.href = $(this).attr('href');
                 }
+            });
+
+            $('.btn_copy_link').click(function(e){
+                e.preventDefault();
+                let text = $(this).attr('data-link');
+                let $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val(text).select();
+                document.execCommand("copy");
+                $temp.remove();
+                alert('Ссылка на опрос скопирована');
             });
         });
     </script>

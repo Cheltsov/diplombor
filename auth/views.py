@@ -18,7 +18,7 @@ def auth(request):
 
         if email == 'admin@gmail.com' and password == '11111':
             request.session['admin'] = 'admin'
-            return redirect('adminer:home')
+            return redirect('adminer:polls')
         else:
             content['error'] = "Такого пользователя нет"
 
