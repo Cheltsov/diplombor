@@ -40,7 +40,7 @@
         </div>
         <div class="mx-auto" style="width: 50%">
             <br>
-            <h1 class="text-center">Изменение шаблона анкеты #{{ polls.id }}</h1>
+            <h1 class="text-center">Изменение опроса #{{ polls.id }}</h1>
             <br>
             <form method="post" class="mt-4" id="form_polls_edit"
                   url="{% url 'adminer:polls_edit' id=polls.id %}">
@@ -156,10 +156,39 @@
                 </div>
             </form>
         </div>
-        <div class="mx-auto block-window"></div>
+        <div class="mx-auto block-window">
+            <h4>Список шаблонов анкет</h4>
+            <br>
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for pattern in patterns %}
+                    <tr>
+                        <th scope="row">{{ pattern.id }}</th>
+                        <td>{{ pattern.title }}</td>
+                        <td>
+                            <a href="/admin/pattern/edit/{{ pattern.id }}" type="button" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            <a type="button" class="btn btn-success add_pattern" data-id="{{ pattern.id }}" id="btn_add_pattern_{{ pattern.id }}">
+                                <i class="fas fa-plus" style="color: white;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="d-none" id="list_category">{{ categories_json }}</div>
+    <div class="d-none" id="list_patterns">{{ patterns_json }}</div>
 
     <script>
         $(document).ready(function () {

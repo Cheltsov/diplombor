@@ -59,9 +59,11 @@ def polls_edit(request, id):
             "category_polls": createJsonCategory(Category.objects.filter(id__in=obj_polls.categorypolls_set.all().values_list('id_category_id', flat=True))),
             "questions": createJsonQuestion(questions),
             "categories": createJsonCategory(Category.objects.all()),
+            "patterns": createJsonPattern(Pattern.objects.all()),
         }
 
         content["categories_json"] = json.dumps(content['categories'])
+        content["patterns_json"] = json.dumps(content['patterns'])
         return render(request, 'adminer/polls/polls_edit.html', content)
     else:
         return redirect('auth:auth')
