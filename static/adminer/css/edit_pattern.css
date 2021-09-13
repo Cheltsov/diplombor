@@ -1,3 +1,6 @@
+a.btn {
+    padding: .625rem 0.6rem .5rem;
+}
 .box-master, .box-master-category {
     margin: 10px -5px;
     background-color: gainsboro;

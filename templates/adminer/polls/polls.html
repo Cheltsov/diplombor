@@ -8,45 +8,80 @@
             text-align: right;
         }
     </style>
-    <div class="d-flex">
-        <div class="mx-auto" style="width: 100%">
-            <br>
-            <div style="position: relative; width: 70%; margin: 0 auto">
-                <h1 class="text-center">Опросы</h1>
-                <div style="position: absolute; right: 0; top: 5px;">
-                    <a href="{% url 'adminer:polls_create' %}" class="btn btn-success">Создать опрос</a>
+
+
+    <!-- Tabs navs -->
+    <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="ex1-tab-1" data-mdb-toggle="tab" href="#ex1-tabs-1" role="tab"
+               aria-controls="ex1-tabs-1" aria-selected="true">Не начатые опросы</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ex1-tab-2" data-mdb-toggle="tab" href="#ex1-tabs-2" role="tab"
+               aria-controls="ex1-tabs-2" aria-selected="false">Начатые опросы</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ex1-tab-3" data-mdb-toggle="tab" href="#ex1-tabs-3" role="tab"
+               aria-controls="ex1-tabs-3" aria-selected="false">Завершенные опросы</a>
+        </li>
+    </ul>
+    <!-- Tabs navs -->
+
+    <!-- Tabs content -->
+    <div class="tab-content" id="ex1-content">
+        <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+            <div class="d-flex">
+                <div class="mx-auto" style="width: 100%">
+                    <br>
+                    <div style="position: relative; width: 70%; margin: 0 auto">
+                        <h1 class="text-center">Опросы</h1>
+                        <div style="position: absolute; right: 0; top: 5px;">
+                            <a href="{% url 'adminer:polls_create' %}" class="btn btn-success">Создать опрос</a>
+                        </div>
+                    </div>
+                    <br>
+                    <table class="table" style="width: 70%; text-align: center; margin: 0 auto">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Название</th>
+                            <th scope="col">Дата создания</th>
+                            <th scope="col">Дата обновления</th>
+                            <th scope="col">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for poll in polls %}
+                            <tr>
+                                <th scope="row">{{ poll.id }}</th>
+                                <td class="text-center">{{ poll.title }}</td>
+                                <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i' }}</td>
+                                <td class="text-center">{{ poll.date_updated|date:'Y-m-d H:i' }}</td>
+                                <td>
+                                    <a href="/admin/polls/copy/{{ poll.id }}" type="button" class="btn btn-primary"
+                                       title="Копировать в шаблон"><i
+                                            class="far fa-copy"></i></a>
+                                    <a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"
+                                       title="Изменить"><i
+                                            class="fas fa-edit"></i></a>
+                                    <a href="/admin/polls/delete/{{ poll.id }}" type="button" title="Удалить"
+                                       class="btn btn-danger delete_polls delete_polls"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <br>
-            <table class="table" style="width: 70%; text-align: center; margin: 0 auto">
-                <thead class="thead-light">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Название</th>
-                    <th scope="col">Дата создания</th>
-                    <th scope="col">Дата обновления</th>
-                    <th scope="col">Действия</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for poll in polls %}
-                    <tr>
-                        <th scope="row">{{ poll.id }}</th>
-                        <td class="text-center">{{ poll.title }}</td>
-                        <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i'}}</td>
-                        <td class="text-center">{{ poll.date_update|date:'Y-m-d H:i' }}</td>
-                        <td>
-                            <a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"><i
-                                    class="fas fa-edit"></i></a>
-                            <a href="/admin/polls/delete/{{ poll.id }}" type="button"
-                               class="btn btn-danger delete_polls"><i class="far fa-trash-alt"></i></a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        </div>
+        <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+            Tab 2 content
+        </div>
+        <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+            Tab 3 content
         </div>
     </div>
+    <!-- Tabs content -->
 
     <script>
         $(document).ready(function () {
@@ -55,10 +90,9 @@
                 if ($(this).attr('data-name') === "polls") $(this).addClass('active')
             });
 
-            $('.delete_pattern').click(function (e) {
+            $('.delete_polls').click(function (e) {
                 e.preventDefault();
-                let isDeletePattern = confirm("Вы действительно хотите удалить запись?");
-                if (isDeletePattern) {
+                if (confirm("Вы действительно хотите удалить запись?")) {
                     window.location.href = $(this).attr('href');
                 }
             });

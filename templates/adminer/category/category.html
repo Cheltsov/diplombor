@@ -36,10 +36,10 @@
                         <td class="text-center">{{ category.date_created|date:'Y-m-d H:i'}}</td>
                         <td class="text-center">{{ category.date_updated|date:'Y-m-d H:i' }}</td>
                         <td>
-                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-warning"><i
+                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-warning" title="Изменить"><i
                                     class="fas fa-edit"></i></a>
-                            <a href="/admin/category/delete/{{ category.id }}" type="button"
-                               class="btn btn-danger delete_pattern"><i class="far fa-trash-alt"></i></a>
+                            <a href="/admin/category/delete/{{ category.id }}" type="button" title="Удалить"
+                               class="btn btn-danger delete_category"><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -55,7 +55,7 @@
                 if ($(this).attr('data-name') === "category") $(this).addClass('active')
             });
 
-            $('.delete_pattern').click(function (e) {
+            $('.delete_category').click(function (e) {
                 e.preventDefault();
                 let isDeletePattern = confirm("Вы действительно хотите удалить запись?");
                 if (isDeletePattern) {
