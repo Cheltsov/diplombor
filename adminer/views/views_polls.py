@@ -9,7 +9,7 @@ from adminer.models import *
 def polls(request):
     if 'admin' in request.session:
         content = {
-            "polls": Polls.objects.all().order_by('-date_created'),
+            "polls": Polls.objects.all().order_by('-date_updated'),
             "polls_start": [],
             "polls_end": [],
         }

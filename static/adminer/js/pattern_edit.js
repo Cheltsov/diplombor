@@ -146,7 +146,7 @@ $(document).ready(function () {
         if ($(this).val() == 0) {
             $('#container_answer_' + id_question).html(`
             <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
-                <input type="number" required class="form-control input_number" max="100" name="question[` + id_question + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
+                <input type="number" required class="form-control input_number" max="20" name="question[` + id_question + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
                 <br>
            </div>`);
             $('#container_answer_' + id_question).parent('.box').css('width', '88%');
@@ -388,7 +388,7 @@ $(document).ready(function(){
                        let count_answer = index + 1;
                        $('#container_answer_' + count_box).html(`
                             <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
-                                <input type="number" required class="form-control input_number" value="` + answer.title + `" max="100" name="question[` + count_box + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
+                                <input type="number" required class="form-control input_number" value="` + answer.title + `" max="20" name="question[` + count_box + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
                                 <br>
                            </div>`);
                        $('#container_answer_' + count_box).parent('.box').css('width', '88%');

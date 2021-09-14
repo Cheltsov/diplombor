@@ -8,39 +8,10 @@
     <link rel="stylesheet" href="{% static 'adminer/css/edit_pattern.css' %}">
 
     <div class="d-flex">
-        <div class="mx-auto block-window">
-            <h4>Список категорий</h4>
-            <br>
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Название</th>
-                    <th scope="col">Действия</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for category in categories %}
-                    <tr>
-                        <th scope="row">{{ category.id }}</th>
-                        <td>{{ category.title }}</td>
-                        <td style="display: inline-block; width: 110px;">
-                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-primary" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                            <a type="button" class="btn btn-success add_category" data-id="{{ category.id }}" id="btn_add_category_{{ category.id }}"
-                                {% if category.id in pattern.get_category_id %} disabled="disabled" {% endif %}>
-                                <i class="fas fa-plus" style="color: white;"></i>
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        <div class="mx-auto block-window"></div>
         <div class="mx-auto" style="width: 50%">
             <br>
-            <h1 class="text-center">Изменение шаблона анкеты #{{ pattern.id }}</h1>
+            <h1 class="text-center">Изменение анкеты #{{ pattern.id }}</h1>
             <br>
             <form method="post" class="mt-4" id="form_pattern_edit"
                   url="{% url 'adminer:pattern_edit' id=pattern.id %}">
@@ -48,51 +19,7 @@
 
                 <div class="form-group">
                     <input type="text" class="form-control" id="pattern_title"
-                           placeholder="Название шаблона анкеты" required value="{{ pattern.title }}">
-                </div>
-                <br>
-                <h4>Добавление категорий</h4>
-                <div class="box-all-category">
-
-                    {% if pattern.categorypattern_set.count < 1 %}
-                        <p style="text-align: center">Категории еще не добавлены</p>
-                    {% else %}
-
-                        {% for category in category_pattern %}
-
-                            <div class="box-master-category" data-id="{{ category.id }}">
-                                <div class="box-category">
-                                    <div class="item" style="width: 19%;">
-                                        <div style="display: flex">
-                                            <button class="btn btn-danger remove_category" data-id="{{ category.id }}"><i
-                                                    class="fas fa-trash-alt"></i></button>
-
-                                            <input type="text" class="form-control" value="{{ category.questions.0.title }}" name="category[{{ category.id }}]['title']" disabled>
-                                        </div>
-                                    </div>
-                                    <div class="item" id="container_answer_{{ category.id }}">
-                                        {% for answer in category.questions.0.answers %}
-                                            <div class="box_answer" id="box_answer_{{ answer.id }}" data-id="{{ answer.id }}" style="width: 80%;">
-                                                <input type="text" class="form-control" value="{{ answer.title }}" name="category[{{ category.id }}]['answer'][{{ answer.id }}]" disabled>
-                                                <br>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-
-                    {% endif %}
-
-
-
-
-
-
-
-
-
-
+                           placeholder="Название анкеты" required value="{{ pattern.title }}">
                 </div>
                 <br>
                 <h4>Добавление вопросов</h4>
