@@ -81,7 +81,11 @@ def polls_delete(request, id):
 
 def polls_copy(request, id):
     if 'admin' in request.session and id:
-        return HttpResponse(id)
+        obj = Polls.objects.get(id=id)
+        obj.pk = None
+        obj.title = obj.title + " - Копия"
+        obj.save()
+        return redirect('adminer:polls')
     else:
         return redirect('auth:auth')
 
