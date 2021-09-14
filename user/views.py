@@ -6,7 +6,7 @@ from adminer.models import Polls, UserAnswer
 
 
 def index(request, id):
-    if Polls.objects.filter(id=id).exists():
+    if Polls.objects.filter(id=id, date_start__isnull=False, date_end__isnull=True).exists():
         polls = [Polls.objects.get(id=id)]
         content = {
             'polls': createJsonPolls(polls)
