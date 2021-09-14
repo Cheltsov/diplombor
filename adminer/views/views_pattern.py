@@ -23,15 +23,10 @@ def pattern_create(request):
             request_pattern = getPostJson(request, 'getdata')
             obj_pattern = Pattern.objects.create(title=request.POST['pattern_title'])
             obj_pattern.save()
-            if createQuestionAnswerByPattern(request_pattern, obj_pattern.id) and \
-                    addCategoryInPattern(getPostJson(request, 'pattern_category'), obj_pattern.id):
+            if createQuestionAnswerByPattern(request_pattern, obj_pattern.id):
                 response = 'true'
             return HttpResponse(response)
-        content = {
-            "categories": createJsonCategory(Category.objects.all())
-        }
-        content["categories_json"] = json.dumps(content['categories'])
-        return render(request, 'adminer/pattern/pattern_create.html', content)
+        return render(request, 'adminer/pattern/pattern_create.html', {})
     else:
         return redirect('auth:auth')
 

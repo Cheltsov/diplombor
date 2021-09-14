@@ -17,13 +17,37 @@ $(document).ready(function () {
         let count_box = parseInt($('.box-master').last().attr('data-id')) + 1;
         $('.box-master').last().after(`
                 <div class="box-master" id="question_box_` + count_box + `" data-id="` + count_box + `">
+                    <div class="form-group d-flex align-items-center">
+                        <label for="question[` + count_box + `]['is_verbal']">Система оценивания вопроса</label>
+                        <select id="question[` + count_box + `]['is_verbal']" class="form-control select_verbal" data-id="` + count_box + `" name="question[` + count_box + `]['is_verbal']">
+                            <option value="1">Вербальная</option>
+                            <option value="0">Числовая</option>
+                        </select>
+                    </div>
                     <div class="box">
                         <div class="item">
-                            <div style="display: flex; width: 94%; margin-left: 5px;">
-                                <input type="text" required class="form-control" value="" name="question[` + count_box + `]['title']" placeholder="Введите текст показателя" style="margin-right: 10px;">
+                            <div style="display: flex">
                                 <button class="btn btn-danger delete_question" data-id="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <input type="text" required class="form-control" value="" name="question[` + count_box + `]['title']" placeholder="Введите текст вопроса">
                             </div>
                         </div>
+                        <div class="item" id="container_answer_` + count_box + `">
+                            <div class="box_answer" id="box_answer_1" data-id="1">
+                                <input type="text" required class="form-control" value="" name="question[` + count_box + `]['answer'][1]"  placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="1" data-question="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[` + count_box + `]['cost'][1]">0</span>
+                                <br>
+                            </div>
+                            <div class="box_answer" id="box_answer_2" data-id="2">
+                                <input type="text" class="form-control" value="" name="question[` + count_box + `]['answer'][2]" required placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="2" data-question="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[` + count_box + `]['cost'][2]">100</span>
+                                <br>
+                            </div>
+                            <div class="d-flex mt-3" style="width: 87%;">
+                                <button class="btn btn-success mx-auto add_answer" data-id="` + count_box + `">Добавить ответ</button>
+                            </div>
+                        </div> 
                     </div>
                 </div>`);
     });
@@ -34,10 +58,10 @@ $(document).ready(function () {
         let id_box_answer = $(this).attr('data-id');
         let id_question = $(this).attr('data-question');
 
-        if ($('#container_answer_1').children('.box_answer').length != 2) {
-            $(this).parent('.box_answer').remove();
+        if ($('#container_answer_' + id_question).children('.box_answer').length != 2) {
+            $('#question_box_' + id_question).find('#box_answer_' + id_box_answer).remove();
         } else {
-            alert('Нельзя удалить оценку. Должно быть минимум 2 оценки');
+            alert('Нельзя удалить ответ. У вопроса должно быть минимум 2 ответа');
         }
     });
 
@@ -56,7 +80,7 @@ $(document).ready(function () {
 
         last_answer.after(`
                 <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
-                    <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][` + count_answer + `]"  placeholder="Введите текст оценки">
+                    <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][` + count_answer + `]"  placeholder="Введите текст ответа">
                     <button class="btn btn-danger answer_delete" data-id="` + count_answer + `" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                     <span class="cost-answer" id="question[` + id_question + `]['cost'][` + count_answer + `]"></span>
                     <br>
@@ -81,15 +105,20 @@ $(document).ready(function () {
         $(this).find('.box-master').each(function () {
             let id = $(this).attr('data-id');
             let answers = [];
-            $('#container_answer_1').find('.box_answer').each(function () {
+            $(this).find('.box_answer').each(function () {
                 answers.push($(this).find('input').val())
             });
             data.push({
                 'id': id,
                 'title': $(this).find(`input[name="question[` + id + `]['title']"]`).val(),
                 'answers': answers,
-                'is_verbal': $('#question_is_verbal_1').val()
+                'is_verbal': $(this).find(`select[name="question[` + id + `]['is_verbal']"]`).val()
             })
+        });
+
+        let data_category = [];
+        $(this).find('.box-master-category').each(function(){
+            data_category.push($(this).attr('data-id'));
         });
 
         $.ajax({
@@ -97,7 +126,7 @@ $(document).ready(function () {
             type: $(this).attr('method'),
             url: $(this).attr('url'),
             dataType: 'json',
-            data: {'getdata': JSON.stringify(data), 'pattern_title': $('#pattern_title').val()},
+            data: {'getdata': JSON.stringify(data), 'pattern_title': $('#pattern_title').val(), 'pattern_category': JSON.stringify(data_category)},
             success: function (response) {
                 console.log(response);
                 if (response) {
@@ -117,30 +146,28 @@ $(document).ready(function () {
         if ($(this).val() == 0) {
             $('#container_answer_' + id_question).html(`
             <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
-                <input type="number" required class="form-control input_number" max="20" style="width: 87%;" name="question[` + id_question + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
-                <span class="cost-answer" id="question[` + id_question + `]['cost'][1]">до 20</span>
+                <input type="number" required class="form-control input_number" max="20" name="question[` + id_question + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
                 <br>
            </div>`);
             $('#container_answer_' + id_question).parent('.box').css('width', '88%');
-            $('#btn_add_answer').removeClass('d-flex');
-            $('#btn_add_answer').hide();
-
         } else {
             $('#container_answer_' + id_question).html(`
             <div class="box_answer" id="box_answer_` + count_answer + `" data-id="1">
-                <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][1]"  placeholder="Введите текст оценки">
+                <input type="text" required class="form-control" value="" name="question[` + id_question + `]['answer'][1]"  placeholder="Введите текст ответа">
                 <button class="btn btn-danger answer_delete" data-id="1" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                 <span class="cost-answer" id="question[` + id_question + `]['cost'][1]">0</span>
                 <br>
              </div>
              <div class="box_answer" id="box_answer_2" data-id="2">
-                <input type="text" class="form-control" value="" name="question[` + id_question + `]['answer'][2]" required  placeholder="Введите текст оценки">
+                <input type="text" class="form-control" value="" name="question[` + id_question + `]['answer'][2]" required  placeholder="Введите текст ответа">
                 <button class="btn btn-danger answer_delete" data-id="2" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                 <span class="cost-answer" id="question[` + id_question + `]['cost'][2]">100</span>
                 <br>
+             </div>
+             <div class="d-flex mt-3" style="width: 87%;">
+                <button class="btn btn-success mx-auto add_answer" data-id="` + id_question + `">Добавить ответ</button>
              </div>`);
             $('#container_answer_' + id_question).parent('.box').css('width', '100%');
-            $('#btn_add_answer').addClass('d-flex');
         }
     });
     // Валидация поле для ввода Числоcлового оценивания
@@ -148,8 +175,8 @@ $(document).ready(function () {
         if (e.key.length == 1 && e.key.match(/[^0-9'".]/)) {
             return false;
         }
-        if (this.value.length > 1) {
-            this.value = this.value.slice(0, 1);
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2);
         }
     });
 
@@ -255,14 +282,14 @@ $(document).ready(function(){
         $(this).find('.box-master').each(function () {
             let id = $(this).attr('data-id');
             let answers = [];
-            $('#container_answer_1').find('.box_answer').each(function () {
+            $(this).find('.box_answer').each(function () {
                 answers.push($(this).find('input').val())
             });
             data.push({
                 'id': id,
                 'title': $(this).find(`input[name="question[` + id + `]['title']"]`).val(),
                 'answers': answers,
-                'is_verbal': $('#question_is_verbal_1').val()
+                'is_verbal': $(this).find(`select[name="question[` + id + `]['is_verbal']"]`).val()
             })
         });
 
@@ -313,48 +340,62 @@ $(document).ready(function(){
        console.log(pattern);
 
        pattern.questions.forEach(function(el, index){
+
            let count_box = parseInt($('.box-master').last().attr('data-id')) + 1;
             $('.box-master').last().after(`
                 <div class="box-master" id="question_box_` + count_box + `" data-id="` + count_box + `">
+                    <div class="form-group d-flex align-items-center">
+                        <label for="question[` + count_box + `]['is_verbal']">Система оценивания вопроса</label>
+                        <select id="question[` + count_box + `]['is_verbal']" class="form-control select_verbal" data-id="` + count_box + `" name="question[` + count_box + `]['is_verbal']">
+                            <option value="1">Вербальная</option>
+                            <option value="0">Числовая</option>
+                        </select>
+                    </div>
                     <div class="box">
                         <div class="item">
-                            <div style="display: flex; width: 94%; margin-left: 5px;">                               
-                                <input type="text" required class="form-control" value="`+el.title+`" name="question[` + count_box + `]['title']" placeholder="Введите текст показателя" style="margin-right: 10px;">
+                            <div style="display: flex">
                                 <button class="btn btn-danger delete_question" data-id="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <input type="text" required class="form-control" value="`+el.title+`" name="question[` + count_box + `]['title']" placeholder="Введите текст вопроса">
                             </div>
                         </div>
+                        <div class="item" id="container_answer_` + count_box + `"></div> 
                     </div>
                 </div>`);
+
+               if(el.is_verbal){
+                   $('.box-master').last().find('.select_verbal').val(1);
+
+                   el.answers.forEach(function (answer, index){
+                       let count_answer = index + 1;
+                       $('#container_answer_' + count_box).append(`
+                            <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
+                                <input type="text" required class="form-control" value="` + answer.title + `" name="question[` + count_box + `]['answer'][` + count_answer + `]"  placeholder="Введите текст ответа">
+                                <button class="btn btn-danger answer_delete" data-id="` + count_answer + `" data-question="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <span class="cost-answer" id="question[` + count_box + `]['cost'][` + count_answer + `]">0</span>
+                                <br>
+                            </div>`);
+                       $('#container_answer_' + count_box).parent('.box').css('width', '100%');
+                   });
+                   $('#container_answer_' + count_box).append(`
+                        <div class="d-flex mt-3" style="width: 87%;">
+                            <button class="btn btn-success mx-auto add_answer" data-id="` + count_box + `">Добавить ответ</button>
+                        </div>`);
+                   recalculateAnswer(count_box);
+               } else {
+                   $('.box-master').last().find('.select_verbal').val(0);
+
+                   el.answers.forEach(function (answer, index){
+                       let count_answer = index + 1;
+                       $('#container_answer_' + count_box).html(`
+                            <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
+                                <input type="number" required class="form-control input_number" value="` + answer.title + `" max="20" name="question[` + count_box + `]['answer'][` + count_answer + `]" placeholder="Введите максильную оценку">
+                                <br>
+                           </div>`);
+                       $('#container_answer_' + count_box).parent('.box').css('width', '88%');
+                   });
+               }
+
        });
-
-       $('#container_answer_1').find('.box_answer').remove();
-
-       if(pattern.questions[0].is_verbal) {
-           $('#question_is_verbal_1').val(1);
-            pattern.questions[0].answers.forEach(function(el, index){
-               $('#container_answer_1').append(`
-                <div class="box_answer" id="box_answer_`+(index)+`" data-id="`+(index)+`">
-                    <input type="text" class="form-control" value="`+el.title+`" name="question[1]['answer'][`+(index)+`]" required placeholder="Введите текст оценки">
-                    <button class="btn btn-danger answer_delete" data-id="`+(index)+`" data-question="1"><i class="fas fa-trash-alt"></i></button>
-                    <span class="cost-answer" id="question[1]['cost'][`+(index)+`]">100</span>
-                    <br>
-                </div>`);
-           });
-            $('#btn_add_answer').addClass('d-flex');
-       } else {
-           $('#question_is_verbal_1').val(0);
-           let answers = pattern.questions[0].answers;
-           let length_answers = parseInt(answers.length);
-           $('#container_answer_1').append(`
-            <div class="box_answer" id="box_answer_1" data-id="1">
-                <input type="number" required class="form-control input_number" max="20" style="width: 87%;" name="question[1]['answer'][1]" placeholder="Введите максильную оценку" value="`+answers[length_answers-1].title+`">
-                <button class="btn btn-danger answer_delete" data-id="1" data-question="1"><i class="fas fa-trash-alt"></i></button>
-                <span class="cost-answer" id="question[1]['cost'][1]">до 20</span>
-                <br>
-            </div>`);
-           $('#btn_add_answer').removeClass('d-flex');
-           $('#btn_add_answer').hide();
-       }
    }
 
    function recalculateAnswer(id_container_answer) {

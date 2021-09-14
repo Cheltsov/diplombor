@@ -6,7 +6,6 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'adminer/css/edit_pattern.css' %}">
-
     <div class="d-flex">
         <div class="mx-auto block-window"></div>
         <div class="mx-auto" style="width: 50%">
@@ -16,76 +15,14 @@
             <form method="post" class="mt-4" id="form_pattern_edit"
                   url="{% url 'adminer:pattern_edit' id=pattern.id %}">
                 {% csrf_token %}
-
+                <h4>Название анкеты</h4>
                 <div class="form-group">
                     <input type="text" class="form-control" id="pattern_title"
                            placeholder="Название анкеты" required value="{{ pattern.title }}">
                 </div>
-                <br>
-                <h4>Добавление вопросов</h4>
-                {% for question in questions %}
 
-                    <div class="box-master" id="question_box_{{ question.id }}" data-id="{{ question.id }}">
-                        <div class="form-group d-flex align-items-center">
-                            <label for="question_is_verbal_{{ question.id }}">Система оценивания вопроса</label>
-                            <select id="question_is_verbal_{{ question.id }}" class="form-control select_verbal"
-                                    data-id="{{ question.id }}" name="question[{{ question.id }}]['is_verbal']">
-                                <option value="1" {% if question.is_verbal %} selected {% endif %}>Вербальная</option>
-                                <option value="0" {% if not question.is_verbal %} selected {% endif %}>Числовая</option>
-                            </select>
-                        </div>
-                        <div class="box">
-                            <div class="item">
-                                <div style="display: flex">
-                                    <button class="btn btn-danger delete_question" data-id="{{ question.id }}"><i
-                                            class="fas fa-trash-alt"></i></button>
-                                    <input type="text" class="form-control" value="{{ question.title }}"
-                                           name="question[{{ question.id }}]['title']" required
-                                           placeholder="Введите текст вопроса">
-                                </div>
-                            </div>
-                            <div class="item" id="container_answer_{{ question.id }}">
+                {% include "adminer/question/edit.html" %}
 
-                                {% if question.is_verbal %}
-                                    {% for answer in question.answers %}
-                                        <div class="box_answer" id="box_answer_{{ answer.id }}"
-                                             data-id="{{ answer.id }}">
-                                            <input type="text" class="form-control" value="{{ answer.title }}"
-                                                   name="question[{{ question.id }}]['answer'][{{ answer.id }}]"
-                                                   required placeholder="Введите текст ответа">
-                                            <button class="btn btn-danger answer_delete" data-id="{{ answer.id }}"
-                                                    data-question="{{ question.id }}"><i class="fas fa-trash-alt"></i>
-                                            </button>
-                                            <span class="cost-answer"
-                                                  id="question[{{ question.id }}]['cost'][{{ answer.id }}]">{{ answer.cost }}</span>
-                                            <br>
-                                        </div>
-                                    {% endfor %}
-                                    <div class="d-flex mt-3" style="width: 87%;">
-                                        <button class="btn btn-success mx-auto add_answer" data-id="{{ question.id }}">
-                                            Добавить ответ
-                                        </button>
-                                    </div>
-                                {% else %}
-                                    <div class="box_answer" id="box_answer_{{ answer.id }}"
-                                         data-id="{{ answer.id }}">
-                                        <input type="number" required class="form-control input_number" max="100"
-                                               name="question[{{ question.id }}]['answer'][{{ answer.id }}]"
-                                               placeholder="Введите максильную оценку"
-                                               value="{{ question.answers.last.title }}">
-                                        <br>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                {% endfor %}
-                <br>
-                <div class="d-flex mt-3">
-                    <button class="btn btn-success" id="add_question">Добавить вопрос</button>
-                </div>
-                <br>
                 <br>
                 <div class="d-flex mt-3">
                     <a href="{% url 'adminer:pattern' %}" type="submit" class="btn btn-secondary"
@@ -93,6 +30,8 @@
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </div>
             </form>
+            <br>
+            <br>
         </div>
         <div class="mx-auto block-window"></div>
     </div>
