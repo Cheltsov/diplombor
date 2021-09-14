@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap');
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+.head-form {
+    margin-top: 20px;
+    background-color: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    padding: 24px;
+    padding-top: 22px;
+    position: relative;
+    width: 700px;
+    height: 147px;
+}
+
+.color-line {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    height: 10px;
+    width: calc(100% + 2px);
+    background-color: rgb(103, 58, 183);
+    color: rgba(255, 255, 255, 1);
+    left: -1px;
+    position: absolute;
+    top: -1px;
+}
+
+.question {
+    font-size: 16px;
+    letter-spacing: .1px;
+    line-height: 24px;
+    color: #202124;
+    font-weight: 400;
+}
+
+.btn-secondary {
+    background-color: rgb(103, 58, 183);
+}
+
+.clear-form {
+    color: rgb(103, 58, 183);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .25px;
+    line-height: 36px;
+    text-decoration: none;
+    text-transform: none;
+    min-width: auto;
+    outline: none;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+}

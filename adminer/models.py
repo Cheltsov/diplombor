@@ -96,3 +96,18 @@ class CategoryPolls(models.Model):
     class Meta:
         managed = True
         db_table = 'category_polls'
+
+
+class UserAnswer(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_polls = models.ForeignKey(Polls, on_delete=models.SET_NULL, default="", null=True)
+    id_question = models.ForeignKey(Question, on_delete=models.SET_NULL, default="", null=True)
+    id_answer = models.ForeignKey(Answer, on_delete=models.SET_NULL, default="", null=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
+    date_updated = models.DateTimeField(auto_now=True, db_index=True, null=True)
+    ip = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'user_answer'
+
