@@ -36,8 +36,7 @@
                         <td class="text-center">{{ category.date_created|date:'Y-m-d H:i'}}</td>
                         <td class="text-center">{{ category.date_updated|date:'Y-m-d H:i' }}</td>
                         <td>
-                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-warning" title="Изменить"><i
-                                    class="fas fa-edit"></i></a>
+                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-warning" title="Изменить"><i class="fas fa-pencil-alt"></i></a>
                             <a href="/admin/category/delete/{{ category.id }}" type="button" title="Удалить"
                                class="btn btn-danger delete_category"><i class="far fa-trash-alt"></i></a>
                         </td>
