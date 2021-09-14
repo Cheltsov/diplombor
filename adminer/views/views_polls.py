@@ -9,9 +9,9 @@ from adminer.models import *
 def polls(request):
     if 'admin' in request.session:
         content = {
-            "polls": Polls.objects.all().order_by('-date_updated'),
-            "polls_start": [],
-            "polls_end": [],
+            "polls": Polls.objects.filter(date_start__isnull=True, date_end__isnull=True).order_by('-date_updated'),
+            "polls_start": Polls.objects.filter(date_start__isnull=False, date_end__isnull=True).order_by('-date_updated'),
+            "polls_end": Polls.objects.filter(date_start__isnull=True, date_end__isnull=True).order_by('-date_updated'),
         }
         return render(request, 'adminer/polls/polls.html', content)
     else:

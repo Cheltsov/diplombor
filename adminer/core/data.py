@@ -54,3 +54,16 @@ def createJsonPattern(patterns):
         })
     return pattern_json
 
+
+def createJsonPolls(polls):
+    polls_json = []
+    for poll in polls:
+        polls_json.append({
+            "id": poll.id,
+            "title": poll.title,
+            "description": poll.description,
+            "questions": createJsonQuestion(poll.question_set.all(), True)
+        })
+    return polls_json
+
+

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_cleanup',
     'adminer.apps.AdminerConfig',
+    'mathfilters'
 ]
 
 MIDDLEWARE = [

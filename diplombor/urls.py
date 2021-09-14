@@ -7,5 +7,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', include("adminer.urls")),
+    path('polls/<int:id>/', include("user.urls")),
     path('', include("auth.urls")),
 ]
