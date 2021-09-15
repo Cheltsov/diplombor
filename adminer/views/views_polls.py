@@ -1,4 +1,6 @@
-from django.http import HttpResponse
+import datetime
+
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 
 from adminer.core.data import *
@@ -11,7 +13,7 @@ def polls(request):
         content = {
             "polls": Polls.objects.filter(date_start__isnull=True, date_end__isnull=True).order_by('-date_updated'),
             "polls_start": Polls.objects.filter(date_start__isnull=False, date_end__isnull=True).order_by('-date_updated'),
-            "polls_end": Polls.objects.filter(date_start__isnull=True, date_end__isnull=True).order_by('-date_updated'),
+            "polls_end": Polls.objects.filter(date_start__isnull=False, date_end__isnull=False).order_by('-date_updated'),
         }
         return render(request, 'adminer/polls/polls.html', content)
     else:
@@ -82,10 +84,48 @@ def polls_delete(request, id):
 def polls_copy(request, id):
     if 'admin' in request.session and id:
         obj = Polls.objects.get(id=id)
-        obj.pk = None
         obj.title = obj.title + " - Копия"
-        obj.save()
+        obj.copy()
         return redirect('adminer:polls')
     else:
         return redirect('auth:auth')
 
+
+def polls_show(request, id):
+    if 'admin' in request.session and id:
+        if Polls.objects.filter(id=id).exists():
+            list_category_id = []
+            poll = Polls.objects.get(id=id)
+            categories = poll.categorypolls_set.all()
+            for item_category in categories:
+                list_category_id.append(item_category.id_category_id)
+            list_question = createJsonQuestion(Question.objects.filter(id_category_id__in=list_category_id))
+            content = {
+                'poll': createJsonPolls([poll])[0],
+                'categories_question': list_question
+            }
+            return render(request, 'adminer/polls/polls_show.html', content)
+        else:
+            return HttpResponseNotFound('<h1>Page not found</h1>')
+    else:
+        return redirect('auth:auth')
+
+
+def polls_start(request, id):
+    if 'admin' in request.session and id:
+        poll = Polls.objects.get(id=id)
+        poll.date_start = datetime.datetime.now()
+        poll.save()
+        return HttpResponse('true')
+    else:
+        return redirect('auth:auth')
+
+
+def polls_end(request, id):
+    if 'admin' in request.session and id:
+        poll = Polls.objects.get(id=id)
+        poll.date_end = datetime.datetime.now()
+        poll.save()
+        return HttpResponse('true')
+    else:
+        return redirect('auth:auth')

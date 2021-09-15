@@ -58,11 +58,23 @@ def createJsonPattern(patterns):
 def createJsonPolls(polls):
     polls_json = []
     for poll in polls:
+        status = "Не начат"
+        if poll.date_start and poll.date_end:
+            status = "Завершен"
+        elif poll.date_start and not poll.date_end:
+            status = "Начат"
+
         polls_json.append({
             "id": poll.id,
             "title": poll.title,
             "description": poll.description,
-            "questions": createJsonQuestion(poll.question_set.all(), True)
+            "questions": createJsonQuestion(poll.question_set.all(), True),
+            "date_start": poll.date_start,
+            "date_end": poll.date_end,
+            "date_created": poll.date_created,
+            "date_updated": poll.date_updated,
+            "status": status,
+            "answer_user": poll.useranswer_set.count()
         })
     return polls_json
 

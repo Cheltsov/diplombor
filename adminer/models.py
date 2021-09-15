@@ -28,6 +28,28 @@ class Polls(models.Model):
     def get_category_id(self):
         return self.categorypolls_set.all().values_list('id_category_id', flat=True)
 
+    def copy(self):
+        questions = self.question_set.all()
+        categories = self.categorypolls_set.all()
+        obj = Polls(title=self.title, description=self.description)
+        obj.save()
+        for item_question in questions:
+            answers = item_question.answer_set.all()
+            obj_question = Question(
+                title=item_question.title,
+                id_pattern_id=item_question.id_pattern_id,
+                id_category_id=item_question.id_category_id,
+                id_polls_id=obj.id,
+                is_verbal=item_question.is_verbal)
+            obj_question.save()
+            for item_answer in answers:
+                obj_answer = Answer(title=item_answer.title, cost=item_answer.cost, id_question_id=obj_question.id)
+                obj_answer.save()
+
+        for item_category in categories:
+            obj_categories = CategoryPolls(id_category_id=item_category.id_category_id, id_polls_id=obj.id)
+            obj_categories.save()
+
     class Meta:
         managed = True
         db_table = 'polls'

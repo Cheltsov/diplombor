@@ -1,17 +1,26 @@
 from django.http import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
 
-from adminer.core.data import createJsonPolls, getPostJson
-from adminer.models import Polls, UserAnswer
+from adminer.core.data import createJsonPolls, getPostJson, createJsonQuestion
+from adminer.models import Polls, UserAnswer, Question
 
 
 def index(request, id):
     if Polls.objects.filter(id=id, date_start__isnull=False, date_end__isnull=True).exists():
-        polls = [Polls.objects.get(id=id)]
+        poll = Polls.objects.get(id=id)
+
+        list_category_id = []
+        categories = poll.categorypolls_set.all()
+        for item_category in categories:
+            list_category_id.append(item_category.id_category_id)
+
+        list_question = createJsonQuestion(Question.objects.filter(id_category_id__in=list_category_id))
+
         content = {
-            'polls': createJsonPolls(polls)
+            'poll': createJsonPolls([poll])[0],
+            'categories_question': list_question
         }
-        return render(request, 'user/index.html', content)
+        return render(request, 'user/base.html', content)
     else:
         return HttpResponseNotFound('<h1>Page not found</h1>')
 

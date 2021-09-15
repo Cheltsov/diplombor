@@ -1,29 +1,20 @@
 {% load mathfilters %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Опрос #{{ polls.0.id }}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="{% static 'user/css/main.css' %}">
-</head>
-<body style="background-color: #F0EBF8">
+<link rel="stylesheet" href="{% static 'user/css/main.css' %}">
 
-<div class="d-flex">
-    <div class="mx-auto">
-        <div class="head-form">
-            <div class="color-line"></div>
-            <h1 style="color: black;">{{ polls.0.title }}</h1>
-            <p>{{ polls.0.description }}</p>
-        </div>
-        <form url="{% url 'user:create_user_answer' polls.0.id %}" method="post" id="form_answer">
-            {% csrf_token %}
-            {% for question in polls.0.questions %}
-                <div class="head-form">
-                    <p class="question">{{ question.title }}</p>
-                    {% if question.is_verbal %}
+<div style="background-color: #F0EBF8">
+    <div class="d-flex">
+        <div class="mx-auto">
+            <div class="head-form">
+                <div class="color-line"></div>
+                <h1 style="color: black;">{{ poll.title }}</h1>
+                <p>{{ poll.description }}</p>
+            </div>
+            <form url="{% url 'user:create_user_answer' poll.id %}" method="post" id="form_answer">
+                {% csrf_token %}
+                {% for question in categories_question %}
+                    <div class="head-form">
+                        <p class="question">{{ question.title }}</p>
                         <div class="form-group">
                             <select class="form-select" data-question="{{ question.id }}">
                                 {% for answer in question.answers %}
@@ -31,28 +22,37 @@
                                 {% endfor %}
                             </select>
                         </div>
-                    {% else %}
-                        <div class="form-group">
-                            Ответ: <span class="number_range"></span>
-                            <input type="range" class="form-range customRange2" min="1" data-question="{{ question.id }}"
-                                   max="{% with question.answers|last as last %}{{ last.title }}{% endwith %}">
-                        </div>
-                    {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% for question in poll.questions %}
+                    <div class="head-form">
+                        <p class="question">{{ question.title }}</p>
+                        {% if question.is_verbal %}
+                            <div class="form-group">
+                                <select class="form-select" data-question="{{ question.id }}">
+                                    {% for answer in question.answers %}
+                                        <option value="{{ answer.id }}">{{ answer.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                Ответ: <span class="number_range"></span>
+                                <input type="range" class="form-range customRange2" min="1"
+                                       data-question="{{ question.id }}"
+                                       max="{% with question.answers|last as last %}{{ last.title }}{% endwith %}">
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <br>
+                <div class="d-flex justify-content-between align-items-center block_btn_send_form">
+                    <button type="submit" class="btn btn-secondary">Отправить</button>
+                    <a href="" class="clear-form">Очистить форму</a>
                 </div>
-            {% endfor %}
-            <br>
-            <div class="d-flex justify-content-between align-items-center">
-                <button type="submit" class="btn btn-secondary">Отправить</button>
-                <a href="" class="clear-form">Очистить форму</a>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-
-<!-- MDB -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="{% static 'user/js/main.js' %}"></script>
-</body>
-</html>

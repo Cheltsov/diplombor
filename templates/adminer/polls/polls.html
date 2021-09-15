@@ -54,7 +54,7 @@
                         {% for poll in polls %}
                             <tr>
                                 <th scope="row">{{ poll.id }}</th>
-                                <td class="text-center">{{ poll.title }}</td>
+                                <td class="text-center"><a href="{% url "adminer:polls_show" poll.id %}">{{ poll.title }}</a></td>
                                 <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i' }}</td>
                                 <td class="text-center">{{ poll.date_updated|date:'Y-m-d H:i' }}</td>
                                 <td>
@@ -101,7 +101,7 @@
                         {% for poll in polls_start %}
                             <tr>
                                 <th scope="row">{{ poll.id }}</th>
-                                <td class="text-center">{{ poll.title }}</td>
+                                <td class="text-center"><a href="{% url "adminer:polls_show" poll.id %}">{{ poll.title }}</a></td>
                                 <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i' }}</td>
                                 <td class="text-center">{{ poll.date_updated|date:'Y-m-d H:i' }}</td>
                                 <td>
@@ -148,7 +148,7 @@
                         {% for poll in polls_end %}
                             <tr>
                                 <th scope="row">{{ poll.id }}</th>
-                                <td class="text-center">{{ poll.title }}</td>
+                                <td class="text-center"><a href="{% url "adminer:polls_show" poll.id %}">{{ poll.title }}</a></td>
                                 <td class="text-center">{{ poll.date_created|date:'Y-m-d H:i' }}</td>
                                 <td class="text-center">{{ poll.date_updated|date:'Y-m-d H:i' }}</td>
                                 <td>
