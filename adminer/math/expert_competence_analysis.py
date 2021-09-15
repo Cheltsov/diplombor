@@ -128,4 +128,18 @@ def mainer():
     print(np.array(list_q))
     print(np.array(list_q))
 
+    list_qmin = []
+    for item in range(0, len(experts)):
+        sum_q = 0
+
+        q_line1 = list_q[item]
+        q_line2 = list_q[(item + 1) % len(experts)]
+
+        for i in range(len(q_line1)):
+            qsum1 = q_line1[i]
+            qsum2 = q_line2[i]
+            qmin = abs(qsum1 - qsum2)
+            sum_q = sum_q + qmin
+        list_qmin.append(sum_q)
+    print(list_qmin)
     exit()
