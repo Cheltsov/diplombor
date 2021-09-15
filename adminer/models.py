@@ -127,7 +127,8 @@ class UserAnswer(models.Model):
     id_answer = models.ForeignKey(Answer, on_delete=models.SET_NULL, default="", null=True)
     date_created = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
     date_updated = models.DateTimeField(auto_now=True, db_index=True, null=True)
-    ip = models.CharField(max_length=100, blank=True, null=True)
+    user = models.CharField(max_length=100, blank=True, null=True)
+    is_category = models.BooleanField(blank=True, null=False, default=False)
 
     class Meta:
         managed = True

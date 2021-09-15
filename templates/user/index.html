@@ -16,7 +16,7 @@
                     <div class="head-form">
                         <p class="question">{{ question.title }}</p>
                         <div class="form-group">
-                            <select class="form-select" data-question="{{ question.id }}">
+                            <select class="form-select" data-question="{{ question.id }}" data-category="1">
                                 {% for answer in question.answers %}
                                     <option value="{{ answer.id }}">{{ answer.title }}</option>
                                 {% endfor %}
@@ -30,7 +30,7 @@
                         <p class="question">{{ question.title }}</p>
                         {% if question.is_verbal %}
                             <div class="form-group">
-                                <select class="form-select" data-question="{{ question.id }}">
+                                <select class="form-select" data-question="{{ question.id }}" data-category="0">
                                     {% for answer in question.answers %}
                                         <option value="{{ answer.id }}">{{ answer.title }}</option>
                                     {% endfor %}
@@ -40,7 +40,7 @@
                             <div class="form-group">
                                 Ответ: <span class="number_range"></span>
                                 <input type="range" class="form-range customRange2" min="1"
-                                       data-question="{{ question.id }}"
+                                       data-question="{{ question.id }}" data-category="0" data-id-first="{% with question.answers|first as first %}{{ first.id }}{% endwith %}"
                                        max="{% with question.answers|last as last %}{{ last.title }}{% endwith %}">
                             </div>
                         {% endif %}

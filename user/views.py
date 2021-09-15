@@ -4,6 +4,8 @@ from django.shortcuts import render
 from adminer.core.data import createJsonPolls, getPostJson, createJsonQuestion
 from adminer.models import Polls, UserAnswer, Question
 
+from adminer.math.expert_competence_analysis import mainer
+
 
 def index(request, id):
     if Polls.objects.filter(id=id, date_start__isnull=False, date_end__isnull=True).exists():
@@ -34,8 +36,14 @@ def create_user_answer(request, id):
             list_user_answer.append(UserAnswer(id_polls_id=id,
                                                id_question_id=item['id_question'],
                                                id_answer_id=item['id_answer'],
-                                               ip=item['ip']))
+                                               user=item['user'],
+                                               is_category=item['is_category']))
         if UserAnswer.objects.bulk_create(list_user_answer):
             response = 'true'
         return HttpResponse(response)
     return HttpResponseNotFound('<h1>Page not found</h1>')
+
+
+def main(request):
+    mainer()
+    return HttpResponse('true')
