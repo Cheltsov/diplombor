@@ -62,7 +62,6 @@ def getM(listSum, listS1):
     for item in range(len(listSum)):
         mo = mo + (listSum[item] * listS1[item])
     return mo
-    # return np.sum(listS1 * listSum)
 
 
 def getAnswerByUser(id_poll, user):
