@@ -6,6 +6,12 @@ class Math:
     answerRowByIdQuestion = []
     listExperts = []
 
+    list_m = []
+    list_q = []
+    list_s = []
+    rank_q = []
+    list_max = []
+
     def __init__(self, id_poll):
         self.id_poll = id_poll
         self.questions = UserAnswer.objects.filter(id_polls_id=id_poll, is_category=False).values(

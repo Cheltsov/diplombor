@@ -4,8 +4,8 @@ from django.shortcuts import render
 from adminer.core.data import createJsonPolls, getPostJson, createJsonQuestion
 from adminer.models import Polls, UserAnswer, Question
 
-#from adminer.math.expert_competence_analysis import mainer
-from adminer.math.count_experts import mainer
+from adminer.math.expert_competence_analysis import mainer
+#from adminer.math.count_experts import mainer
 
 
 def index(request, id):

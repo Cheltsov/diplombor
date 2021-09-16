@@ -6,10 +6,6 @@ from adminer.models import *
 
 
 class CompetenceExpert(Math):
-    list_m = []
-    list_q = []
-    list_s = []
-    rank_q = []
 
     def getSumAnswer(self):
         list_sum_question = []
@@ -124,3 +120,12 @@ class CompetenceExpert(Math):
             list_qmin.append(sum_q)
 
         self.rank_q = scipy.stats.rankdata(self.list_q[-1])
+
+    def getMark(self):
+        rezult = []
+        for question in self.questions:
+            sum_answer = 0
+            for i, answer in enumerate(self.getUserAnswersRow(id_question=question['id_question_id'])):
+                sum_answer = sum_answer + self.floatCost(answer.id_answer.cost) * self.list_q[-1][i]
+            rezult.append(sum_answer)
+        return np.array(rezult)

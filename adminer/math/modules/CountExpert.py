@@ -8,7 +8,7 @@ class CountExpert(Math):
     p = 0.05
     E = 0.05
     cheb = (1 - p) * E * E
-    list_max = []
+
 
     def getQ(self):
         # Получить всех экспертов
