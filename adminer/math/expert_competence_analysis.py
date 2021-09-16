@@ -1,4 +1,7 @@
 import numpy as np
+import scipy.stats
+import scipy.stats as ss
+import pandas as pd
 from adminer.models import *
 
 
@@ -116,24 +119,30 @@ def mainer():
     experts = UserAnswer.objects.filter(id_polls_id=31).values('user').distinct()
 
     list_m = []
-    list_q = []
+    list_q = [[
+        getCompetencyRatio(7),
+        getCompetencyRatio(7),
+        getCompetencyRatio(7),
+        getCompetencyRatio(7),
+        getCompetencyRatio(7)
+    ]]
     list_s = []
 
-    for expert in range(len(experts)+1):
+    for expert in range(len(experts) + 1):
         m, array_q1, array_s = getArrQ(experts=experts, array_sum=array_sum, array_s1=array_s)
         list_m.append(m)
         list_q.append(array_q1)
         list_s.append(array_s)
     print(np.array(list_m))
     print(np.array(list_q))
-    print(np.array(list_q))
+    print(np.array(list_s))
 
     list_qmin = []
-    for item in range(0, len(experts)):
+    for item in range(1, len(experts) + 1):
         sum_q = 0
 
         q_line1 = list_q[item]
-        q_line2 = list_q[(item + 1) % len(experts)]
+        q_line2 = list_q[(item - 1)]
 
         for i in range(len(q_line1)):
             qsum1 = q_line1[i]
@@ -141,5 +150,7 @@ def mainer():
             qmin = abs(qsum1 - qsum2)
             sum_q = sum_q + qmin
         list_qmin.append(sum_q)
-    print(list_qmin)
+
+    rank_q = scipy.stats.rankdata(list_q[-1])
+
     exit()
