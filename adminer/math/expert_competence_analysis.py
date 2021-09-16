@@ -47,9 +47,9 @@ def getS1Answer(id_poll):
     questions = UserAnswer.objects.filter(id_polls_id=id_poll, is_category=False).values('id_question_id').distinct()
     for question in questions:
         s1 = 0
-        if UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=31,
+        if UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=id_poll,
                                      is_category=False).exists():
-            list_user_answer = UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=31,
+            list_user_answer = UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=id_poll,
                                                          is_category=False)
             for user_answer in list_user_answer:
                 e1 = floatCost(user_answer.id_answer.cost)
@@ -84,9 +84,9 @@ def getSAnswer(id_poll, listQ1):
     for question in questions:
         list_e1 = []
         sl_list = []
-        if UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=31,
+        if UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=id_poll,
                                      is_category=False).exists():
-            list_user_answer = UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=31,
+            list_user_answer = UserAnswer.objects.filter(id_question_id=question['id_question_id'], id_polls_id=id_poll,
                                                          is_category=False)
             for user_answer in list_user_answer:
                 e1 = floatCost(user_answer.id_answer.cost)
