@@ -118,11 +118,11 @@ def mainer():
 
     list_m = []
     list_q = [[
-        getCompetencyRatio(7),
-        getCompetencyRatio(7),
-        getCompetencyRatio(7),
-        getCompetencyRatio(7),
-        getCompetencyRatio(7)
+        getCompetencyRatio(len(experts)),
+        getCompetencyRatio(len(experts)),
+        getCompetencyRatio(len(experts)),
+        getCompetencyRatio(len(experts)),
+        getCompetencyRatio(len(experts))
     ]]
     list_s = []
 
