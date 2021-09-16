@@ -8,6 +8,7 @@ class CountExpert(Math):
     p = 0.05
     E = 0.05
     cheb = (1 - p) * E * E
+    list_max = []
 
     def getQ(self):
         # Получить всех экспертов
@@ -29,8 +30,7 @@ class CountExpert(Math):
         matrix = np.array(list_oo)
         new_matrix = matrix.swapaxes(0, 1)
 
-        list_max = []
         for item in new_matrix:
-            list_max.append(max(item))
+            self.list_max.append(max(item))
 
-        return list_max
+        return self.list_max

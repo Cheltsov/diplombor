@@ -66,7 +66,6 @@ class CompetenceExpert(Math):
         questions = self.questions
         for question in questions:
             list_e1 = []
-            sl_list = []
             list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'])
             for user_answer in list_user_answer:
                 e1 = self.floatCost(user_answer.id_answer.cost)
