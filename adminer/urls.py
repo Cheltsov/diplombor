@@ -3,6 +3,7 @@ from . import views
 
 app_name = "adminer"
 urlpatterns = [
+    path('polls/statistic/<int:id>/', views.polls_stat, name='polls_stat'),
     path('polls/start/<int:id>/', views.polls_start, name='polls_start'),
     path('polls/end/<int:id>/', views.polls_end, name='polls_end'),
     path('polls/show/<int:id>/', views.polls_show, name='polls_show'),

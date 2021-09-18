@@ -83,7 +83,7 @@ class CompetenceExpert(Math):
 
     def main(self):
         # Вывод входных данных
-        list_cost = self.getMatr()
+        self.list_cost = self.getMatr()
 
         array_sum = np.array(self.getSumAnswer())
         array_s = np.array(self.getS1Answer())
@@ -113,10 +113,11 @@ class CompetenceExpert(Math):
             q_line2 = self.list_q[(item - 1)]
 
             for i in range(len(q_line1)):
-                qsum1 = q_line1[i]
-                qsum2 = q_line2[i]
-                qmin = abs(qsum1 - qsum2)
-                sum_q = sum_q + qmin
+                if len(q_line1) > i and len(q_line2) > i:
+                    qsum1 = q_line1[i]
+                    qsum2 = q_line2[i]
+                    qmin = abs(qsum1 - qsum2)
+                    sum_q = sum_q + qmin
             list_qmin.append(sum_q)
 
         self.rank_q = scipy.stats.rankdata(self.list_q[-1])

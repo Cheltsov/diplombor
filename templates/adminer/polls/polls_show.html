@@ -20,7 +20,7 @@
             <button class="btn btn-danger" id="end_poll" data-id="{{ poll.id }}">Завершить</button>
         {% endif %}
         {% if poll.date_start %}
-            <button class="btn btn-warning">Статистика</button>
+            <button class="btn btn-warning btn_go_stat" data-url="{% url 'adminer:polls_stat' poll.id %}">Статистика</button>
         {% endif %}
     </div>
     <div class="mx-auto block-info head-form">
@@ -42,6 +42,14 @@
 
     {% include "user/index.html" with poll=poll %}
 
+    <script>
+        $(document).ready(function () {
+            $('.nav-item').removeClass('active');
+            $('.nav-item').each(function () {
+                if ($(this).attr('data-name') === "polls") $(this).addClass('active')
+            });
+        });
+    </script>
     <script>
         $(document).ready(function(){
             $(".block_btn_send_form").removeClass('d-flex');
@@ -70,6 +78,10 @@
                         }
                     }
                 });
+            });
+
+            $('.btn_go_stat').click(function(){
+               window.location.href = $(this).attr('data-url');
             });
         });
     </script>

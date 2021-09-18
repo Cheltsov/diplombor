@@ -1,10 +1,12 @@
 import datetime
 
+import numpy as np
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect
 
 from adminer.core.data import *
 from adminer.core.query import *
+from adminer.math.modules.CompetenceExpert import CompetenceExpert
 from adminer.models import *
 
 
@@ -127,5 +129,31 @@ def polls_end(request, id):
         poll.date_end = datetime.datetime.now()
         poll.save()
         return HttpResponse('true')
+    else:
+        return redirect('auth:auth')
+
+
+def polls_stat(request, id):
+    if 'admin' in request.session and id:
+        poll = Polls.objects.get(id=id)
+
+        obj_competence_expert = CompetenceExpert(id_poll=id)
+        obj_competence_expert.main()
+        list_math_1 = [{
+            "list_m": np.array(obj_competence_expert.list_m),
+            "list_q": np.array(obj_competence_expert.list_q),
+            "list_s": np.array(obj_competence_expert.list_s),
+            "list_rank": np.array(obj_competence_expert.rank_q),
+            "list_cost": obj_competence_expert.list_cost,
+        }]
+
+        list_math_3 = obj_competence_expert.getMark()
+
+        content = {
+            "poll": poll,
+            "list_math_1": list_math_1,
+            "list_math_3": list_math_3,
+        }
+        return render(request, 'adminer/polls/polls_statistic.html', content)
     else:
         return redirect('auth:auth')

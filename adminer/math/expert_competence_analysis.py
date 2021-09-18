@@ -10,6 +10,7 @@ def mainer():
     list_q = np.array(r.list_q)
     list_s = np.array(r.list_s)
     list_rank = np.array(r.rank_q)
+    list_cost = r.list_cost
 
     l = r.getMark()
     exit()

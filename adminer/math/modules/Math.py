@@ -11,6 +11,7 @@ class Math:
     list_s = []
     rank_q = []
     list_max = []
+    list_cost = []
 
     def __init__(self, id_poll):
         self.id_poll = id_poll
