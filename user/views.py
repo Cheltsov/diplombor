@@ -2,7 +2,7 @@ from django.http import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
 
 from adminer.core.data import createJsonPolls, getPostJson, createJsonQuestion
-from adminer.models import Polls, UserAnswer, Question
+from adminer.models import Polls, UserAnswer, Question, Answer
 
 from adminer.math.expert_competence_analysis import mainer
 #from adminer.math.count_experts import mainer
@@ -34,11 +34,14 @@ def create_user_answer(request, id):
         request_user_answer = getPostJson(request, 'getdata')
         list_user_answer = []
         for item in request_user_answer:
+            answer = Answer.objects.get(id=item['id_answer'])
             list_user_answer.append(UserAnswer(id_polls_id=id,
                                                id_question_id=item['id_question'],
                                                id_answer_id=item['id_answer'],
                                                user=item['user'],
-                                               is_category=item['is_category']))
+                                               is_category=item['is_category'],
+                                               id_category_id=item['id_category'],
+                                               answer_cost=answer.cost/100))
         if UserAnswer.objects.bulk_create(list_user_answer):
             response = 'true'
         return HttpResponse(response)

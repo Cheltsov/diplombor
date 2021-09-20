@@ -11,7 +11,7 @@ class CompetenceExpert(Math):
         list_sum_question = []
         for question in self.questions:
             sum_question = 0
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'])
+            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
             for user_answer in list_user_answer:
                 e1 = self.floatCost(user_answer.id_answer.cost)
                 sum_question = round((sum_question + e1), 2)
@@ -20,7 +20,7 @@ class CompetenceExpert(Math):
 
     def getAnswerByQuestion(self, id_question):
         list_answer_cost = []
-        list_user_answer = self.getUserAnswersRow(id_question)
+        list_user_answer = self.getUserAnswersRow(id_question=id_question, id_category=self.id_category)
         for user_answer in list_user_answer:
             e1 = self.floatCost(user_answer.id_answer.cost)
             list_answer_cost.append(e1)
@@ -31,7 +31,7 @@ class CompetenceExpert(Math):
         questions = self.questions
         for question in questions:
             s1 = 0
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'])
+            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
             for user_answer in list_user_answer:
                 e1 = self.floatCost(user_answer.id_answer.cost)
                 s1 = round((s1 + (e1 / len(list_user_answer))), 2)
@@ -47,10 +47,16 @@ class CompetenceExpert(Math):
 
     def getAnswerByUser(self, user):
         list_answer = []
-        if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False).exists():
-            user_answers = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False)
-            for user_answer in user_answers:
-                list_answer.append(self.floatCost(user_answer.id_answer.cost))
+        if self.id_category:
+            if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category=self.id_category).exists():
+                user_answers = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category=self.id_category)
+                for user_answer in user_answers:
+                    list_answer.append(self.floatCost(user_answer.id_answer.cost))
+        else:
+            if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False).exists():
+                user_answers = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False)
+                for user_answer in user_answers:
+                    list_answer.append(self.floatCost(user_answer.id_answer.cost))
         return list_answer
 
     @staticmethod
@@ -62,7 +68,7 @@ class CompetenceExpert(Math):
         questions = self.questions
         for question in questions:
             list_e1 = []
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'])
+            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
             for user_answer in list_user_answer:
                 e1 = self.floatCost(user_answer.id_answer.cost)
                 list_e1.append(e1)
@@ -87,6 +93,7 @@ class CompetenceExpert(Math):
 
         array_sum = np.array(self.getSumAnswer())
         array_s = np.array(self.getS1Answer())
+        list_s1 = array_s
 
         # Получить всех экспертов
         experts = self.getExperts()
@@ -122,11 +129,14 @@ class CompetenceExpert(Math):
 
         self.rank_q = scipy.stats.rankdata(self.list_q[-1])
 
+        list_s6 = self.getSAnswer(self.list_q[-1])
+        return list_s1, list_s6
+
     def getMark(self):
         rezult = []
         for question in self.questions:
             sum_answer = 0
             for i, answer in enumerate(self.getUserAnswersRow(id_question=question['id_question_id'])):
-                sum_answer = sum_answer + self.floatCost(answer.id_answer.cost) * self.list_q[-1][i]
+                sum_answer = sum_answer + (self.floatCost(answer.id_answer.cost) * self.list_q[-1][i])
             rezult.append(sum_answer)
         return np.array(rezult)

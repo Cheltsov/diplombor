@@ -31,7 +31,7 @@ class Polls(models.Model):
     def copy(self):
         questions = self.question_set.all()
         categories = self.categorypolls_set.all()
-        obj = Polls(title=self.title, description=self.description)
+        obj = Polls(title=self.title, description=self.description, date_start=None, date_end=None)
         obj.save()
         for item_question in questions:
             answers = item_question.answer_set.all()
@@ -129,6 +129,8 @@ class UserAnswer(models.Model):
     date_updated = models.DateTimeField(auto_now=True, db_index=True, null=True)
     user = models.CharField(max_length=100, blank=True, null=True)
     is_category = models.BooleanField(blank=True, null=False, default=False)
+    id_category = models.ForeignKey(Category, on_delete=models.SET_NULL, default="", null=True)
+    answer_cost = models.FloatField(max_length=20, null=True)
 
     class Meta:
         managed = True

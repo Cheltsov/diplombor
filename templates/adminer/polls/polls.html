@@ -108,10 +108,10 @@
                                     <a href="/admin/polls/copy/{{ poll.id }}" type="button" class="btn btn-primary"
                                        title="Копировать"><i
                                             class="far fa-copy"></i></a>
-                                    <a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"
+                                    {% comment %}<a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"
                                        title="Изменить"><i class="fas fa-pencil-alt"></i></a>
                                     <a href="/admin/polls/delete/{{ poll.id }}" type="button" title="Удалить"
-                                       class="btn btn-danger delete_polls delete_polls"><i class="far fa-trash-alt"></i></a>
+                                       class="btn btn-danger delete_polls delete_polls"><i class="far fa-trash-alt"></i></a>{% endcomment %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -152,8 +152,8 @@
                                     <a href="/admin/polls/copy/{{ poll.id }}" type="button" class="btn btn-primary"
                                        title="Копировать"><i
                                             class="far fa-copy"></i></a>
-                                    <a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"
-                                       title="Изменить"><i class="fas fa-pencil-alt"></i></a>
+                                    {% comment %}<a href="/admin/polls/edit/{{ poll.id }}" type="button" class="btn btn-warning"
+                                       title="Изменить"><i class="fas fa-pencil-alt"></i></a>{% endcomment %}
                                     <a href="/admin/polls/delete/{{ poll.id }}" type="button" title="Удалить"
                                        class="btn btn-danger delete_polls delete_polls"><i class="far fa-trash-alt"></i></a>
                                 </td>

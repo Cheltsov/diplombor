@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from adminer.core.data import *
 from adminer.core.query import *
 from adminer.math.modules.CompetenceExpert import CompetenceExpert
+from adminer.math.modules.ConsistencyEstimates import ConsistencyEstimates
 from adminer.models import *
 
 
@@ -14,8 +15,10 @@ def polls(request):
     if 'admin' in request.session:
         content = {
             "polls": Polls.objects.filter(date_start__isnull=True, date_end__isnull=True).order_by('-date_updated'),
-            "polls_start": Polls.objects.filter(date_start__isnull=False, date_end__isnull=True).order_by('-date_updated'),
-            "polls_end": Polls.objects.filter(date_start__isnull=False, date_end__isnull=False).order_by('-date_updated'),
+            "polls_start": Polls.objects.filter(date_start__isnull=False, date_end__isnull=True).order_by(
+                '-date_updated'),
+            "polls_end": Polls.objects.filter(date_start__isnull=False, date_end__isnull=False).order_by(
+                '-date_updated'),
         }
         return render(request, 'adminer/polls/polls.html', content)
     else:
@@ -62,7 +65,8 @@ def polls_edit(request, id):
 
         content = {
             "polls": obj_polls,
-            "category_polls": createJsonCategory(Category.objects.filter(id__in=obj_polls.categorypolls_set.all().values_list('id_category_id', flat=True))),
+            "category_polls": createJsonCategory(Category.objects.filter(
+                id__in=obj_polls.categorypolls_set.all().values_list('id_category_id', flat=True))),
             "questions": createJsonQuestion(questions),
             "categories": createJsonCategory(Category.objects.all()),
             "patterns": createJsonPattern(Pattern.objects.all()),
@@ -138,21 +142,21 @@ def polls_stat(request, id):
         poll = Polls.objects.get(id=id)
 
         obj_competence_expert = CompetenceExpert(id_poll=id)
-        obj_competence_expert.main()
-        list_math_1 = [{
-            "list_m": np.array(obj_competence_expert.list_m),
-            "list_q": np.array(obj_competence_expert.list_q),
-            "list_s": np.array(obj_competence_expert.list_s),
-            "list_rank": np.array(obj_competence_expert.rank_q),
-            "list_cost": obj_competence_expert.list_cost,
-        }]
+        list_s1, list_s6 = obj_competence_expert.main()
 
-        list_math_3 = obj_competence_expert.getMark()
+        obj_ser = ConsistencyEstimates(id_poll=id)
+
+        list_math_1 = [{
+            "list_s1": np.array(list_s1),
+            "list_s6": np.array(list_s6),
+            "list_s6ch": obj_competence_expert.getMark(),
+            "word": obj_ser.math4(),
+            "coord": obj_ser.math5()
+        }]
 
         content = {
             "poll": poll,
             "list_math_1": list_math_1,
-            "list_math_3": list_math_3,
         }
         return render(request, 'adminer/polls/polls_statistic.html', content)
     else:

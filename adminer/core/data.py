@@ -18,6 +18,7 @@ def createJsonQuestion(questions, answer=False):
             "title": question.title,
             "answers": list_answer,
             "is_verbal": question.is_verbal,
+            "id_category": question.id_category_id
         })
     return ques_json
 

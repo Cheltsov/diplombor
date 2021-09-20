@@ -10,7 +10,8 @@ $(document).ready(function () {
     $('#form_answer').submit(function (e) {
         e.preventDefault();
         let data = [];
-        let ip = '';
+        let date = new Date();
+        let id_user =  date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString() + date.getHours().toString() + date.getMinutes().toString() + date.getSeconds().toString();
 
         $(this).find('select, input[type="range"]').each(function () {
             let id_answer = $(this).val();
@@ -18,11 +19,14 @@ $(document).ready(function () {
             if(typeof attr !== 'undefined' && attr !== false){
                 id_answer = parseInt($(this).attr('data-id-first')) + (parseInt($(this).val() - 1))
             }
+
+            let id_category = $('select[data-is-category="1"]').attr('data-category');
             data.push({
-                'id_question': $(this).attr('data-question'),
+                'id_question': parseInt($(this).attr('data-question')),
                 'id_answer': id_answer,
-                'user': ip,
-                'is_category': $(this).attr('data-category')
+                'user': id_user,
+                'is_category': $(this).attr('data-is-category'),
+                'id_category': id_category
             })
         });
 
