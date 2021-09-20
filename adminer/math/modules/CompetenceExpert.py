@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.stats
+import pandas as pd
 
 from adminer.math.modules.Math import Math
 from adminer.models import *
@@ -127,7 +128,8 @@ class CompetenceExpert(Math):
                     sum_q = sum_q + qmin
             list_qmin.append(sum_q)
 
-        self.rank_q = scipy.stats.rankdata(self.list_q[-1])
+        S1 = pd.Series(self.list_q[-1])
+        self.rank_q = list(S1.rank())
 
         list_s6 = self.getSAnswer(self.list_q[-1])
         return list_s1, list_s6
