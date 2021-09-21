@@ -30,4 +30,4 @@ urlpatterns = [
 
     path('exit/', views.exit, name='exit'),
     path('', views.home, name='home'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
