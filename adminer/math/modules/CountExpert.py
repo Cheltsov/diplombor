@@ -9,14 +9,17 @@ class CountExpert(Math):
     E = 0.05
     cheb = (1 - p) * E * E
 
-
-    def getQ(self):
+    def getMinCountExpert(self):
         # Получить всех экспертов
         experts = self.getExperts()
         list_oo = []
         for question in self.questions:
             list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'])
             list_cost = []
+
+            list_min_count_expert = []
+            for i in range(3, len(experts) + 1):
+                list_min_count_expert.append(i)
 
             for i in range(3, len(experts) + 1):
                 list_c = []

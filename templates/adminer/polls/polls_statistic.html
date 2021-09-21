@@ -64,24 +64,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>Показатель 1</td>
-                                <td>0.28</td>
-                                <td>0.29</td>
-                                <td>0.16</td>
-                            </tr>
-                            <tr>
-                                <td>Показатель 2</td>
-                                <td>0.28</td>
-                                <td>0.29</td>
-                                <td>0.16</td>
-                            </tr>
-                            <tr>
-                                <td>Показатель 3</td>
-                                <td>0.28</td>
-                                <td>0.29</td>
-                                <td>0.16</td>
-                            </tr>
+                            {% for item in list_q_mark %}
+                                <tr class="tr_question">
+                                    <td class="title_question">{{ item.question.title }}</td>
+                                    <td class="s1">{{ item.s1 }}</td>
+                                    <td class="s6">{{ item.s6 }}</td>
+                                    <td class="sch">{{ item.sch }}</td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -90,11 +80,11 @@
                 </div>
 
                 <div class="head-form">
-                    <h3>Согласованность оценок по шкале Харрингтона: средняя</h3>
+                    <h3>Согласованность оценок по шкале Харрингтона: <br> <span style="color: red">{{ list_math.word }}</span></h3>
                     <br>
                 </div>
                 <div class="head-form">
-                    <h3>Согласованность оценок по шкале Пирсона: Значимые</h3>
+                    <h3>Согласованность оценок по шкале Пирсона: <br><span style="color: red">{{ list_math.coord }}</span></h3>
                     <br>
                 </div>
                 <div class="head-form">
@@ -148,12 +138,17 @@
             google.charts.setOnLoadCallback(drawChart);
 
             function drawChart() {
-                let data = google.visualization.arrayToDataTable([
-                    ['Показатель', 'S1', 'S6', 'Sch'],
-                    ['Показатель 1', .28, .29, .16],
-                    ['Показатель 2', .28, .29, .16],
-                    ['Показатель 3', .28, .29, .16],
-                ]);
+
+                let data_to_tabel = [['Показатель', 'S1', 'S6', 'Sch']];
+                $('.tr_question').each(function (){
+                    let title_question = $(this).children('td.title_question').text();
+                    let s1 = $(this).children('td.s1').text();
+                    let s6 = $(this).children('td.s6').text();
+                    let sch = $(this).children('td.sch').text();
+                    data_to_tabel.push([title_question, s1, s6, sch])
+                });
+                console.log(data_to_tabel)
+                let data = google.visualization.arrayToDataTable(data_to_tabel);
 
                 let options = {
                     chart: {
@@ -176,7 +171,7 @@
 
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
-                ['Ответ1', 1],
+                ['Ответ1', 0],
                 ['Ответ2', 5],
                 ['Ответ3', 2],
                 ['Ответ4', 4],

@@ -8,6 +8,9 @@ from adminer.models import *
 
 class CompetenceExpert(Math):
 
+    list_s6 = []
+    sum_qmin = 0
+
     def getSumAnswer(self):
         list_sum_question = []
         for question in self.questions:
@@ -99,40 +102,34 @@ class CompetenceExpert(Math):
         # Получить всех экспертов
         experts = self.getExperts()
 
-        self.list_q = [[
-            self.getCompetencyRatio(len(experts)),
-            self.getCompetencyRatio(len(experts)),
-            self.getCompetencyRatio(len(experts)),
-            self.getCompetencyRatio(len(experts)),
-            self.getCompetencyRatio(len(experts))
-        ]]
-
-        for expert in range(len(experts) + 1):
+        self.list_q.append([])
+        for item in range(len(experts)):
+            self.list_q[0].append(self.getCompetencyRatio(len(experts)))
+        cont_arr = 0
+        for expert in range(1, 11):
+            cont_arr = cont_arr+1
             m, array_q1, array_s = self.getArrQ(experts=experts, array_sum=array_sum, array_s1=array_s)
             self.list_m.append(m)
             self.list_q.append(array_q1)
             self.list_s.append(array_s)
 
-        list_qmin = []
-        for item in range(1, len(experts) + 1):
             sum_q = 0
-
-            q_line1 = self.list_q[item]
-            q_line2 = self.list_q[(item - 1)]
-
+            q_line1 = self.list_q[expert]
+            q_line2 = self.list_q[expert-1]
             for i in range(len(q_line1)):
-                if len(q_line1) > i and len(q_line2) > i:
-                    qsum1 = q_line1[i]
-                    qsum2 = q_line2[i]
-                    qmin = abs(qsum1 - qsum2)
-                    sum_q = sum_q + qmin
-            list_qmin.append(sum_q)
+                qsum1 = q_line1[i]
+                qsum2 = q_line2[i]
+                qmin = abs(qsum1 - qsum2)
+                sum_q = sum_q + qmin
+            self.sum_qmin = sum_q
+            if self.sum_qmin < 0.0001:
+                break
 
         S1 = pd.Series(self.list_q[-1])
         self.rank_q = list(S1.rank())
 
-        list_s6 = self.getSAnswer(self.list_q[-1])
-        return list_s1, list_s6
+        self.list_s6 = self.getSAnswer(self.list_q[-1])
+        return list_s1, self.list_s6
 
     def getMark(self):
         rezult = []

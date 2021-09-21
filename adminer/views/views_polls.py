@@ -8,6 +8,7 @@ from adminer.core.data import *
 from adminer.core.query import *
 from adminer.math.modules.CompetenceExpert import CompetenceExpert
 from adminer.math.modules.ConsistencyEstimates import ConsistencyEstimates
+from adminer.math.modules.CountExpert import CountExpert
 from adminer.models import *
 
 
@@ -144,19 +145,33 @@ def polls_stat(request, id):
         obj_competence_expert = CompetenceExpert(id_poll=id)
         list_s1, list_s6 = obj_competence_expert.main()
 
+        rank = obj_competence_expert.rank_q
+        count_expert = CountExpert(id_poll=id)
+        min_count_expert = count_expert.getMinCountExpert()
+
         obj_ser = ConsistencyEstimates(id_poll=id)
 
-        list_math_1 = [{
+        list_math = {
             "list_s1": np.array(list_s1),
             "list_s6": np.array(list_s6),
-            "list_s6ch": obj_competence_expert.getMark(),
+            "list_sch": obj_competence_expert.getMark(),
             "word": obj_ser.math4(),
             "coord": obj_ser.math5()
-        }]
+        }
+
+        list_q_mark = []
+        for i, item in enumerate(obj_competence_expert.questions):
+            list_q_mark.append({
+                'question': Question.objects.get(id=item['id_question_id']),
+                's1': round(list_math['list_s1'][i], 2),
+                's6': round(list_math['list_s6'][i], 2),
+                'sch': round(list_math['list_sch'][i], 2),
+            })
 
         content = {
             "poll": poll,
-            "list_math_1": list_math_1,
+            "list_math": list_math,
+            "list_q_mark": list_q_mark
         }
         return render(request, 'adminer/polls/polls_statistic.html', content)
     else:

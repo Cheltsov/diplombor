@@ -25,6 +25,7 @@ class ConsistencyEstimates(Math):
     def CountingNumberRepetitions(self):
         list_answer_cost = self.RepetitionsAssessments()
         sumTi_def = 0
+        list_ex = self.getExperts()
         for user in self.getExperts():
             sum_cube = 0
             for answer_cost in list_answer_cost:
