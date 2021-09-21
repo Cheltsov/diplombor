@@ -142,6 +142,7 @@ THUMBNAIL_ALIASES = {
 
 THUMBNAIL_BASEDIR = 'thumbnails'
 
+
 import dj_database_url
 
 db_from_env = dj_database_url.config()
