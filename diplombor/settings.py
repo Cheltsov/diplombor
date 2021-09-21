@@ -139,6 +139,9 @@ THUMBNAIL_ALIASES = {
 
 THUMBNAIL_BASEDIR = 'thumbnails'
 
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
+
 
 import dj_database_url
 
