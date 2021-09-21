@@ -135,7 +135,7 @@ class CompetenceExpert(Math):
         rezult = []
         for question in self.questions:
             sum_answer = 0
-            for i, answer in enumerate(self.getUserAnswersRow(id_question=question['id_question_id'])):
+            for i, answer in enumerate(self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)):
                 sum_answer = sum_answer + (self.floatCost(answer.id_answer.cost) * self.list_q[-1][i])
             rezult.append(sum_answer)
         return np.array(rezult)

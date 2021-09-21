@@ -20,7 +20,7 @@ $(document).ready(function () {
                 id_answer = parseInt($(this).attr('data-id-first')) + (parseInt($(this).val() - 1))
             }
 
-            let id_category = $('select[data-is-category="1"]').attr('data-category');
+            let id_category = $('select[data-is-category="1"]').val();
             data.push({
                 'id_question': parseInt($(this).attr('data-question')),
                 'id_answer': id_answer,

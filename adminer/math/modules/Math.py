@@ -1,5 +1,6 @@
 from adminer.models import *
 import numpy as np
+from collections import Counter
 
 
 class Math:
@@ -79,6 +80,24 @@ class Math:
                     list_answers.append(self.floatCost(answer.id_answer.cost))
                 list_math.append(list_answers)
             list_math = np.array(list_math)
+
+        return list_math
+
+    def getMatrWord(self):
+        list_math = []
+        if self.id_category:
+            for question in self.questions:
+                list_answers = []
+                for answer in self.getUserAnswersRow(id_question=question['id_question_id'],
+                                                     id_category=self.id_category):
+                    list_answers.append(answer.id_answer.title)
+                list_math.append(Counter(list_answers))
+        else:
+            for question in self.questions:
+                list_answers = []
+                for answer in self.getUserAnswersRow(id_question=question['id_question_id']):
+                    list_answers.append(answer.id_answer.title)
+                list_math.append(Counter(list_answers))
 
         return list_math
 

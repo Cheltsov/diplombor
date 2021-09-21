@@ -29,7 +29,10 @@ class ConsistencyEstimates(Math):
         for user in self.getExperts():
             sum_cube = 0
             for answer_cost in list_answer_cost:
-                cost_expert = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user['user'], answer_cost=(answer_cost/100), is_category=False).count()
+                if self.id_category:
+                    cost_expert = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user['user'], answer_cost=(answer_cost/100), is_category=False, id_category_id=self.id_category).count()
+                else:
+                    cost_expert = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user['user'], answer_cost=(answer_cost / 100), is_category=False).count()
                 if cost_expert > 1:
                     sum_cube = sum_cube + ((math.pow(cost_expert, 3) - cost_expert) / 12)
             sumTi_def = sumTi_def + sum_cube
@@ -38,7 +41,11 @@ class ConsistencyEstimates(Math):
     def CountingRanks(self):
         list_rank = []
         for user in self.getExperts():
-            list_answer = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user['user'], is_category=False).values_list('answer_cost', flat=True)
+            if self.id_category:
+                list_answer = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user['user'],
+                                                        is_category=False, id_category_id=self.id_category).values_list('answer_cost', flat=True)
+            else:
+                list_answer = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user['user'], is_category=False).values_list('answer_cost', flat=True)
             S1 = pd.Series(list_answer)
             r = list(S1.rank())
             list_rank.append(r)

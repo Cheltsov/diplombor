@@ -1,7 +1,8 @@
 import datetime
+import pdfkit
 
 import numpy as np
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 
 from adminer.core.data import *
@@ -139,40 +140,52 @@ def polls_end(request, id):
 
 
 def polls_stat(request, id):
-    if 'admin' in request.session and id:
-        poll = Polls.objects.get(id=id)
+    poll = Polls.objects.get(id=id)
+    list_category = getCategoryInPoll(id_poll=id)
+    content = {
+        "poll": poll,
+        "list_category": list_category,
+        'id_category': int(request.GET['id_category']) if request.GET else None
+    }
+    return render(request, 'adminer/polls/polls_statistic.html', content)
 
-        obj_competence_expert = CompetenceExpert(id_poll=id)
-        list_s1, list_s6 = obj_competence_expert.main()
 
-        rank = obj_competence_expert.rank_q
-        count_expert = CountExpert(id_poll=id)
-        min_count_expert = count_expert.getMinCountExpert()
+def stat_ajax(request, id):
+    id_category = request.POST['id_category'] if int(request.POST['id_category']) > 0 else None
 
-        obj_ser = ConsistencyEstimates(id_poll=id)
+    obj_competence_expert = CompetenceExpert(id_poll=id, id_category=id_category)
+    list_s1, list_s6 = obj_competence_expert.main()
 
-        list_math = {
-            "list_s1": np.array(list_s1),
-            "list_s6": np.array(list_s6),
-            "list_sch": obj_competence_expert.getMark(),
-            "word": obj_ser.math4(),
-            "coord": obj_ser.math5()
-        }
+    rank = obj_competence_expert.rank_q
+    count_expert = CountExpert(id_poll=id, id_category=id_category)
+    min_count_expert = count_expert.getMinCountExpert()
 
-        list_q_mark = []
-        for i, item in enumerate(obj_competence_expert.questions):
-            list_q_mark.append({
-                'question': Question.objects.get(id=item['id_question_id']),
-                's1': round(list_math['list_s1'][i], 2),
-                's6': round(list_math['list_s6'][i], 2),
-                'sch': round(list_math['list_sch'][i], 2),
-            })
+    obj_ser = ConsistencyEstimates(id_poll=id, id_category=id_category)
 
-        content = {
-            "poll": poll,
-            "list_math": list_math,
-            "list_q_mark": list_q_mark
-        }
-        return render(request, 'adminer/polls/polls_statistic.html', content)
+    list_q_mark = []
+    for i, item in enumerate(obj_competence_expert.questions):
+        list_q_mark.append({
+            'question_title': Question.objects.get(id=item['id_question_id']).title,
+            's1': round(list_s1[i], 2),
+            's6': round(list_s6[i], 2),
+            'sch': round(obj_competence_expert.getMark()[i], 2),
+        })
+
+    content = {
+        "list_q_mark": list_q_mark,
+        "word": obj_ser.math4(),
+        "coord": obj_ser.math5(),
+        "count_mark": obj_competence_expert.getMatrWord()
+    }
+    return JsonResponse(content, safe=False)
+
+
+def create_pdf(request, id):
+    if int(request.POST['id_category']) > 0:
+        id_category = request.POST['id_category']
+        url = 'static/adminer/pdf/out_' + str(id) + '_category_' + str(id_category) + '.pdf'
+        pdfkit.from_url('http://127.0.0.1:8000/admin/polls/statistic/' + str(id) + '/?id_category=' + str(id_category), url)
     else:
-        return redirect('auth:auth')
+        url = 'static/adminer/pdf/out_' + str(id) + '.pdf'
+        pdfkit.from_url('http://127.0.0.1:8000/admin/polls/statistic/' + str(id) + '/', url)
+    return JsonResponse('/'+url, safe=False)

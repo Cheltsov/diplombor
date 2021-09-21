@@ -14,7 +14,7 @@ class CountExpert(Math):
         experts = self.getExperts()
         list_oo = []
         for question in self.questions:
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'])
+            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
             list_cost = []
 
             list_min_count_expert = []

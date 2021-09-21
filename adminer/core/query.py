@@ -120,3 +120,8 @@ def addCategoryInPolls(request_category, id_polls):
     except Exception as ex:
         print(ex)
         return False
+
+
+def getCategoryInPoll(id_poll):
+    list_category = UserAnswer.objects.filter(id_polls_id=id_poll, is_category=True)[0].id_question.answer_set.all()
+    return list_category
