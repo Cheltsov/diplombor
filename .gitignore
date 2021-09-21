@@ -1,2 +1,5 @@
 /static/adminer/pdf/
 /venv/
+__pychache__/
+*.pyc
+db.sqlite3
