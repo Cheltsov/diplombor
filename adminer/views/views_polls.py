@@ -181,11 +181,14 @@ def stat_ajax(request, id):
 
 
 def create_pdf(request, id):
+    scheme = request.is_secure() and "https" or "http"
+    url_site = f'{scheme}://{request.get_host()}/'
+
     if int(request.POST['id_category']) > 0:
         id_category = request.POST['id_category']
         url = 'static/adminer/pdf/out_' + str(id) + '_category_' + str(id_category) + '.pdf'
-        pdfkit.from_url('http://127.0.0.1:8000/admin/polls/statistic/' + str(id) + '/?id_category=' + str(id_category), url)
+        pdfkit.from_url(str(url_site) + 'admin/polls/statistic/' + str(id) + '/?id_category=' + str(id_category), url)
     else:
         url = 'static/adminer/pdf/out_' + str(id) + '.pdf'
-        pdfkit.from_url('http://127.0.0.1:8000/admin/polls/statistic/' + str(id) + '/', url)
+        pdfkit.from_url(str(url_site)+'admin/polls/statistic/' + str(id) + '/', url)
     return JsonResponse('/'+url, safe=False)
