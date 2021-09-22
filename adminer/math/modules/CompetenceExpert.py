@@ -52,8 +52,8 @@ class CompetenceExpert(Math):
     def getAnswerByUser(self, user):
         list_answer = []
         if self.id_category:
-            if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category=self.id_category).exists():
-                user_answers = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category=self.id_category)
+            if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category_id=self.id_category).exists():
+                user_answers = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category_id=self.id_category)
                 for user_answer in user_answers:
                     list_answer.append(self.floatCost(user_answer.id_answer.cost))
         else:

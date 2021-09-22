@@ -22,7 +22,7 @@ $(document).ready(function () {
 
             let id_category = 0;
             if($('select[data-is-category="1"]').length > 0){
-                let id_category = $('select[data-is-category="1"]').val();
+                id_category = $('select[data-is-category="1"]').val();
             }
             data.push({
                 'id_question': parseInt($(this).attr('data-question')),
@@ -45,9 +45,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 console.log(response);
-                if (response == 'true') {
-                    alert('Вы прошли опрос');
-                }
+                alert('Вы прошли опрос');
             }
         });
     });
