@@ -33,7 +33,7 @@ $(document).ready(function () {
                     <td class="title_question">` + item.question_title + `</td>
                     <td class="s1">` + item.s1 + `</td>
                     <td class="s6">` + item.s6 + `</td>
-                    <td class="sch">` + item.sch + `</td>
+                    <td class="sch">` + (item.sch == 0 ? 'Недостаточно экспертов' :  item.sch) + `</td>
                 </tr>`);
         });
     }
@@ -43,7 +43,7 @@ $(document).ready(function () {
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
-            let data_to_tabel = [['Показатель', 'S1', 'S6', 'Sch']];
+            let data_to_tabel = [['Показатель', 'S1', 'S2', 'S3']];
             list_q_mark.forEach(function (item, index) {
                 data_to_tabel.push([item.question_title, item.s1, item.s6, item.sch]);
             });
@@ -76,7 +76,7 @@ $(document).ready(function () {
             data_chart.push(['Task', 'Hours per Day']);
 
             for (const [key, value] of Object.entries(item)) {
-                data_chart.push([key, value]);
+                data_chart.push(['Оценка: '+key, value]);
             }
 
             smallRenderCountMark('Ответы по показателю ' + (index + 1), 'piechart' + index, data_chart)

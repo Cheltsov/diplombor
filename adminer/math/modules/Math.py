@@ -14,6 +14,8 @@ class Math:
     list_max = []
     list_cost = []
 
+    min_count_expert = 0
+
     def __init__(self, id_poll, id_category=None):
         self.id_poll = id_poll
         self.id_category = id_category

@@ -22,11 +22,11 @@ class ConsistencyEstimates(Math):
         list_answer_cost = first_question.answer_set.order_by('id').all().values_list('cost', flat=True)
         return list_answer_cost
 
-    def CountingNumberRepetitions(self):
+    def CountingNumberRepetitions(self, min_count_expert):
         list_answer_cost = self.RepetitionsAssessments()
         sumTi_def = 0
-        list_ex = self.getExperts()
-        for user in self.getExperts():
+        list_ex = self.getExperts()[:min_count_expert]
+        for user in list_ex:
             sum_cube = 0
             for answer_cost in list_answer_cost:
                 if self.id_category:
@@ -38,9 +38,9 @@ class ConsistencyEstimates(Math):
             sumTi_def = sumTi_def + sum_cube
         self.sumTi = sumTi_def
 
-    def CountingRanks(self):
+    def CountingRanks(self, min_count_expert):
         list_rank = []
-        for user in self.getExperts():
+        for user in self.getExperts()[:min_count_expert]:
             if self.id_category:
                 list_answer = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user['user'],
                                                         is_category=False, id_category_id=self.id_category).values_list('answer_cost', flat=True)
@@ -51,28 +51,33 @@ class ConsistencyEstimates(Math):
             list_rank.append(r)
 
         matrix = np.array(list_rank)
-        matrix_rank = matrix.swapaxes(0, 1)
 
-        list_question_sum_rank = []
-        all_sum_rank = 0
-        for item_rank in matrix_rank:
-            sum_rank = 0
-            for rank in item_rank:
-                sum_rank = sum_rank + rank
-            list_question_sum_rank.append(sum_rank)
-            all_sum_rank = all_sum_rank + sum_rank
+        if len(matrix) < 1:
+            self.W = 0
+            return self.W
+        else:
+            matrix_rank = matrix.swapaxes(0, 1)
 
-        middle_rank = all_sum_rank / len(matrix_rank)
+            list_question_sum_rank = []
+            all_sum_rank = 0
+            for item_rank in matrix_rank:
+                sum_rank = 0
+                for rank in item_rank:
+                    sum_rank = sum_rank + rank
+                list_question_sum_rank.append(sum_rank)
+                all_sum_rank = all_sum_rank + sum_rank
 
-        for item in list_question_sum_rank:
-            d = math.pow((item - middle_rank), 2)
-            self.S = self.S + d
+            middle_rank = all_sum_rank / len(matrix_rank)
 
-        count_expert = len(self.getExperts())
-        count_question = len(self.questions)
+            for item in list_question_sum_rank:
+                d = math.pow((item - middle_rank), 2)
+                self.S = self.S + d
 
-        self.W = self.S / ((1/12) * math.pow(count_expert, 2) * (math.pow(count_question, 3) - count_question) - (count_expert * self.sumTi))
-        self.W = round(self.W, 2)
+            count_expert = len(self.getExperts()[:min_count_expert])
+            count_question = len(self.questions)
+
+            self.W = self.S / ((1/12) * math.pow(count_expert, 2) * (math.pow(count_question, 3) - count_question) - (count_expert * self.sumTi))
+            self.W = round(self.W, 2)
 
     def getWordCost(self):
         if self.W < 0.2:
@@ -86,28 +91,32 @@ class ConsistencyEstimates(Math):
         elif 0.8 < self.W <= 1:
             self.word_cost = 'Очень высокая'
 
-    def math4(self):
-        self.CountingNumberRepetitions()
-        self.CountingRanks()
+    def math4(self, min_count_expert):
+        self.CountingNumberRepetitions(min_count_expert=min_count_expert)
+        self.CountingRanks(min_count_expert=min_count_expert)
         self.getWordCost()
         return self.word_cost
 
-    def math5(self):
+    def math5(self, min_count_expert):
 
-        count_expert = len(self.getExperts())
+        count_expert = len(self.getExperts()[:min_count_expert])
         count_question = len(self.questions)
 
-        self.A = self.S/((1/12) * count_expert * count_question * (count_question + 1) + (1 / (count_question - 1)) * self.sumTi)
-        percent_sens = 20
-        countWord = count_question - 1
-
-        k_pearson = getListPearson()[countWord - 1]
-
-        if self.A > k_pearson:
-            self.word_coord = 'Не случайно'
-        else:
+        if self.S == 0:
             self.word_coord = 'Случайно'
+            return self.word_coord
+        else:
+            self.A = self.S/((1/12) * count_expert * count_question * (count_question + 1) + (1 / (count_question - 1)) * self.sumTi)
+            percent_sens = 20
+            countWord = count_question - 1
 
-        return self.word_coord
+            k_pearson = getListPearson()[countWord - 1]
+
+            if self.A > k_pearson:
+                self.word_coord = 'Не случайно'
+            else:
+                self.word_coord = 'Случайно'
+
+            return self.word_coord
 
 

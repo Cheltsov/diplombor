@@ -10,6 +10,7 @@ class CountExpert(Math):
     cheb = (1 - p) * E * E
 
     def getMinCountExpert(self):
+        self.list_max = []
         # Получить всех экспертов
         experts = self.getExperts()
         list_oo = []
@@ -31,9 +32,17 @@ class CountExpert(Math):
             list_oo.append(list_cost)
 
         matrix = np.array(list_oo)
-        new_matrix = matrix.swapaxes(0, 1)
 
-        for item in new_matrix:
-            self.list_max.append(max(item))
+        if len(matrix) < 1:
+            return 0
+        else:
+            new_matrix = matrix.swapaxes(0, 1)
+            for item in new_matrix:
+                self.list_max.append(max(item))
 
-        return self.list_max
+            if len(self.list_max) < 1:
+                return 0
+            else:
+                arr_min = np.where(self.list_max == np.min(self.list_max))
+                self.min_count_expert = np.max(arr_min) + 3
+                return self.min_count_expert

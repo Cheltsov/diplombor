@@ -164,17 +164,18 @@ def stat_ajax(request, id):
 
     list_q_mark = []
     for i, item in enumerate(obj_competence_expert.questions):
+        sch = round(obj_competence_expert.getMark(min_count_expert)[i], 2)
         list_q_mark.append({
             'question_title': Question.objects.get(id=item['id_question_id']).title,
             's1': round(list_s1[i], 2),
             's6': round(list_s6[i], 2),
-            'sch': round(obj_competence_expert.getMark()[i], 2),
+            'sch': sch if sch > 0 else 0,
         })
 
     content = {
         "list_q_mark": list_q_mark,
-        "word": obj_ser.math4(),
-        "coord": obj_ser.math5(),
+        "word": obj_ser.math4(min_count_expert),
+        "coord": obj_ser.math5(min_count_expert),
         "count_mark": obj_competence_expert.getMatrWord()
     }
     return JsonResponse(content, safe=False)
@@ -186,9 +187,9 @@ def create_pdf(request, id):
 
     if int(request.POST['id_category']) > 0:
         id_category = request.POST['id_category']
-        url = 'static/adminer/pdf/out_' + str(id) + '_category_' + str(id_category) + '.pdf'
+        url = 'staticfiles/adminer/pdf/out_' + str(id) + '_category_' + str(id_category) + '.pdf'
         pdfkit.from_url(str(url_site) + 'admin/polls/statistic/' + str(id) + '/?id_category=' + str(id_category), url)
     else:
-        url = 'static/adminer/pdf/out_' + str(id) + '.pdf'
+        url = 'staticfiles/adminer/pdf/out_' + str(id) + '.pdf'
         pdfkit.from_url(str(url_site)+'admin/polls/statistic/' + str(id) + '/', url)
     return JsonResponse('/'+url, safe=False)
