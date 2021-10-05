@@ -13,7 +13,7 @@
                 <label for="question_is_verbal_1">Система оценивания показателей</label>
                 <select id="question_is_verbal_1" class="form-control select_verbal" data-id="1"
                         name="question[1]['is_verbal']">
-                    <option value="1">Вербальная</option>
+                    <option value="1" selected>Вербальная</option>
                     <option value="0">Числовая</option>
                 </select>
             </div>
@@ -21,14 +21,18 @@
                 <div class="box_answer" id="box_answer_1" data-id="1">
                     <input type="text" class="form-control" value="" name="question[1]['answer'][1]"
                            required placeholder="Введите текст оценки">
+                    <input type="number" class="form-control" value="" min="0" name="question[1]['sort'][1]"
+                           required placeholder="Сорт." style="width: 90px; margin-left: 5px">
                     <button class="btn btn-danger answer_delete" data-id="1" data-question="1"><i
                             class="fas fa-trash-alt"></i></button>
-                    <span class="cost-answer" id="question[1]['cost'][2]">0</span>
+                    <span class="cost-answer" id="question[1]['cost'][1]">0</span>
                     <br>
                 </div>
                 <div class="box_answer" id="box_answer_2" data-id="2">
                     <input type="text" class="form-control" value="" name="question[1]['answer'][2]"
                            required placeholder="Введите текст оценки">
+                    <input type="number" class="form-control" value="" min="0" name="question[1]['sort'][2]"
+                           required placeholder="Сорт." style="width: 90px; margin-left: 5px">
                     <button class="btn btn-danger answer_delete" data-id="2" data-question="1"><i
                             class="fas fa-trash-alt"></i></button>
                     <span class="cost-answer" id="question[1]['cost'][2]">100</span>

@@ -21,7 +21,7 @@ def createQuestionAnswerByPattern(request_pattern, id_pattern):
             list_answer = []
             if ques.is_verbal == '1':
                 for answer in question['answers']:
-                    list_answer.append(Answer(title=answer, id_question_id=ques.id))
+                    list_answer.append(Answer(title=answer['title'], sort=answer['sort'], id_question_id=ques.id))
             else:
                 for answer in range(int(question['answers'][0])):
                     list_answer.append(Answer(title=(answer + 1), id_question_id=ques.id))
@@ -95,10 +95,10 @@ def createQuestionAnswerByPolls(request_polls, id_polls):
             list_answer = []
             if ques.is_verbal == '1':
                 for answer in question['answers']:
-                    list_answer.append(Answer(title=answer, id_question_id=ques.id))
+                    list_answer.append(Answer(title=answer['title'], sort=answer['sort'], id_question_id=ques.id))
             else:
                 for answer in range(int(question['answers'][0])):
-                    list_answer.append(Answer(title=(answer + 1), id_question_id=ques.id))
+                    list_answer.append(Answer(title=(answer + 1), sort=answer, id_question_id=ques.id))
 
             Answer.objects.bulk_create(list_answer)
             if not calculateAnswer(id_question=ques.id):

@@ -25,6 +25,9 @@
                             <input type="text" class="form-control" value="{{ answer.title }}"
                                    name="question[{{ question.id }}]['answer'][{{ answer.id }}]"
                                    required placeholder="Введите текст оценки">
+                            <input type="number" class="form-control" value="{{ answer.sort }}" min="0"
+                                   name="question[{{ question.id }}]['sort'][{{ answer.id }}]"
+                                   required placeholder="Сорт." style="width: 90px; margin-left: 5px">
                             <button class="btn btn-danger answer_delete" data-id="{{ answer.id }}"
                                     data-question="{{ question.id }}"><i class="fas fa-trash-alt"></i>
                             </button>
@@ -34,19 +37,26 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <div class="box_answer" id="box_answer_{{ answer.id }}"
-                         data-id="{{ answer.id }}">
-                        <input type="number" required class="form-control input_number" max="20" style="width: 87%;"
-                               name="question[{{ question.id }}]['answer'][{{ answer.id }}]"
-                               placeholder="Введите максильную оценку"
-                               value="{{ questions.0.answers.last.title }}">
-                        <span class="cost-answer" id="question[1]['cost'][1]">до 20</span>
-                        <br>
-                    </div>
+                    {% for answer in questions.0.answers %}
+                        {% if forloop.last %}
+                            <div class="box_answer" id="box_answer_{{ answer.id }}"
+                                 data-id="{{ answer.id }}">
+                                <input type="number" required class="form-control input_number" max="20"
+                                       style="width: 87%;"
+                                       name="question[{{ questions.0.id }}]['answer'][{{ answer.id }}]"
+                                       placeholder="Введите максильную оценку"
+                                       value="{{ answer.title }}">
+                                <span class="cost-answer"
+                                      id="question[{{ questions.0.id }}]['cost'][{{ answer.id }}]">до 20</span>
+                                <br>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
             </div>
 
-            <div class="{% if questions.0.is_verbal %} d-flex {% endif %} mt-3" style="width: 87%; {% if not questions.0.is_verbal %} display:none {% endif %}"
+            <div class="{% if questions.0.is_verbal %} d-flex {% endif %} mt-3"
+                 style="width: 87%; {% if not questions.0.is_verbal %} display:none {% endif %}"
                  id="btn_add_answer">
                 <button class="btn btn-success add_answer" data-id="1">
                     Добавить оценку

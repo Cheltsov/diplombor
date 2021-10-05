@@ -14,6 +14,7 @@
     </style>
 
     <div class="mx-auto block-info" id="block_btn">
+        <a href="#" onclick="history.back();" class="btn btn-secondary">Назад</a>
         {% if not poll.date_start and not poll.date_end %}
             <button class="btn btn-success" id="start_poll" data-id="{{ poll.id }}">Начать</button>
         {% elif poll.date_start and not poll.date_end %}

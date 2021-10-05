@@ -30,6 +30,7 @@ def createJsonAnswer(answers):
             "id": answer.id,
             "title": answer.title,
             "cost": answer.cost,
+            "sort": answer.sort,
         })
     return ans_json
 
