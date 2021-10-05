@@ -14,7 +14,7 @@ body {
     padding-top: 22px;
     position: relative;
     width: 700px;
-    height: 147px;
+    min-height: 147px;
 }
 
 .color-line {
