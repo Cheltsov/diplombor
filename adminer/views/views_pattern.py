@@ -9,7 +9,7 @@ from adminer.models import *
 def pattern(request):
     if 'admin' in request.session:
         content = {
-            "patterns": Pattern.objects.all()
+            "patterns": Pattern.objects.all().order_by('-date_update')
         }
         return render(request, 'adminer/pattern/pattern.html', content)
     else:

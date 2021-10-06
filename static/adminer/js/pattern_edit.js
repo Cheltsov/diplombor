@@ -84,15 +84,19 @@ $(document).ready(function () {
 
     $('#form_pattern_edit_send_pat').click(function (e) {
         e.preventDefault();
-        $('#form_pattern_edit').submit();
-        window.location.href = '/admin/pattern/';
+        if (validSortQuestion($('#form_pattern_edit')) == 'true' && validSortAnswer($('#form_pattern_edit')) == 'true') {
+            $('#form_pattern_edit').submit();
+            window.location.href = '/admin/pattern/';
+        }
     });
 
     $('#form_pattern_edit_reload_pat').click(function (e) {
         e.preventDefault();
-        $('#form_pattern_edit').submit();
-        setTimeout(() => window.location.href = $('#form_pattern_edit').attr('url'), 1000);
-        return false;
+        if (validSortQuestion($('#form_pattern_edit')) == 'true' && validSortAnswer($('#form_pattern_edit')) == 'true') {
+            $('#form_pattern_edit').submit();
+            setTimeout(() => window.location.href = $('#form_pattern_edit').attr('url'), 1000);
+            return false;
+        }
     });
 
     $('#form_pattern_edit').submit(function (e) {
@@ -240,10 +244,6 @@ $(document).ready(function () {
         $('#btn_add_category_' + id_category).removeAttr('disabled');
     });
 
-});
-
-$(document).ready(function () {
-
     //Отправить категории
     $('#form_category_edit').submit(function (e) {
         e.preventDefault();
@@ -278,21 +278,22 @@ $(document).ready(function () {
             }
         })
     });
-});
-
-$(document).ready(function () {
 
     $('#form_pattern_edit_send').click(function (e) {
         e.preventDefault();
-        $('#form_polls_edit').submit();
-        window.location.href = '/admin/polls/';
+        if (validSortQuestion($('#form_polls_edit')) == 'true' && validSortAnswer($('#form_polls_edit')) == 'true') {
+            $('#form_polls_edit').submit();
+            window.location.href = '/admin/polls/';
+        }
     });
 
     $('#form_pattern_edit_reload').click(function (e) {
         e.preventDefault();
-        $('#form_polls_edit').submit();
-        setTimeout(() => window.location.href = $('#form_polls_edit').attr('url'), 1000);
-        return false;
+        if (validSortQuestion($('#form_polls_edit')) == 'true' && validSortAnswer($('#form_polls_edit')) == 'true') {
+            $('#form_polls_edit').submit();
+            setTimeout(() => window.location.href = $('#form_polls_edit').attr('url'), 1000);
+            return false;
+        }
     });
 
     $('#form_polls_edit').submit(function (e) {
@@ -339,8 +340,55 @@ $(document).ready(function () {
             success: function (response) {
                 console.log(response);
             }
-        })
+        });
     });
+
+    function validSortQuestion(form) {
+        let i = 0
+        let arrSort = [];
+        form.find('.box-master').each(function (index) {
+            arrSort[index] = $(this).find('input[type="number"]').val();
+            if ($(this).find('input[type="number"]').val() == '') {
+                $(this).find('input[type="number"]').css('border', '3px solid red');
+                setTimeout(() => $(this).find('input[type="number"]').css('border', 'none'), 5000);
+                i++;
+            }
+        });
+        if (i > 0) {
+            alert("Заполните поля сортировки показателей");
+            return 'false';
+        }
+        if ((new Set(arrSort)).size !== arrSort.length) {
+            alert("Значения сортировки повторяются");
+            return 'false';
+        }
+        return 'true';
+    }
+
+    function validSortAnswer(form) {
+        let i = 0
+        let arrSort = [];
+        if ($('#question_is_verbal_1').val() == '1') {
+            form.find('.box_answer').each(function (index) {
+                arrSort[index] = $(this).find('input[type="number"]').val();
+                if ($(this).find('input[type="number"]').val() == '') {
+                    $(this).find('input[type="number"]').css('border', '3px solid red');
+                    setTimeout(() => $(this).find('input[type="number"]').css('border', 'none'), 5000);
+                    i++;
+                }
+            });
+            if (i > 0) {
+                alert("Заполните поля сортировки показателей");
+                return 'false';
+            }
+            if ((new Set(arrSort)).size !== arrSort.length) {
+                alert("Значения сортировки повторяются");
+                return 'false';
+            }
+        }
+        return 'true';
+    }
+
 });
 
 $(document).ready(function () {
@@ -425,5 +473,4 @@ $(document).ready(function () {
             $(this).text(Math.trunc(step * index));
         });
     }
-
 });
