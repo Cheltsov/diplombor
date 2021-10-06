@@ -27,7 +27,7 @@
                                    required placeholder="Введите текст оценки">
                             <input type="number" class="form-control" value="{{ answer.sort }}" min="0"
                                    name="question[{{ question.id }}]['sort'][{{ answer.id }}]"
-                                   required placeholder="Сорт." style="width: 90px; margin-left: 5px">
+                                   placeholder="Сорт." style="width: 90px; margin-left: 5px" title="Сортировка">
                             <button class="btn btn-danger answer_delete" data-id="{{ answer.id }}"
                                     data-question="{{ question.id }}"><i class="fas fa-trash-alt"></i>
                             </button>

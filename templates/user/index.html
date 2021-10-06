@@ -13,8 +13,8 @@
             <form url="{% url 'user:create_user_answer' poll.id %}" method="post" id="form_answer">
                 {% csrf_token %}
                 {% for question in categories_question %}
-                    <div class="head-form">
-                        <p class="question">{{ question.title }}</p>
+                    <div class="head-form min-height-auto">
+                        <div class="question">{{ question.title }}</div>
                         <div class="form-group">
                             <select class="form-select" data-question="{{ question.id }}" data-is-category="1" data-category="{{ question.id_category }}">
                                 {% for answer in question.answers %}
@@ -25,9 +25,14 @@
                     </div>
                 {% endfor %}
 
+                <div class="text-center">
+                    <h4>Оцените, пожалуйста, следующие показатели</h4>
+                    <h3>Заранее благодарим Вас</h3>
+                </div>
+
                 {% for question in poll.questions %}
-                    <div class="head-form">
-                        <p class="question">{{ question.title }}</p>
+                    <div class="head-form min-height-auto">
+                        <div class="question">{{ question.title }}</div>
                         {% if question.is_verbal %}
                             <div class="form-group">
                                 <select class="form-select" data-question="{{ question.id }}" data-is-category="0">
@@ -49,7 +54,6 @@
                 <br>
                 <div class="d-flex justify-content-between align-items-center block_btn_send_form">
                     <button type="submit" class="btn btn-secondary">Отправить</button>
-                    <a href="" class="clear-form">Очистить форму</a>
                 </div>
             </form>
             <br><br>

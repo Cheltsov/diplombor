@@ -4,6 +4,10 @@ body {
     font-family: 'Noto Sans JP', sans-serif;
 }
 
+.min-height-auto {
+    min-height: auto !important;
+}
+
 .head-form {
     margin-top: 20px;
     background-color: #fff;
@@ -15,6 +19,7 @@ body {
     position: relative;
     width: 700px;
     min-height: 147px;
+    display: flex;
 }
 
 .color-line {
@@ -35,6 +40,10 @@ body {
     line-height: 24px;
     color: #202124;
     font-weight: 400;
+    width: 50%;
+}
+.head-form > .form-group {
+    width: 50%;
 }
 
 .btn-secondary {

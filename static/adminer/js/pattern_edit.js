@@ -61,7 +61,7 @@ $(document).ready(function () {
         last_answer.after(`
                 <div class="box_answer" id="box_answer_` + count_answer + `" data-id="` + count_answer + `">
                     <input type="text" autocomplete="off" required class="form-control" value="" name="question[` + id_question + `]['answer'][` + count_answer + `]"  placeholder="Введите текст оценки">
-                    <input type="number" autocomplete="off" class="form-control" value="" min="0" name="question[` + id_question + `]['sort'][` + count_answer + `]" placeholder="Сорт." style="width: 90px; margin-left: 5px">
+                    <input type="number" title="Сортировка" class="form-control" value="` + count_answer + `" min="0" name="question[` + id_question + `]['sort'][` + count_answer + `]" placeholder="Сорт." style="width: 90px; margin-left: 5px">
                     <button class="btn btn-danger answer_delete" data-id="` + count_answer + `" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                     <span class="cost-answer" id="question[` + id_question + `]['cost'][` + count_answer + `]"></span>
                     <br>
@@ -79,6 +79,19 @@ $(document).ready(function () {
             $(this).text(Math.trunc(step * index));
         });
     }
+
+    $('#form_pattern_edit_send_pat').click(function (e) {
+        e.preventDefault();
+        $('#form_pattern_edit').submit();
+        window.location.href = '/admin/pattern/';
+    });
+
+    $('#form_pattern_edit_reload_pat').click(function (e) {
+        e.preventDefault();
+        $('#form_pattern_edit').submit();
+        setTimeout(() => window.location.href = $('#form_pattern_edit').attr('url'), 1000);
+        return false;
+    });
 
     $('#form_pattern_edit').submit(function (e) {
         e.preventDefault();
@@ -112,9 +125,6 @@ $(document).ready(function () {
             data: {'getdata': JSON.stringify(data), 'pattern_title': $('#pattern_title').val()},
             success: function (response) {
                 console.log(response);
-                if (response) {
-                    window.location.href = '/admin/pattern/';
-                }
             }
         })
     });
@@ -141,14 +151,14 @@ $(document).ready(function () {
             $('#container_answer_' + id_question).html(`
             <div class="box_answer" id="box_answer_` + count_answer + `" data-id="1">
                 <input type="text" autocomplete="off" required class="form-control" value="" name="question[` + id_question + `]['answer'][1]"  placeholder="Введите текст оценки">
-                <input type="number" autocomplete="off" class="form-control" value="" min="0" name="question[` + id_question + `]['sort'][1]" placeholder="Сорт." style="width: 90px; margin-left: 5px">
+                <input type="number" class="form-control" value="1" min="0" name="question[` + id_question + `]['sort'][1]" placeholder="Сорт." style="width: 90px; margin-left: 5px">
                 <button class="btn btn-danger answer_delete" data-id="1" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                 <span class="cost-answer" id="question[` + id_question + `]['cost'][1]">0</span>
                 <br>
              </div>
              <div class="box_answer" id="box_answer_2" data-id="2">
                 <input type="text" autocomplete="off" class="form-control" value="" name="question[` + id_question + `]['answer'][2]" required  placeholder="Введите текст оценки">
-                <input type="number" autocomplete="off" class="form-control" value="" min="0" name="question[` + id_question + `]['sort'][2]" placeholder="Сорт." style="width: 90px; margin-left: 5px">
+                <input type="number" class="form-control" value="2" min="0" name="question[` + id_question + `]['sort'][2]" placeholder="Сорт." style="width: 90px; margin-left: 5px">
                 <button class="btn btn-danger answer_delete" data-id="2" data-question="` + id_question + `"><i class="fas fa-trash-alt"></i></button>
                 <span class="cost-answer" id="question[` + id_question + `]['cost'][2]">100</span>
                 <br>
@@ -268,6 +278,20 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+
+    $('#form_pattern_edit_send').click(function (e) {
+        e.preventDefault();
+        $('#form_polls_edit').submit();
+        window.location.href = '/admin/polls/';
+    });
+
+    $('#form_pattern_edit_reload').click(function (e) {
+        e.preventDefault();
+        $('#form_polls_edit').submit();
+        setTimeout(() => window.location.href = $('#form_polls_edit').attr('url'), 1000);
+        return false;
+    });
+
     $('#form_polls_edit').submit(function (e) {
         e.preventDefault();
         let data = []
@@ -310,9 +334,6 @@ $(document).ready(function () {
             },
             success: function (response) {
                 console.log(response);
-                if (response) {
-                    window.location.href = '/admin/polls/';
-                }
             }
         })
     });
@@ -353,10 +374,10 @@ $(document).ready(function () {
                 </div>`);
         });
 
-        $('.box-master').each(function (){
-           if($(this).find('input[type="text"]').val() == '') {
-              $(this).remove();
-           }
+        $('.box-master').each(function () {
+            if ($(this).find('input[type="text"]').val() == '') {
+                $(this).remove();
+            }
         });
 
         if (confirm("Хотите перезаписать ответы?")) {
@@ -367,7 +388,7 @@ $(document).ready(function () {
                     $('#container_answer_1').append(`
                         <div class="box_answer" id="box_answer_` + (index) + `" data-id="` + (index) + `">
                             <input type="text" autocomplete="off" class="form-control" value="` + el.title + `" name="question[1]['answer'][` + (index) + `]" required placeholder="Введите текст оценки">
-                            <input type="number" autocomplete="off" class="form-control" value="` + el.sort + `" min="0" name="question[1]['sort'][` + (index) + `]" placeholder="Сорт." style="width: 90px; margin-left: 5px">
+                            <input type="number" class="form-control" value="` + el.sort + `" min="0" name="question[1]['sort'][` + (index) + `]" placeholder="Сорт." style="width: 90px; margin-left: 5px" title="Сортировка">
                             <button class="btn btn-danger answer_delete" data-id="` + (index) + `" data-question="1"><i class="fas fa-trash-alt"></i></button>
                             <span class="cost-answer" id="question[1]['cost'][` + (index) + `]">100</span>
                             <br>

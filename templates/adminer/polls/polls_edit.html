@@ -23,12 +23,12 @@
                     <tr>
                         <th scope="row">{{ category.id }}</th>
                         <td>{{ category.title }}</td>
-                        <td style="display: inline-block; width: 110px;">
-                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-primary" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
+                        <td style="display: inline-block; width: 115px;">
+                            <a href="/admin/category/edit/{{ category.id }}" type="button" class="btn btn-warning" target="_blank" title="Изменить">
+                                <i class="fas fa-edit"></i>
                             </a>
                             <a type="button" class="btn btn-success add_category" data-id="{{ category.id }}" id="btn_add_category_{{ category.id }}"
-                                {% if category.id in polls.get_category_id %} disabled="disabled" {% endif %}>
+                                {% if category.id in polls.get_category_id %} disabled="disabled" {% endif %} title="Добавить в опрос">
                                 <i class="fas fa-plus" style="color: white;"></i>
                             </a>
                         </td>
@@ -90,7 +90,8 @@
                 <div class="d-flex mt-3">
                     <a href="{% url 'adminer:polls' %}" type="submit" class="btn btn-secondary"
                        style="margin-right: 5px;">Отмена</a>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-success" id="form_pattern_edit_reload" style="margin-right: 5px;">Обновить</button>
+                    <button type="submit" class="btn btn-primary" id="form_pattern_edit_send">Сохранить</button>
                 </div>
             </form>
             <br>
@@ -112,11 +113,11 @@
                     <tr>
                         <th scope="row">{{ pattern.id }}</th>
                         <td>{{ pattern.title }}</td>
-                        <td style="display: inline-block; width: 110px;">
-                            <a href="/admin/pattern/edit/{{ pattern.id }}" type="button" class="btn btn-primary" target="_blank">
-                                <i class="fas fa-external-link-alt"></i>
+                        <td style="display: inline-block; width: 115px;">
+                            <a href="/admin/pattern/edit/{{ pattern.id }}" type="button" class="btn btn-warning" target="_blank" title="Изменить">
+                                <i class="fas fa-edit"></i>
                             </a>
-                            <a type="button" class="btn btn-success add_pattern" data-id="{{ pattern.id }}" id="btn_add_pattern_{{ pattern.id }}">
+                            <a type="button" class="btn btn-success add_pattern" data-id="{{ pattern.id }}" id="btn_add_pattern_{{ pattern.id }}" title="Добавить в опрос">
                                 <i class="fas fa-plus" style="color: white;"></i>
                             </a>
                         </td>

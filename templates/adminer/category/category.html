@@ -32,7 +32,7 @@
                 {% for category in categories %}
                     <tr>
                         <th scope="row">{{ category.id }}</th>
-                        <td class="text-center">{{ category.title }}</td>
+                        <td class="text-left">{{ category.title }}</td>
                         <td class="text-center">{{ category.date_created|date:'Y-m-d H:i'}}</td>
                         <td class="text-center">{{ category.date_updated|date:'Y-m-d H:i' }}</td>
                         <td>
