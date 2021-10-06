@@ -53,8 +53,10 @@
                     <div style="display: flex; width: 94%; margin-left: 5px;">
                         <input type="text" class="form-control" value="" name="question[1]['title']"
                                required
-                               placeholder="Введите текст показателя" style="margin-right: 10px;">
-                        <button class="btn btn-danger delete_question" data-id="1"><i
+                               placeholder="Введите текст показателя" style="margin-right: 5px;">
+                        <input type="number" class="form-control" value="1" min="0" name="question[1]['sort']"
+                           placeholder="Сорт." style="width: 90px" title="Сортировка">
+                        <button class="btn btn-danger delete_question" data-id="1"  style="margin-left: 5px;"><i
                                 class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>

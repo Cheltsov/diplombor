@@ -16,6 +16,7 @@ def createJsonQuestion(questions, answer=False):
         ques_json.append({
             "id": question.id,
             "title": question.title,
+            "sort": question.sort,
             "answers": list_answer,
             "is_verbal": question.is_verbal,
             "id_category": question.id_category_id

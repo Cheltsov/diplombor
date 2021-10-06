@@ -16,7 +16,7 @@ def deleteQuestionAnswerByPatternOrPolls(pattern):
 def createQuestionAnswerByPattern(request_pattern, id_pattern):
     try:
         for question in request_pattern:
-            ques = Question(title=question['title'], id_pattern_id=id_pattern, is_verbal=question['is_verbal'])
+            ques = Question(title=question['title'], id_pattern_id=id_pattern, is_verbal=question['is_verbal'], sort=question['sort'])
             ques.save()
             list_answer = []
             if ques.is_verbal == '1':
@@ -90,7 +90,7 @@ def addCategoryInPattern(request_category, id_pattern):
 def createQuestionAnswerByPolls(request_polls, id_polls):
     try:
         for question in request_polls:
-            ques = Question(title=question['title'], id_polls_id=id_polls, is_verbal=question['is_verbal'])
+            ques = Question(title=question['title'], id_polls_id=id_polls, is_verbal=question['is_verbal'], sort=question['sort'])
             ques.save()
             list_answer = []
             if ques.is_verbal == '1':

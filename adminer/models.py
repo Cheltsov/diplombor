@@ -83,10 +83,12 @@ class Question(models.Model):
     id_pattern = models.ForeignKey(Pattern, on_delete=models.SET_NULL, default="", null=True)
     is_verbal = models.BooleanField(blank=True, null=False, default=False)
     id_category = models.ForeignKey(Category, on_delete=models.SET_NULL, default="", null=True)
+    sort = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = True
         db_table = 'question'
+        ordering = ['sort']
 
 
 class Answer(models.Model):

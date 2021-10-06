@@ -18,13 +18,15 @@ $(document).ready(function () {
         e.preventDefault();
 
         let count_box = parseInt($('.box-master').last().attr('data-id')) + 1;
+        let index = $('.box-master').length;
         $('.box-master').last().after(`
                 <div class="box-master" id="question_box_` + count_box + `" data-id="` + count_box + `">
                     <div class="box">
                         <div class="item">
                             <div style="display: flex; width: 94%; margin-left: 5px;">
-                                <input type="text" required class="form-control" autocomplete="off" value="" name="question[` + count_box + `]['title']" placeholder="Введите текст показателя" style="margin-right: 10px;">
-                                <button class="btn btn-danger delete_question" data-id="` + count_box + `"><i class="fas fa-trash-alt"></i></button>
+                                <input type="text" required class="form-control" autocomplete="off" value="" name="question[` + count_box + `]['title']" placeholder="Введите текст показателя" style="margin-right: 5px;">
+                                <input type="number" class="form-control" value="` + (index + 1) + `" min="0" name="question[` + count_box + `]['sort']" placeholder="Сорт." style="width: 90px" title="Сортировка">
+                                <button class="btn btn-danger delete_question" data-id="` + count_box + `" style="margin-left: 5px;"><i class="fas fa-trash-alt"></i></button>
                             </div>
                         </div>
                     </div>
@@ -112,6 +114,7 @@ $(document).ready(function () {
             data.push({
                 'id': id,
                 'title': $(this).find(`input[name="question[` + id + `]['title']"]`).val(),
+                'sort': $(this).find(`input[name="question[` + id + `]['sort']"]`).val(),
                 'answers': answers,
                 'is_verbal': $('#question_is_verbal_1').val()
             })
@@ -311,6 +314,7 @@ $(document).ready(function () {
             data.push({
                 'id': id,
                 'title': $(this).find(`input[name="question[` + id + `]['title']"]`).val(),
+                'sort': $(this).find(`input[name="question[` + id + `]['sort']"]`).val(),
                 'answers': answers,
                 'is_verbal': $('#question_is_verbal_1').val()
             });
