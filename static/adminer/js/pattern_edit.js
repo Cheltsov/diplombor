@@ -44,7 +44,7 @@ $(document).ready(function () {
         } else {
             alert('Нельзя удалить оценку. Должно быть минимум 2 оценки');
         }
-        recalculateAnswer(id_question);
+        recalculateAnswer(1);
     });
 
     // Добавление ответа
@@ -78,6 +78,7 @@ $(document).ready(function () {
         let step = 100 / (parseInt(count_answer) - 1);
 
         arr_cost_answer.each(function (index) {
+            console.log(Math.trunc(step * index));
             $(this).text(Math.trunc(step * index));
         });
     }
