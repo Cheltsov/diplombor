@@ -25,9 +25,8 @@
                             <input type="text" class="form-control" value="{{ answer.title }}"
                                    name="question[{{ questions.0.id }}]['answer'][{{ answer.id }}]"
                                    required placeholder="Введите текст оценки">
-                            <input type="number" class="form-control" value="{{ answer.sort }}" min="0"
-                                   name="question[{{ questions.0.id }}]['sort'][{{ answer.id }}]"
-                                   placeholder="Сорт." style="width: 90px; margin-left: 5px" title="Сортировка">
+                            <button class="btn btn-primary arrow_up"><i class="fas fa-arrow-up"></i></button>
+                            <button class="btn btn-primary arrow_down"><i class="fas fa-arrow-down"></i></button>
                             <button class="btn btn-danger answer_delete" data-id="{{ answer.id }}"
                                     data-question="{{ questions.0.id }}"><i class="fas fa-trash-alt"></i>
                             </button>
@@ -66,7 +65,7 @@
     </div>
 
     <h4>Добавление показателей</h4>
-    <div style="background-color: gainsboro;border-radius: 8px;padding: 10px;">
+    <div style="background-color: gainsboro;border-radius: 8px;padding: 10px;" class="box-q">
         {% for question in questions %}
             <div class="box-master" id="question_box_{{ question.id }}" data-id="{{ question.id }}">
                 <div class="box">
@@ -75,8 +74,8 @@
                             <input type="text" class="form-control" value="{{ question.title }}"
                                    name="question[{{ question.id }}]['title']" required
                                    placeholder="Введите текст показателя" style="margin-right: 5px;">
-                            <input type="number" class="form-control" value="{{ question.sort }}" min="0" name="question[{{ question.id }}]['sort']"
-                                   placeholder="Сорт." style="width: 90px" title="Сортировка">
+                            <button class="btn btn-primary arrow_up_q"><i class="fas fa-arrow-up"></i></button>
+                            <button class="btn btn-primary arrow_down_q" style="margin-left: 5px;"><i class="fas fa-arrow-down"></i></button>
                             <button class="btn btn-danger delete_question" data-id="{{ question.id }}" style="margin-left: 5px;"><i
                                     class="fas fa-trash-alt"></i></button>
                         </div>
