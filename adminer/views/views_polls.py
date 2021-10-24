@@ -109,6 +109,7 @@ def polls_show(request, id):
                 list_category_id.append(item_category.id_category_id)
             list_question = createJsonQuestion(Question.objects.filter(id_category_id__in=list_category_id))
             content = {
+                'count_user': poll.getCountUserAnswer(),
                 'poll': createJsonPolls([poll])[0],
                 'categories_question': list_question
             }
@@ -144,6 +145,7 @@ def polls_stat(request, id):
     list_category = getCategoryInPoll(id_poll=id)
     content = {
         "poll": poll,
+        "count_user": poll.getCountUserAnswer(),
         "list_category": list_category,
         'id_category': int(request.GET['id_category']) if request.GET else None
     }

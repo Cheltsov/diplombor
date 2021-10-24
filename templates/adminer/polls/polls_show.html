@@ -13,7 +13,7 @@
         }
     </style>
 
-    <div class="mx-auto block-info" id="block_btn">
+    <div class="mx-auto block-info" id="block_btn" style="width: 34%;">
         <a href="#" onclick="history.back();" class="btn btn-secondary">Назад</a>
         {% if not poll.date_start and not poll.date_end %}
             <button class="btn btn-success" id="start_poll" data-id="{{ poll.id }}">Начать</button>
@@ -24,11 +24,11 @@
             <button class="btn btn-warning btn_go_stat" data-url="{% url 'adminer:polls_stat' poll.id %}">Статистика</button>
         {% endif %}
     </div>
-    <div class="mx-auto block-info head-form">
+    <div class="mx-auto block-info head-form" style="display: block">
         <div style="background-color: white">
             <div class="d-flex justify-content-between align-item-center">
                 <div>Статус: {{ poll.status }}</div>
-                <div>Ответов пользователей: {{ poll.answer_user }}</div>
+                <div>Ответов пользователей: {{ count_user }}</div>
             </div>
             <div class="d-flex justify-content-between align-item-center">
                 {% if poll.date_created %}<div>Дата создания: {{ poll.date_created|date:'Y-m-d H:i' }}</div>{% endif %}

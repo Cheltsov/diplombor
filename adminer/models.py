@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.utils import timezone
 
 
@@ -49,6 +50,9 @@ class Polls(models.Model):
         for item_category in categories:
             obj_categories = CategoryPolls(id_category_id=item_category.id_category_id, id_polls_id=obj.id)
             obj_categories.save()
+
+    def getCountUserAnswer(self):
+        return self.useranswer_set.values('user').annotate(count_user=Count('user')).count()
 
     class Meta:
         managed = True
