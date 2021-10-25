@@ -13,7 +13,7 @@
             <form url="{% url 'user:create_user_answer' poll.id %}" method="post" id="form_answer">
                 {% csrf_token %}
                 {% for question in categories_question %}
-                    <div class="head-form min-height-auto">
+                    <div class="head-form min-height-auto" style="display: block;">
                         <div class="question">{{ question.title }}</div>
                         <div class="form-group">
                             <select class="form-select" data-question="{{ question.id }}" data-is-category="1" data-category="{{ question.id_category }}">
