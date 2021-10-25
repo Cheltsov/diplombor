@@ -27,7 +27,7 @@
                 <br>
                 <button class="btn btn-secondary ripple-surface" onclick="window.location.href='{% url 'adminer:polls' %}'">Отмена</button>
                 <button class="btn btn-primary" id="print_pdf">Печать PDF</button>
-                <div class="head-form">
+                <div class="head-form" style="display:block;">
                     <div class="color-line"></div>
                     <h1 style="color: black;" class="h_poll" data-id="{{ poll.id }}">{{ poll.title }}</h1>
                     <p>{{ poll.description }}</p>
