@@ -39,8 +39,8 @@ def polls_create(request):
                 response = 'true'
             return HttpResponse(response)
         content = {
-            "categories": createJsonCategory(Category.objects.all()),
-            "patterns": createJsonPattern(Pattern.objects.all()),
+            "categories": createJsonCategory(Category.objects.all().order_by('-date_created')),
+            "patterns": createJsonPattern(Pattern.objects.all().order_by('-date_created')),
         }
         content["categories_json"] = json.dumps(content['categories'])
         return render(request, 'adminer/polls/polls_create.html', content)
@@ -70,8 +70,8 @@ def polls_edit(request, id):
             "category_polls": createJsonCategory(Category.objects.filter(
                 id__in=obj_polls.categorypolls_set.all().values_list('id_category_id', flat=True))),
             "questions": createJsonQuestion(questions),
-            "categories": createJsonCategory(Category.objects.all()),
-            "patterns": createJsonPattern(Pattern.objects.all()),
+            "categories": createJsonCategory(Category.objects.all().order_by('-date_created')),
+            "patterns": createJsonPattern(Pattern.objects.all().order_by('-date_created')),
         }
 
         content["categories_json"] = json.dumps(content['categories'])

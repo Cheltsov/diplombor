@@ -14,12 +14,15 @@ $(document).ready(function () {
             dataType: 'json',
             data: {'id_category': $('.select_category').val()},
             success: function (response) {
+                $("#chart_div").empty();
+                $('.tr_question').remove();
+                $('.renderChartRemove').remove();
                 if (response) {
                     renderTableS(response.list_q_mark);
                     renderSircleChart(response.list_q_mark);
                     $('.math4').text(response.word);
                     $('.math5').text(response.coord);
-                    renderCountMark(response.count_mark)
+                    renderCountMark(response.count_mark, response.list_q_mark)
                 }
             }
         });
@@ -61,13 +64,12 @@ $(document).ready(function () {
         }
     }
 
-    function renderCountMark(list_count_mark) {
+    function renderCountMark(list_count_mark, list_q_mark) {
         $('.renderChartRemove').remove();
         list_count_mark.forEach(function (item, index) {
-
             $('.head-form').last().after(`
                 <div class="head-form renderChartRemove">
-                    <h3>Оценки по показателю ` + (index + 1) + `</h3>
+                    <h3>Оценки по показателю "` + list_q_mark[index]['question_title'] + `"</h3>
                     <div id="piechart` + (index) + `" style="width: 100%; height: 500px;"></div>
                     <br>
                 </div>`);
@@ -79,7 +81,7 @@ $(document).ready(function () {
                 data_chart.push(['Оценка: '+key, value]);
             }
 
-            smallRenderCountMark('Ответы по показателю ' + (index + 1), 'piechart' + index, data_chart)
+            smallRenderCountMark('Ответы по показателю "' + list_q_mark[index]['question_title'] + '"', 'piechart' + index, data_chart)
         });
     }
 
