@@ -48,6 +48,10 @@ def create_user_answer(request, id):
     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 
+def thank(request):
+    return render(request, 'user/thank.html', {})
+
+
 def main(request):
     mainer()
     return HttpResponse('true')

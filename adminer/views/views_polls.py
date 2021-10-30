@@ -174,10 +174,14 @@ def stat_ajax(request, id):
             'sch': sch if sch > 0 else 0,
         })
 
+    word = coord = "Недостаточно экспертов"
+    if min_count_expert != 0:
+        word = obj_ser.math4(min_count_expert)
+        coord = obj_ser.math5(min_count_expert)
     content = {
         "list_q_mark": list_q_mark,
-        "word": obj_ser.math4(min_count_expert),
-        "coord": obj_ser.math5(min_count_expert),
+        "word": word,
+        "coord": coord,
         "count_mark": obj_competence_expert.getMatrWord()
     }
     return JsonResponse(content, safe=False)
@@ -193,5 +197,5 @@ def create_pdf(request, id):
         pdfkit.from_url(str(url_site) + 'admin/polls/statistic/' + str(id) + '/?id_category=' + str(id_category), url)
     else:
         url = 'staticfiles/adminer/pdf/out_' + str(id) + '.pdf'
-        pdfkit.from_url(str(url_site)+'admin/polls/statistic/' + str(id) + '/', url)
-    return JsonResponse('/'+url, safe=False)
+        pdfkit.from_url(str(url_site) + 'admin/polls/statistic/' + str(id) + '/', url)
+    return JsonResponse('/' + url, safe=False)

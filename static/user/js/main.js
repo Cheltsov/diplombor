@@ -45,7 +45,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 console.log(response);
-                alert('Вы прошли опрос');
+                window.location.href="/user/thank/";
             }
         });
     });

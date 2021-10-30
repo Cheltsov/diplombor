@@ -52,9 +52,9 @@ class Math:
     @staticmethod
     def getUserAnswersRow(id_question, id_category=None):
         if id_category:
-            return UserAnswer.objects.filter(id_question_id=id_question, id_category_id=id_category, is_category=False)
+            return UserAnswer.objects.filter(id_question_id=id_question, id_category_id=id_category, is_category=False).order_by('id')
         else:
-            return UserAnswer.objects.filter(id_question_id=id_question, is_category=False)
+            return UserAnswer.objects.filter(id_question_id=id_question, is_category=False).order_by('id')
 
     def getExperts(self):
         if self.id_category:

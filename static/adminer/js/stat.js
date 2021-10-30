@@ -18,6 +18,9 @@ $(document).ready(function () {
                 $('.tr_question').remove();
                 $('.renderChartRemove').remove();
                 if (response) {
+                    if (response.word == "Недостаточно экспертов") {
+                        alert('Недостаточно экспертов');
+                    }
                     renderTableS(response.list_q_mark);
                     renderSircleChart(response.list_q_mark);
                     $('.math4').text(response.word);
@@ -42,12 +45,17 @@ $(document).ready(function () {
     }
 
     function renderSircleChart(list_q_mark) {
+
+        $('#chart_div').css('height', (50 * parseInt(list_q_mark.length))+'px');
+
         google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
             let data_to_tabel = [['Показатель', 'S1', 'S2', 'S3']];
             list_q_mark.forEach(function (item, index) {
+                let i = index+1
+                //$('.legend_question').append("<p>"+ i + " - "+ item.question_title +"</p>")
                 data_to_tabel.push([item.question_title, item.s1, item.s6, item.sch]);
             });
 
@@ -56,7 +64,8 @@ $(document).ready(function () {
             let options = {
                 chart: {
                     title: 'Столбчатая диаграмма',
-                }
+                },
+                orientation: 'vertical'
             };
 
             let chart = new google.charts.Bar(document.getElementById('chart_div'));

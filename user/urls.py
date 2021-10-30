@@ -5,5 +5,6 @@ app_name = "user"
 urlpatterns = [
     path('create/<int:id>/', views.create_user_answer, name='create_user_answer'),
     path('polls/<int:id>/', views.index, name='index'),
-    path('main/', views.main, name='main')
+    path('main/', views.main, name='main'),
+    path('thank/', views.thank, name='thank')
 ]

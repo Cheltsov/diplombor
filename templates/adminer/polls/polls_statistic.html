@@ -25,7 +25,9 @@
         <div class="d-flex">
             <div class="container">
                 <br>
-                <button class="btn btn-secondary ripple-surface" onclick="window.location.href='{% url 'adminer:polls' %}'">Отмена</button>
+                <button class="btn btn-secondary ripple-surface"
+                        onclick="window.location.href='{% url 'adminer:polls' %}'">Отмена
+                </button>
                 <button class="btn btn-primary" id="print_pdf">Печать PDF</button>
                 <div class="head-form" style="display:block;">
                     <div class="color-line"></div>
@@ -68,6 +70,12 @@
                     <h3>Векторы средней оценки с учетом компетентности экспертов</h3>
                     <div>
                         <br>
+                        <div>
+                            <p>S1 - средняя оценка</p>
+                            <p>S2 - средне-весовая оценка по всем эекспертам</p>
+                            <p>S3 - средне-весовая оценка по выбранным экспертам (по Чебышеву)</p>
+                        </div>
+                        <br>
                         <table class="table tableS">
                             <thead>
                             <tr>
@@ -80,14 +88,11 @@
                             <tbody></tbody>
                         </table>
                     </div>
+                    {% comment %}<br>
+                        <div class="legend_question">
+                        </div>{% endcomment %}
                     <br>
-                    <div>
-                        <p>S1 - средняя оценка</p>
-                        <p>S2 - средне-весовая оценка по всем эекспертам</p>
-                        <p>S3 - средне-весовая оценка по выбранным экспертам (по Чебышеву)</p>
-                    </div>
-                    <br>
-                    <div id="chart_div"></div>
+                    <div id="chart_div" style="height: 800px"></div>
                 </div>
                 <div class="head-form" style="display:block;">
                     <h3>Согласованность оценок по шкале Харрингтона: <br>
