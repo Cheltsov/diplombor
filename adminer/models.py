@@ -144,3 +144,15 @@ class UserAnswer(models.Model):
         managed = True
         db_table = 'user_answer'
 
+
+class UserAnswerOther(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_question = models.ForeignKey(Question, on_delete=models.SET_NULL, default="", null=True)
+    date_created = models.DateTimeField(auto_now_add=True, db_index=True, null=True)
+    date_updated = models.DateTimeField(auto_now=True, db_index=True, null=True)
+    user = models.CharField(max_length=100, blank=True, null=True)
+    other_text = models.CharField(max_length=250, blank=True, null=False)
+
+    class Meta:
+        managed = True
+        db_table = 'user_answer_other'

@@ -1,9 +1,11 @@
 import datetime
+import json
 import pdfkit
 
 import numpy as np
 from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
+from django.core.serializers.json import DjangoJSONEncoder
 
 from adminer.core.data import *
 from adminer.core.query import *
@@ -167,11 +169,15 @@ def stat_ajax(request, id):
     list_q_mark = []
     for i, item in enumerate(obj_competence_expert.questions):
         sch = round(obj_competence_expert.getMark(min_count_expert)[i], 2)
+
+        list_other_answer = UserAnswerOther.objects.filter(id_question_id=item['id_question_id']).values_list('other_text')
+
         list_q_mark.append({
             'question_title': Question.objects.get(id=item['id_question_id']).title,
             's1': round(list_s1[i], 2),
             's6': round(list_s6[i], 2),
             'sch': sch if sch > 0 else 0,
+            'other_answer': json.dumps(list(list_other_answer), cls=DjangoJSONEncoder)
         })
 
     word = coord = "Недостаточно экспертов"

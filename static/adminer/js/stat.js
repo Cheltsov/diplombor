@@ -14,6 +14,7 @@ $(document).ready(function () {
             dataType: 'json',
             data: {'id_category': $('.select_category').val()},
             success: function (response) {
+                console.log(response)
                 $("#chart_div").empty();
                 $('.tr_question').remove();
                 $('.renderChartRemove').remove();
@@ -78,10 +79,26 @@ $(document).ready(function () {
         list_count_mark.forEach(function (item, index) {
             $('.head-form').last().after(`
                 <div class="head-form renderChartRemove">
-                    <h3>Оценки по показателю "` + list_q_mark[index]['question_title'] + `"</h3>
+                    <div>
+                        <h3>Оценки по показателю "` + list_q_mark[index]['question_title'] + `"</h3>
+                        <div style="margin-top: 20px; margin-left: 10px; display: none" class="other_list_block` + (index) + `">
+                            <h5>Дополнительные ответы пользователей:</h5>
+                            <ul class="other_list` + (index) + `">
+                            </ul>
+                        </div>
+                    </div>
                     <div id="piechart` + (index) + `" style="width: 100%; height: 500px;"></div>
                     <br>
                 </div>`);
+
+                let list_other = JSON.parse(list_q_mark[index]['other_answer']);
+                if(list_other.length > 0) {
+                    $(".other_list_block"+index).show();
+                    list_other.forEach(function(item){
+                        $(".other_list"+index).append("<li>" + item[0] + "</li>")
+                    });
+                }
+
 
             let data_chart = [];
             data_chart.push(['Task', 'Hours per Day']);

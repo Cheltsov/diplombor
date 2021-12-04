@@ -2,10 +2,12 @@ from django.http import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
 
 from adminer.core.data import createJsonPolls, getPostJson, createJsonQuestion
-from adminer.models import Polls, UserAnswer, Question, Answer
+from adminer.models import Polls, UserAnswer, Question, Answer, UserAnswerOther
 
 from adminer.math.expert_competence_analysis import mainer
-#from adminer.math.count_experts import mainer
+
+
+# from adminer.math.count_experts import mainer
 
 
 def index(request, id):
@@ -41,9 +43,18 @@ def create_user_answer(request, id):
                                                user=item['user'],
                                                is_category=item['is_category'],
                                                id_category_id=item['id_category'],
-                                               answer_cost=answer.cost/100))
+                                               answer_cost=answer.cost / 100))
         if UserAnswer.objects.bulk_create(list_user_answer):
             response = 'true'
+
+        request_user_answer_other = getPostJson(request, 'data_other')
+        list_user_answer_other = []
+        for item in request_user_answer_other:
+            list_user_answer_other.append(UserAnswerOther(id_question_id=item['id_question'],
+                                                          user=item['user'],
+                                                          other_text=item['other_text']))
+        UserAnswerOther.objects.bulk_create(list_user_answer_other)
+
         return HttpResponse(response)
     return HttpResponseNotFound('<h1>Page not found</h1>')
 

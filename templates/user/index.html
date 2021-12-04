@@ -16,7 +16,8 @@
                     <div class="head-form min-height-auto" style="display: block;">
                         <div class="question">{{ question.title }}</div>
                         <div class="form-group">
-                            <select class="form-select" data-question="{{ question.id }}" data-is-category="1" data-category="{{ question.id_category }}">
+                            <select class="form-select" data-question="{{ question.id }}" data-is-category="1"
+                                    data-category="{{ question.id_category }}">
                                 {% for answer in question.answers %}
                                     <option value="{{ answer.id }}">{{ answer.title }}</option>
                                 {% endfor %}
@@ -40,13 +41,23 @@
                                         <option value="{{ answer.id }}">{{ answer.title }}</option>
                                     {% endfor %}
                                 </select>
+                                <div style="margin-top: 20px; ">
+                                    <textarea data-question="{{ question.id }}" class="other_answer_text" cols="30" rows="2" style="max-width: 100%; min-height: 60px"
+                                              placeholder="Можете добавить ответ"></textarea>
+                                </div>
                             </div>
+
                         {% else %}
                             <div class="form-group">
                                 Ответ: <span class="number_range"></span>
                                 <input type="range" class="form-range customRange2" min="1"
-                                       data-question="{{ question.id }}" data-is-category="0" data-id-first="{% with question.answers|first as first %}{{ first.id }}{% endwith %}"
+                                       data-question="{{ question.id }}" data-is-category="0" data-id-first="
+                                        {% with question.answers|first as first %}{{ first.id }}{% endwith %}"
                                        max="{% with question.answers|last as last %}{{ last.title }}{% endwith %}">
+                                <div style="margin-top: 20px; ">
+                                    <textarea data-question="{{ question.id }}" cols="30" rows="2" style="max-width: 100%; min-height: 60px"
+                                              placeholder="Можете добавить ответ" class="other_answer_text"></textarea>
+                                </div>
                             </div>
                         {% endif %}
                     </div>

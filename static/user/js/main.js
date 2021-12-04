@@ -11,17 +11,17 @@ $(document).ready(function () {
         e.preventDefault();
         let data = [];
         let date = new Date();
-        let id_user =  date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString() + date.getHours().toString() + date.getMinutes().toString() + date.getSeconds().toString();
+        let id_user = date.getFullYear().toString() + date.getMonth().toString() + date.getDate().toString() + date.getHours().toString() + date.getMinutes().toString() + date.getSeconds().toString();
 
         $(this).find('select, input[type="range"]').each(function () {
             let id_answer = $(this).val();
             let attr = $(this).attr('data-id-first');
-            if(typeof attr !== 'undefined' && attr !== false){
+            if (typeof attr !== 'undefined' && attr !== false) {
                 id_answer = parseInt($(this).attr('data-id-first')) + (parseInt($(this).val() - 1))
             }
 
             let id_category = 0;
-            if($('select[data-is-category="1"]').length > 0){
+            if ($('select[data-is-category="1"]').length > 0) {
                 id_category = $('select[data-is-category="1"]').val();
             }
             data.push({
@@ -33,7 +33,18 @@ $(document).ready(function () {
             })
         });
 
-        console.log(data);
+        let data_other = [];
+        $(this).find('textarea.other_answer_text').each(function () {
+            if ($(this).val() != '') {
+                data_other.push({
+                    'id_question': parseInt($(this).attr('data-question')),
+                    'user': id_user,
+                    'other_text': $(this).val()
+                });
+            }
+        });
+
+        console.log(data_other);
 
         $.ajax({
             headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val()},
@@ -42,10 +53,11 @@ $(document).ready(function () {
             dataType: 'json',
             data: {
                 'getdata': JSON.stringify(data),
+                'data_other': JSON.stringify(data_other),
             },
             success: function (response) {
                 console.log(response);
-                window.location.href="/user/thank/";
+                window.location.href = "/user/thank/";
             }
         });
     });
@@ -56,7 +68,7 @@ $(document).ready(function () {
             async: false,
             dataType: 'json',
         }).responseText;
-        return ;
+        return;
     }
 
 });
