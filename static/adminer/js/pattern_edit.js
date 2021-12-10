@@ -240,14 +240,14 @@ $(document).ready(function () {
                             <input type="text" autocomplete="off" class="form-control" value="` + current_category['questions'][0]['title'] + `" name="category[` + id_category + `]['title']" disabled>
                         </div>
                     </div>
-                    <div class="item" id="container_answer_` + id_category + `"></div>
+                    <div class="item" id="container_category_` + id_category + `"></div>
                 </div>
             </div>
         `);
 
         //Заполнить ответы категории
         current_category['questions'][0]['answers'].forEach(function (el, index) {
-            $("#container_answer_" + id_category).append(`
+            $("#container_category_" + id_category).append(`
                 <div class="box_answer" id="box_answer_` + (index + 1) + `" data-id="` + (index + 1) + `" style="width: 80%;">
                     <input type="text" autocomplete="off" class="form-control" value="` + el['title'] + `" name="category[` + id_category + `]['answer'][` + (index + 1) + `]" disabled>
                     <br>
