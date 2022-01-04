@@ -4,6 +4,8 @@ from collections import Counter
 
 
 class Math:
+    listUserAnswer = []
+
     answerRowByIdQuestion = []
     listExperts = []
 
@@ -20,7 +22,8 @@ class Math:
         self.id_poll = id_poll
         self.id_category = id_category
         if self.id_category:
-            self.questions = UserAnswer.objects.filter(id_polls_id=id_poll, id_category_id=id_category,  is_category=False).values('id_question_id').distinct()
+            self.questions = UserAnswer.objects.filter(id_polls_id=id_poll, id_category_id=id_category,
+                                                       is_category=False).values('id_question_id').distinct()
         else:
             self.questions = UserAnswer.objects.filter(id_polls_id=id_poll, is_category=False).values(
                 'id_question_id').distinct()
@@ -49,12 +52,15 @@ class Math:
             else:
                 return False
 
-    @staticmethod
-    def getUserAnswersRow(id_question, id_category=None):
-        if id_category:
-            return UserAnswer.objects.filter(id_question_id=id_question, id_category_id=id_category, is_category=False).order_by('id')
-        else:
-            return UserAnswer.objects.filter(id_question_id=id_question, is_category=False).order_by('id')
+    def getUserAnswersRow(self, id_question, id_category=None):
+        if not self.listUserAnswer:
+            if id_category:
+                self.listUserAnswer = UserAnswer.objects.filter(id_question_id=id_question, id_category_id=id_category,
+                                                                is_category=False).order_by('id')
+            else:
+                self.listUserAnswer = UserAnswer.objects.filter(id_question_id=id_question, is_category=False)\
+                    .order_by('id')
+        return self.listUserAnswer
 
     def getExperts(self):
         if self.id_category:
@@ -102,5 +108,3 @@ class Math:
                 list_math.append(Counter(list_answers))
 
         return list_math
-
-
