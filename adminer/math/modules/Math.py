@@ -62,13 +62,29 @@ class Math:
                 .order_by('id')
         return self.listUserAnswer
 
-    def getCostUserAnswersRow(self, id_question, id_category=None):
+    def getCostUserAnswersRow(self, id_question, id_category=None, limit=None):
         if id_category:
-            result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question, id_category_id=id_category,
-                                                            is_category=False).order_by('id')
+
+            if limit:
+                result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
+                                                                                         id_category_id=id_category,
+                                                                                         is_category=False).order_by(
+                    'id')[:limit]
+            else:
+                result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
+                                                                                         id_category_id=id_category,
+                                                                                         is_category=False).order_by(
+                    'id')
         else:
-            result = UserAnswer.objects.values_list('answer_cost', flat=True). filter(id_question_id=id_question, is_category=False) \
-                .order_by('id')
+            if limit:
+                result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
+                                                                                         is_category=False) \
+                             .order_by('id')[:limit]
+
+            else:
+                result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
+                                                                                         is_category=False) \
+                    .order_by('id')
         return list(result)
 
     def getSumUserAnswersRow(self, id_question, id_category=None):

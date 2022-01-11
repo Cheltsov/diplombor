@@ -1,5 +1,7 @@
 import datetime
 import json
+import os
+
 import pdfkit
 
 import numpy as np
@@ -13,10 +15,8 @@ from adminer.math.modules.CompetenceExpert import CompetenceExpert
 from adminer.math.modules.ConsistencyEstimates import ConsistencyEstimates
 from adminer.math.modules.CountExpert import CountExpert
 from adminer.models import *
-
 from datetime import datetime
 import time
-
 
 def polls(request):
     if 'admin' in request.session:
@@ -160,55 +160,14 @@ def polls_stat(request, id):
 def stat_ajax(request, id):
     id_category = request.POST['id_category'] if int(request.POST['id_category']) > 0 else None
 
-    start_time = datetime.now()
+    my_file = 'staticfiles/adminer/report/' + str(id) + '_' + str(id_category) + 'data.json'
 
-    obj_competence_expert = CompetenceExpert(id_poll=id, id_category=id_category)
-    list_s1, list_s6 = obj_competence_expert.main()
+    if not os.path.isfile(my_file):
+        getStatAllCategory(id)
 
-    print(list_s1)
-    print(list_s6)
+    with open(my_file) as f:
+        content = json.load(f)
 
-    print(datetime.now() - start_time)
-
-    rank = obj_competence_expert.rank_q
-    count_expert = CountExpert(id_poll=id, id_category=id_category)
-
-    print(datetime.now() - start_time)
-
-    min_count_expert = count_expert.getMinCountExpert()
-
-    print(datetime.now() - start_time)
-
-    obj_ser = ConsistencyEstimates(id_poll=id, id_category=id_category)
-
-    print(datetime.now() - start_time)
-
-    list_q_mark = []
-    for i, item in enumerate(obj_competence_expert.questions):
-        sch = round(obj_competence_expert.getMark(min_count_expert)[i], 2)
-
-        list_other_answer = UserAnswerOther.objects.filter(id_question_id=item['id_question_id']).values_list('other_text')
-
-        list_q_mark.append({
-            'question_title': Question.objects.get(id=item['id_question_id']).title,
-            's1': round(list_s1[i], 2),
-            's6': round(list_s6[i], 2),
-            'sch': sch if sch > 0 else 0,
-            'other_answer': json.dumps(list(list_other_answer), cls=DjangoJSONEncoder)
-        })
-
-    print(datetime.now() - start_time)
-
-    word = coord = "Недостаточно экспертов"
-    if min_count_expert != 0:
-        word = obj_ser.math4(min_count_expert)
-        coord = obj_ser.math5(min_count_expert)
-    content = {
-        "list_q_mark": list_q_mark,
-        "word": word,
-        "coord": coord,
-        "count_mark": obj_competence_expert.getMatrWord()
-    }
     return JsonResponse(content, safe=False)
 
 
@@ -224,3 +183,61 @@ def create_pdf(request, id):
         url = 'staticfiles/adminer/pdf/out_' + str(id) + '.pdf'
         pdfkit.from_url(str(url_site) + 'admin/polls/statistic/' + str(id) + '/', url)
     return JsonResponse('/' + url, safe=False)
+
+
+def refresh_stat_ajax(request, id):
+    getStatAllCategory(id)
+    return HttpResponse('true')
+
+
+def getStatAllCategory(id_poll):
+    start_time = datetime.now()
+    for itemCategory in getCategoryInPoll(id_poll=id_poll):
+        getStat(id_poll, itemCategory.id)
+        print(datetime.now() - start_time)
+    getStat(id_poll, None)
+    print(datetime.now() - start_time)
+    return True
+
+
+def getStat(id_poll, id_category):
+    obj_competence_expert = CompetenceExpert(id_poll=id_poll, id_category=id_category)
+    list_s1, list_s6 = obj_competence_expert.main()
+
+    rank = obj_competence_expert.rank_q
+    count_expert = CountExpert(id_poll=id_poll, id_category=id_category)
+
+    min_count_expert = count_expert.getMinCountExpert()
+
+    obj_ser = ConsistencyEstimates(id_poll=id_poll, id_category=id_category)
+
+    list_q_mark = []
+    for i, item in enumerate(obj_competence_expert.questions):
+        sch = round(obj_competence_expert.getMark(min_count_expert)[i], 2)
+
+        list_other_answer = UserAnswerOther.objects.filter(id_question_id=item['id_question_id']).values_list(
+            'other_text')
+
+        list_q_mark.append({
+            'question_title': Question.objects.get(id=item['id_question_id']).title,
+            's1': round(list_s1[i], 2),
+            's6': round(list_s6[i], 2),
+            'sch': sch if sch > 0 else 0,
+            'other_answer': json.dumps(list(list_other_answer), cls=DjangoJSONEncoder)
+        })
+
+    word = coord = "Недостаточно экспертов"
+    if min_count_expert != 0:
+        word = obj_ser.math4(min_count_expert)
+        coord = obj_ser.math5(min_count_expert)
+    content = {
+        "list_q_mark": list_q_mark,
+        "word": word,
+        "coord": coord,
+        "count_mark": obj_competence_expert.getMatrWord()
+    }
+    with open('staticfiles/adminer/report/' + str(id_poll) + '_' + str(id_category) + 'data.json', 'w',
+              encoding='utf-8') as f:
+        json.dump(content, f, ensure_ascii=False, indent=4)
+
+    return content

@@ -2,8 +2,9 @@ $(document).ready(function () {
 
     sendAjax();
 
-    $('.select_category').change(function () {
+    $('.select_category_btn').click(function () {
         sendAjax();
+        alert('Поиск завершен');
     });
     // Запрос на получение статистики
     function sendAjax() {
@@ -140,5 +141,19 @@ $(document).ready(function () {
         });
     });
 
-
+    $('#refresh_report').click(function(){
+        alert('Выполняется обновление')
+        $.ajax({
+            headers: {"X-CSRFToken": $('#csrfmiddlewaretoken').text()},
+            type: 'post',
+            url: '/admin/polls/refresh_stat_ajax/' + $('.h_poll').attr('data-id') + '/',
+            success: function (response) {
+                 if(response == 'true') {
+                     window.location.reload();
+                 } else {
+                     alert('Ошибка')
+                 }
+            }
+        });
+    });
 });

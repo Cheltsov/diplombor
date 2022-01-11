@@ -14,23 +14,18 @@ class CountExpert(Math):
         # Получить всех экспертов
         experts = self.getExperts()
         list_oo = []
+        list_min_count_expert = []
+        for i in range(3, len(experts) + 1):
+            list_min_count_expert.append(i)
+
         for question in self.questions:
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
             list_cost = []
-
-            list_min_count_expert = []
             for i in range(3, len(experts) + 1):
-                list_min_count_expert.append(i)
-
-            for i in range(3, len(experts) + 1):
-                list_c = []
-                variance = 0
-                for item in list_user_answer[:i]:
-                    list_c.append(self.floatCost(item.id_answer.cost))
-                    variance = np.var(np.array(list_c))
+                list_cost = self.getCostUserAnswersRow(id_question=question['id_question_id'],
+                                                       id_category=self.id_category, limit=i)
+                variance = np.var(np.array(list_cost))
                 list_cost.append(math.ceil((variance / self.cheb)))
             list_oo.append(list_cost)
-
         matrix = np.array(list_oo)
 
         if len(matrix) < 1:

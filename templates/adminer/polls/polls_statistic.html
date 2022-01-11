@@ -29,6 +29,7 @@
                         onclick="window.location.href='{% url 'adminer:polls' %}'">Отмена
                 </button>
                 <button class="btn btn-primary" id="print_pdf">Печать PDF</button>
+                <button class="btn btn-warning" id="refresh_report">Обновить</button>
                 <div class="head-form" style="display:block;">
                     <div class="color-line"></div>
                     <h1 style="color: black;" class="h_poll" data-id="{{ poll.id }}">{{ poll.title }}</h1>
@@ -56,13 +57,17 @@
                 <div class="head-form" style="display:block;">
                     <div class="form-group">
                         <h3>Выберите категорию</h3>
-                        <select class="form-select select_category">
-                            <option value="0">Все категории</option>
-                            {% for item in list_category %}
-                                <option value="{{ item.id }}" {% if id_category == item.id %}
-                                        selected="selected" {% endif %}>{{ item.title }}</option>
-                            {% endfor %}
-                        </select>
+                        <div style="display: flex">
+                            <select class="form-select select_category">
+                                <option value="0">Все категории</option>
+                                {% for item in list_category %}
+                                    <option value="{{ item.id }}" {% if id_category == item.id %}
+                                            selected="selected" {% endif %}>{{ item.title }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-secondary select_category_btn" style="margin-left: 10px;">Выбрать</button>
+                        </div>
+
                     </div>
                 </div>
 
