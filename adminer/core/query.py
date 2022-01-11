@@ -123,5 +123,7 @@ def addCategoryInPolls(request_category, id_polls):
 
 
 def getCategoryInPoll(id_poll):
-    list_category = UserAnswer.objects.filter(id_polls_id=id_poll, is_category=True)[0].id_question.answer_set.all()
+    list_category = []
+    for item in UserAnswer.objects.filter(id_polls_id=id_poll, is_category=True).values('id_question_id').distinct():
+        list_category = list_category + list(Answer.objects.filter(id_question_id=item['id_question_id']))
     return list_category
