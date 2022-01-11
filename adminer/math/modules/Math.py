@@ -1,6 +1,7 @@
 from adminer.models import *
 import numpy as np
 from collections import Counter
+from django.db.models import Sum
 
 
 class Math:
@@ -53,14 +54,32 @@ class Math:
                 return False
 
     def getUserAnswersRow(self, id_question, id_category=None):
-        if not self.listUserAnswer:
-            if id_category:
-                self.listUserAnswer = UserAnswer.objects.filter(id_question_id=id_question, id_category_id=id_category,
-                                                                is_category=False).order_by('id')
-            else:
-                self.listUserAnswer = UserAnswer.objects.filter(id_question_id=id_question, is_category=False)\
-                    .order_by('id')
+        if id_category:
+            self.listUserAnswer = UserAnswer.objects.filter(id_question_id=id_question, id_category_id=id_category,
+                                                            is_category=False).order_by('id')
+        else:
+            self.listUserAnswer = UserAnswer.objects.filter(id_question_id=id_question, is_category=False) \
+                .order_by('id')
         return self.listUserAnswer
+
+    def getCostUserAnswersRow(self, id_question, id_category=None):
+        if id_category:
+            result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question, id_category_id=id_category,
+                                                            is_category=False).order_by('id')
+        else:
+            result = UserAnswer.objects.values_list('answer_cost', flat=True). filter(id_question_id=id_question, is_category=False) \
+                .order_by('id')
+        return list(result)
+
+    def getSumUserAnswersRow(self, id_question, id_category=None):
+        if id_category:
+            result = UserAnswer.objects.filter(id_question_id=id_question, id_category_id=id_category,
+                                                            is_category=False).aggregate(Sum('answer_cost'))
+        else:
+            result = UserAnswer.objects.filter(id_question_id=id_question, is_category=False) \
+                .aggregate(Sum('answer_cost'))
+        return result['answer_cost__sum']
+
 
     def getExperts(self):
         if self.id_category:

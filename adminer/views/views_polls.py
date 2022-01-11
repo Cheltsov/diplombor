@@ -14,6 +14,9 @@ from adminer.math.modules.ConsistencyEstimates import ConsistencyEstimates
 from adminer.math.modules.CountExpert import CountExpert
 from adminer.models import *
 
+from datetime import datetime
+import time
+
 
 def polls(request):
     if 'admin' in request.session:
@@ -157,14 +160,28 @@ def polls_stat(request, id):
 def stat_ajax(request, id):
     id_category = request.POST['id_category'] if int(request.POST['id_category']) > 0 else None
 
+    start_time = datetime.now()
+
     obj_competence_expert = CompetenceExpert(id_poll=id, id_category=id_category)
     list_s1, list_s6 = obj_competence_expert.main()
 
+    print(list_s1)
+    print(list_s6)
+
+    print(datetime.now() - start_time)
+
     rank = obj_competence_expert.rank_q
     count_expert = CountExpert(id_poll=id, id_category=id_category)
+
+    print(datetime.now() - start_time)
+
     min_count_expert = count_expert.getMinCountExpert()
 
+    print(datetime.now() - start_time)
+
     obj_ser = ConsistencyEstimates(id_poll=id, id_category=id_category)
+
+    print(datetime.now() - start_time)
 
     list_q_mark = []
     for i, item in enumerate(obj_competence_expert.questions):
@@ -179,6 +196,8 @@ def stat_ajax(request, id):
             'sch': sch if sch > 0 else 0,
             'other_answer': json.dumps(list(list_other_answer), cls=DjangoJSONEncoder)
         })
+
+    print(datetime.now() - start_time)
 
     word = coord = "Недостаточно экспертов"
     if min_count_expert != 0:

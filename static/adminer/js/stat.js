@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('.select_category').change(function () {
         sendAjax();
     });
-
+    // Запрос на получение статистики
     function sendAjax() {
         $.ajax({
             headers: {"X-CSRFToken": $('#csrfmiddlewaretoken').text()},
@@ -31,7 +31,7 @@ $(document).ready(function () {
             }
         });
     }
-
+    // Отобразить таблицу параметров S!, S6, Sch
     function renderTableS(list_q_mark) {
         $('.tr_question').remove();
         list_q_mark.forEach(function (item, index) {
@@ -44,7 +44,7 @@ $(document).ready(function () {
                 </tr>`);
         });
     }
-
+    // Отобразить круглый график
     function renderSircleChart(list_q_mark) {
 
         $('#chart_div').css('height', (50 * parseInt(list_q_mark.length))+'px');
@@ -73,7 +73,7 @@ $(document).ready(function () {
             chart.draw(data, google.charts.Bar.convertOptions(options));
         }
     }
-
+    // отобразить кол-во оценкок каждого показателя
     function renderCountMark(list_count_mark, list_q_mark) {
         $('.renderChartRemove').remove();
         list_count_mark.forEach(function (item, index) {
@@ -110,7 +110,7 @@ $(document).ready(function () {
             smallRenderCountMark('Ответы по показателю "' + list_q_mark[index]['question_title'] + '"', 'piechart' + index, data_chart)
         });
     }
-
+    // Круговой график для каждого показателя
     function smallRenderCountMark(title_chart, id_div, data_chart) {
         google.charts.load('current', {'packages': ['corechart']});
         google.charts.setOnLoadCallback(drawChart);

@@ -14,12 +14,8 @@ class CompetenceExpert(Math):
     def getSumAnswer(self):
         list_sum_question = []
         for question in self.questions:
-            sum_question = 0
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
-            for user_answer in list_user_answer:
-                e1 = self.floatCost(user_answer.id_answer.cost)
-                sum_question = round((sum_question + e1), 2)
-            list_sum_question.append(sum_question)
+            r = self.getSumUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
+            list_sum_question.append(r)
         return list_sum_question
 
     def getAnswerByQuestion(self, id_question):
@@ -53,14 +49,12 @@ class CompetenceExpert(Math):
         list_answer = []
         if self.id_category:
             if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category_id=self.id_category).exists():
-                user_answers = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category_id=self.id_category)
-                for user_answer in user_answers:
-                    list_answer.append(self.floatCost(user_answer.id_answer.cost))
+                tt = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category_id=self.id_category)
+                list_answer = list(tt)
         else:
             if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False).exists():
-                user_answers = UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False)
-                for user_answer in user_answers:
-                    list_answer.append(self.floatCost(user_answer.id_answer.cost))
+                tt = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_polls_id=self.id_poll, user=user, is_category=False)
+                list_answer = list(tt)
         return list_answer
 
     @staticmethod
@@ -71,11 +65,7 @@ class CompetenceExpert(Math):
         list_s2 = []
         questions = self.questions
         for question in questions:
-            list_e1 = []
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
-            for user_answer in list_user_answer:
-                e1 = self.floatCost(user_answer.id_answer.cost)
-                list_e1.append(e1)
+            list_e1 = self.getCostUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
             sr = 0
             for item in range(len(list_e1)):
                 sr = sr + (list_e1[item] * listQ1[item])
@@ -106,8 +96,11 @@ class CompetenceExpert(Math):
         for item in range(len(experts)):
             self.list_q[0].append(self.getCompetencyRatio(len(experts)))
         cont_arr = 0
-        for expert in range(1, 11):
-            cont_arr = cont_arr+1
+
+        expert = 1
+        self.sum_qmin = 1
+        while self.sum_qmin > 0.001:
+            cont_arr = cont_arr + 1
             m, array_q1, array_s = self.getArrQ(experts=experts, array_sum=array_sum, array_s1=array_s)
             self.list_m.append(m)
             self.list_q.append(array_q1)
@@ -115,15 +108,14 @@ class CompetenceExpert(Math):
 
             sum_q = 0
             q_line1 = self.list_q[expert]
-            q_line2 = self.list_q[expert-1]
+            q_line2 = self.list_q[expert - 1]
             for i in range(len(q_line1)):
                 qsum1 = q_line1[i]
                 qsum2 = q_line2[i]
                 qmin = abs(qsum1 - qsum2)
                 sum_q = sum_q + qmin
             self.sum_qmin = sum_q
-            if self.sum_qmin < 0.0001:
-                break
+            expert = expert + 1
 
         S1 = pd.Series(self.list_q[-1])
         self.rank_q = list(S1.rank())
@@ -137,6 +129,6 @@ class CompetenceExpert(Math):
             sum_answer = 0
             for i, answer in enumerate(self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)):
                 if i < min_count_expert:
-                    sum_answer = sum_answer + (self.floatCost(answer.id_answer.cost) * self.list_q[-1][i])
+                    sum_answer = sum_answer + (answer.answer_cost * self.list_q[-1][i])
             rezult.append(sum_answer)
         return np.array(rezult)

@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     $('input').attr('autocomplete', 'off');
 
-
+    // Переместить ответ вверх
     $(document).on('click', '.arrow_up', function (e) {
         e.preventDefault();
         let currentEl = $(this).parent('.box_answer').index();
@@ -12,7 +12,7 @@ $(document).ready(function () {
             recalculateAnswer(1);
         }
     });
-
+    // Переместить ответ вниз
     $(document).on('click', '.arrow_down', function (e) {
         e.preventDefault();
         let currentEl = $(this).parent('.box_answer').index();
@@ -23,7 +23,7 @@ $(document).ready(function () {
         }
     });
 
-
+    // Переместить показатель вверх
     $(document).on('click', '.arrow_up_q', function (e) {
         e.preventDefault();
         let currentEl = $(this).parents('.box-master').index();
@@ -32,7 +32,7 @@ $(document).ready(function () {
             $($(listBox).children('.box-master').eq(currentEl - 1)).before($($(listBox).children('.box-master').eq(currentEl)));
         }
     });
-
+    // Переместить показатель вниз
     $(document).on('click', '.arrow_down_q', function (e) {
         e.preventDefault();
         let currentEl = $(this).parents('.box-master').index();
@@ -42,8 +42,7 @@ $(document).ready(function () {
         }
     });
 
-
-    // Удаление вопроса
+    // Удаление опроса
     $(document).on('click', '.delete_question', function (e) {
         e.preventDefault();
         let id = $(this).attr('data-id');
@@ -54,7 +53,7 @@ $(document).ready(function () {
         }
     });
 
-    // Добавление вопроса
+    // Добавление опроса
     $(document).on('click', '#add_question', function (e) {
         e.preventDefault();
 
@@ -98,6 +97,7 @@ $(document).ready(function () {
         }
     });
 
+    // Добавить вербальный ответ
     function addAnswerIsVerbal(id_question) {
         let last_answer = $('#container_answer_' + id_question).children('.box_answer').last();
         let count_answer = parseInt(last_answer.attr('data-id')) + 1;
@@ -115,6 +115,7 @@ $(document).ready(function () {
         recalculateAnswer(id_question);
     }
 
+    // Пересчитать оценки
     function recalculateAnswer(id_container_answer) {
         let arr_cost_answer = $('#container_answer_' + id_container_answer).find('.cost-answer')
         let count_answer = arr_cost_answer.length
@@ -124,7 +125,7 @@ $(document).ready(function () {
             $(this).text(Math.trunc(step * index));
         });
     }
-
+    // Отправкить запрос с данными формы
     $('#form_pattern_edit').submit(function (e) {
         e.preventDefault();
         let data = []
