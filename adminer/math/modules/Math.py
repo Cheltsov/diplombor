@@ -70,22 +70,22 @@ class Math:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          id_category_id=id_category,
                                                                                          is_category=False).order_by(
-                    'user')[:limit]
+                    'id')[:limit]
             else:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          id_category_id=id_category,
                                                                                          is_category=False).order_by(
-                    'user')
+                    'id')
         else:
             if limit:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          is_category=False) \
-                             .order_by('user')[:limit]
+                             .order_by('id')[:limit]
 
             else:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          is_category=False) \
-                    .order_by('user')
+                    .order_by('id')
         return list(result)
 
     def getSumUserAnswersRow(self, id_question, id_category=None):
