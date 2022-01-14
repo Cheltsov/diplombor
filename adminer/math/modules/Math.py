@@ -2,6 +2,7 @@ from adminer.models import *
 import numpy as np
 from collections import Counter
 from django.db.models import Sum
+from statistics import mean
 
 
 class Math:
@@ -69,22 +70,22 @@ class Math:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          id_category_id=id_category,
                                                                                          is_category=False).order_by(
-                    'id')[:limit]
+                    'user')[:limit]
             else:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          id_category_id=id_category,
                                                                                          is_category=False).order_by(
-                    'id')
+                    'user')
         else:
             if limit:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          is_category=False) \
-                             .order_by('id')[:limit]
+                             .order_by('user')[:limit]
 
             else:
                 result = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_question_id=id_question,
                                                                                          is_category=False) \
-                    .order_by('id')
+                    .order_by('user')
         return list(result)
 
     def getSumUserAnswersRow(self, id_question, id_category=None):
@@ -109,22 +110,24 @@ class Math:
 
     def getMatr(self):
         list_math = []
+        list_s1 = []
         if self.id_category:
             for question in self.questions:
-                list_answers = []
-                for answer in self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category):
-                    list_answers.append(self.floatCost(answer.id_answer.cost))
-                list_math.append(list_answers)
+                list_cost = self.getCostUserAnswersRow(id_question=question['id_question_id'],
+                                                       id_category=self.id_category)
+                list_s1.append(round(mean(list_cost), 2))
+                list_math.append(list_cost)
             list_math = np.array(list_math)
         else:
             for question in self.questions:
-                list_answers = []
-                for answer in self.getUserAnswersRow(id_question=question['id_question_id']):
-                    list_answers.append(self.floatCost(answer.id_answer.cost))
-                list_math.append(list_answers)
+                list_cost = self.getCostUserAnswersRow(id_question=question['id_question_id'],
+                                                       id_category=self.id_category)
+
+                list_s1.append(round(mean(list_cost), 2))
+                list_math.append(list_cost)
             list_math = np.array(list_math)
 
-        return list_math
+        return list_math, list_s1
 
     def getMatrWord(self):
         list_math = []

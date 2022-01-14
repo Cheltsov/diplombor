@@ -128,7 +128,7 @@ def polls_show(request, id):
 def polls_start(request, id):
     if 'admin' in request.session and id:
         poll = Polls.objects.get(id=id)
-        poll.date_start = datetime.datetime.now()
+        poll.date_start = datetime.now()
         poll.save()
         return HttpResponse('true')
     else:
@@ -138,7 +138,7 @@ def polls_start(request, id):
 def polls_end(request, id):
     if 'admin' in request.session and id:
         poll = Polls.objects.get(id=id)
-        poll.date_end = datetime.datetime.now()
+        poll.date_end = datetime.now()
         poll.save()
         return HttpResponse('true')
     else:

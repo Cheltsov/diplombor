@@ -83,10 +83,10 @@ class CompetenceExpert(Math):
 
     def main(self):
         # Вывод входных данных
-        self.list_cost = self.getMatr()
+        self.list_cost, list_s1 = self.getMatr()
 
         array_sum = np.array(self.getSumAnswer())
-        array_s = np.array(self.getS1Answer())
+        array_s = np.array(list_s1)
         list_s1 = array_s
 
         # Получить всех экспертов
