@@ -25,10 +25,10 @@ class Math:
         self.id_category = id_category
         if self.id_category:
             self.questions = UserAnswer.objects.filter(id_polls_id=id_poll, id_category_id=id_category,
-                                                       is_category=False).values('id_question_id').distinct()
+                                                       is_category=False).values('id_question_id').distinct().order_by('id_question_id')
         else:
             self.questions = UserAnswer.objects.filter(id_polls_id=id_poll, is_category=False).values(
-                'id_question_id').distinct()
+                'id_question_id').distinct().order_by('id_question_id')
 
     @staticmethod
     def getCompetencyRatio(count_user):
