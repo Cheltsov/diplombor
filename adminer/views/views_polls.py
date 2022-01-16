@@ -210,7 +210,6 @@ def getStatAllCategory(id_poll):
         return False
     listCategory = listCategoryByQuestion[0] + listCategoryByQuestion[1]
 
-
     getStat(id_poll)
     print(datetime.now() - start_time)
 
