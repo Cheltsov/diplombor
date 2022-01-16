@@ -26,10 +26,13 @@
             <div class="container">
                 <br>
                 <button class="btn btn-secondary ripple-surface"
-                        onclick="window.location.href='{% url 'adminer:polls' %}'">Отмена
+                        onclick="window.location.href='{% url 'adminer:polls_show' poll.id %}'">Отмена
                 </button>
                 <button class="btn btn-primary" id="print_pdf">Печать PDF</button>
-                <button class="btn btn-warning" id="refresh_report">Обновить</button>
+                {% if not poll.date_end %}
+                    <button class="btn btn-warning" id="refresh_report">Обновить</button>
+                {% endif %}
+
                 <div class="head-form" style="display:block;">
                     <div class="color-line"></div>
                     <h1 style="color: black;" class="h_poll" data-id="{{ poll.id }}">{{ poll.title }}</h1>
@@ -54,62 +57,74 @@
                     </div>
                 </div>
 
-                <div class="head-form" style="display:block;">
-                    <div class="form-group">
-                        <h3>Выберите категорию</h3>
-                        <div style="display: flex">
-                            <select class="form-select select_category">
-                                <option value="0">Все категории</option>
-                                {% for item in list_category %}
-                                    <option value="{{ item.id }}" {% if id_category == item.id %}
-                                            selected="selected" {% endif %}>{{ item.title }}</option>
-                                {% endfor %}
-                            </select>
-                            <button class="btn btn-secondary select_category_btn" style="margin-left: 10px;">Выбрать</button>
+                {% if count_user == 0 %}
+                    <div class="head-form" style="display:block;">
+                        <div class="form-group">
+                            <h3>Нет ответов пользователей</h3>
                         </div>
-
                     </div>
-                </div>
+                {% else %}
+                    <div class="head-form" style="display:block;">
+                        <div class="form-group">
+                            <h3>Выберите категорию</h3>
+                            <br>
+                            {% for item_category in list_category %}
+                                <div style="display: flex; margin-bottom: 10px">
+                                    <select class="form-select select_category" data-id="{{ forloop.counter }}">
+                                        <option value="0">Выберите категорию</option>
+                                        {% for item in item_category %}
+                                            <option value="{{ item.id }}" {% if id_category == item.id %}
+                                                    selected="selected" {% endif %}>{{ item.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endfor %}
+                            <button class="btn btn-secondary select_category_btn">Выбрать</button>
+                        </div>
+                    </div>
 
-                <div class="head-form" style="display:block;">
-                    <h3>Векторы средней оценки с учетом компетентности экспертов</h3>
-                    <div>
-                        <br>
+                    <div class="head-form" style="display:block;">
+                        <h3>Векторы средней оценки с учетом компетентности экспертов</h3>
                         <div>
-                            <p>S1 - средняя оценка</p>
-                            <p>S2 - средне-весовая оценка по всем эекспертам</p>
-                            <p>S3 - средне-весовая оценка по выбранным экспертам (по Чебышеву)</p>
+                            <br>
+                            <div>
+                                <p>S1 - средняя оценка</p>
+                                <p>S2 - средне-весовая оценка по всем эекспертам</p>
+                                <p>S3 - средне-весовая оценка по выбранным экспертам (по Чебышеву)</p>
+                            </div>
+                            <br>
+                            <table class="table tableS">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Показатели</th>
+                                    <th scope="col">S1</th>
+                                    <th scope="col">S2</th>
+                                    <th scope="col">S3</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
+                        {% comment %}<br>
+                            <div class="legend_question">
+                            </div>{% endcomment %}
                         <br>
-                        <table class="table tableS">
-                            <thead>
-                            <tr>
-                                <th scope="col">Показатели</th>
-                                <th scope="col">S1</th>
-                                <th scope="col">S2</th>
-                                <th scope="col">S3</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                        <div id="chart_div" style="height: 800px"></div>
                     </div>
-                    {% comment %}<br>
-                        <div class="legend_question">
-                        </div>{% endcomment %}
-                    <br>
-                    <div id="chart_div" style="height: 800px"></div>
-                </div>
-                <div class="head-form" style="display:block;">
-                    <h3>Согласованность оценок по шкале Харрингтона: <br>
-                        <span style="color: red" class="math4">{{ list_math.word }}</span>
-                    </h3>
-                    <br>
-                </div>
-                <div class="head-form" style="display:block;">
-                    <h3>Согласованность оценок по шкале Пирсона: <br><span
-                            style="color: red" class="math5">{{ list_math.coord }}</span></h3>
-                    <br>
-                </div>
+                    <div class="head-form" style="display:block;">
+                        <h3>Согласованность оценок по шкале Харрингтона: <br>
+                            <span style="color: red" class="math4">{{ list_math.word }}</span>
+                        </h3>
+                        <br>
+                    </div>
+                    <div class="head-form" style="display:block;">
+                        <h3>Согласованность оценок по шкале Пирсона: <br><span
+                                style="color: red" class="math5">{{ list_math.coord }}</span></h3>
+                        <br>
+                    </div>
+                {% endif %}
+
+
                 <br><br>
             </div>
         </div>

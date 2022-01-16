@@ -2,7 +2,7 @@ import numpy as np
 import scipy.stats
 import pandas as pd
 
-from adminer.math.modules.Math import Math
+from adminer.math.modules.Math import Math, getSumUserAnswersRow
 from adminer.models import *
 
 
@@ -14,13 +14,13 @@ class CompetenceExpert(Math):
     def getSumAnswer(self):
         list_sum_question = []
         for question in self.questions:
-            r = self.getSumUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
+            r = getSumUserAnswersRow(id_question=question['id_question_id'], users=self.users_in_category)
             list_sum_question.append(r)
         return list_sum_question
 
     def getAnswerByQuestion(self, id_question):
         list_answer_cost = []
-        list_user_answer = self.getUserAnswersRow(id_question=id_question, id_category=self.id_category)
+        list_user_answer = self.getUserAnswersRow(id_question=id_question, users=self.users_in_category)
         for user_answer in list_user_answer:
             e1 = self.floatCost(user_answer.id_answer.cost)
             list_answer_cost.append(e1)
@@ -31,7 +31,8 @@ class CompetenceExpert(Math):
         questions = self.questions
         for question in questions:
             s1 = 0
-            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
+            list_user_answer = self.getUserAnswersRow(id_question=question['id_question_id'],
+                                                      users=self.users_in_category)
             for user_answer in list_user_answer:
                 e1 = self.floatCost(user_answer.id_answer.cost)
                 s1 = round((s1 + (e1 / len(list_user_answer))), 2)
@@ -47,13 +48,16 @@ class CompetenceExpert(Math):
 
     def getAnswerByUser(self, user):
         list_answer = []
-        if self.id_category:
-            if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category_id=self.id_category).exists():
-                tt = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_polls_id=self.id_poll, user=user, is_category=False, id_category_id=self.id_category)
+        if self.users_in_category:
+            if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False,
+                                         user__in=self.users_in_category).exists():
+                tt = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_polls_id=self.id_poll,
+                                                                                     user=user, is_category=False)
                 list_answer = list(tt)
         else:
             if UserAnswer.objects.filter(id_polls_id=self.id_poll, user=user, is_category=False).exists():
-                tt = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_polls_id=self.id_poll, user=user, is_category=False)
+                tt = UserAnswer.objects.values_list('answer_cost', flat=True).filter(id_polls_id=self.id_poll,
+                                                                                     user=user, is_category=False)
                 list_answer = list(tt)
         return list_answer
 
@@ -65,7 +69,7 @@ class CompetenceExpert(Math):
         list_s2 = []
         questions = self.questions
         for question in questions:
-            list_e1 = self.getCostUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)
+            list_e1 = self.getCostUserAnswersRow(id_question=question['id_question_id'], users=self.users_in_category)
             sr = 0
             for item in range(len(list_e1)):
                 sr = sr + (list_e1[item] * listQ1[item])
@@ -127,7 +131,8 @@ class CompetenceExpert(Math):
         rezult = []
         for question in self.questions:
             sum_answer = 0
-            for i, answer in enumerate(self.getUserAnswersRow(id_question=question['id_question_id'], id_category=self.id_category)):
+            for i, answer in enumerate(self.getUserAnswersRow(id_question=question['id_question_id'],
+                                                              users=self.users_in_category)):
                 if i < min_count_expert:
                     sum_answer = sum_answer + (answer.answer_cost * self.list_q[-1][i])
             rezult.append(sum_answer)

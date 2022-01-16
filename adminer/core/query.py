@@ -1,4 +1,5 @@
 from adminer.models import *
+from itertools import groupby
 
 
 def deleteQuestionAnswerByPatternOrPolls(pattern):
@@ -125,5 +126,10 @@ def addCategoryInPolls(request_category, id_polls):
 def getCategoryInPoll(id_poll):
     list_category = []
     for item in UserAnswer.objects.filter(id_polls_id=id_poll, is_category=True).values('id_question_id').distinct():
-        list_category = list_category + list(Answer.objects.filter(id_question_id=item['id_question_id']))
+        list_answer = []
+        for itemAnswer in UserAnswer.objects.filter(id_polls_id=id_poll,
+                                                    is_category=True, id_question_id=item['id_question_id'])\
+                .values('id_answer_id').distinct().order_by('id_answer_id'):
+            list_answer.append(Answer.objects.get(id=itemAnswer['id_answer_id']))
+        list_category.append([el for el, _ in groupby(list_answer)])
     return list_category

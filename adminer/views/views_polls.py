@@ -1,5 +1,6 @@
 import datetime
 import json
+import math
 import os
 
 import pdfkit
@@ -158,12 +159,17 @@ def polls_stat(request, id):
 
 
 def stat_ajax(request, id):
-    id_category = request.POST['id_category'] if int(request.POST['id_category']) > 0 else None
+    listCategory = json.loads(request.POST['id_category'])
+    id_category = listCategory if len(listCategory) > 0 else None
 
-    my_file = 'staticfiles/adminer/report/' + str(id) + '_' + str(id_category) + 'data.json'
+    strCategory = ''
+    for item in id_category:
+        strCategory = strCategory + str(item) + '_' if item != 0 else ''
 
-    if not os.path.isfile(my_file):
-        getStatAllCategory(id)
+    my_file = 'staticfiles/adminer/report/' + str(id) + '_' + strCategory + 'data.json'
+
+    if not os.path.exists(my_file):
+        return HttpResponse('false')
 
     with open(my_file) as f:
         content = json.load(f)
@@ -186,30 +192,54 @@ def create_pdf(request, id):
 
 
 def refresh_stat_ajax(request, id):
-    getStatAllCategory(id)
-    return HttpResponse('true')
+    if getStatAllCategory(id):
+        return HttpResponse('true')
+    else:
+        return HttpResponse('false')
+
+
+def split_list(a_list):
+    half = math.ceil(len(a_list)/2)
+    return a_list[:half], a_list[half:]
 
 
 def getStatAllCategory(id_poll):
     start_time = datetime.now()
-    for itemCategory in getCategoryInPoll(id_poll=id_poll):
-        getStat(id_poll, itemCategory.id)
-        print(datetime.now() - start_time)
-    getStat(id_poll, None)
+    listCategoryByQuestion = getCategoryInPoll(id_poll=id_poll)
+    if len(listCategoryByQuestion) == 0:
+        return False
+    listCategory = listCategoryByQuestion[0] + listCategoryByQuestion[1]
+
+
+    getStat(id_poll)
     print(datetime.now() - start_time)
+
+    for item in listCategory:
+        getStat(id_poll, [item.id])
+        print(datetime.now() - start_time)
+
+    newList1, newList2 = split_list(listCategory)
+    for item1 in newList1:
+        for item2 in newList2:
+            getStat(id_poll, [item1.id, item2.id])
+            print(datetime.now() - start_time)
     return True
 
 
-def getStat(id_poll, id_category):
-    obj_competence_expert = CompetenceExpert(id_poll=id_poll, id_category=id_category)
+def getStat(id_poll, arr_id_category=None):
+    obj_competence_expert = CompetenceExpert(id_poll=id_poll, id_category=arr_id_category)
+
+    if not obj_competence_expert.questions:
+        return False
+
     list_s1, list_s6 = obj_competence_expert.main()
 
     rank = obj_competence_expert.rank_q
-    count_expert = CountExpert(id_poll=id_poll, id_category=id_category)
+    count_expert = CountExpert(id_poll=id_poll, id_category=arr_id_category)
 
     min_count_expert = count_expert.getMinCountExpert()
 
-    obj_ser = ConsistencyEstimates(id_poll=id_poll, id_category=id_category)
+    obj_ser = ConsistencyEstimates(id_poll=id_poll, id_category=arr_id_category)
 
     list_q_mark = []
     for i, item in enumerate(obj_competence_expert.questions):
@@ -236,7 +266,14 @@ def getStat(id_poll, id_category):
         "coord": coord,
         "count_mark": obj_competence_expert.getMatrWord()
     }
-    with open('staticfiles/adminer/report/' + str(id_poll) + '_' + str(id_category) + 'data.json', 'w',
+
+    nameCategory = ''
+    if arr_id_category:
+        for itemC in arr_id_category:
+            nameCategory = nameCategory + str(itemC) + '_'
+
+    print(str(id_poll) + '_' + nameCategory)
+    with open('staticfiles/adminer/report/' + str(id_poll) + '_' + nameCategory + 'data.json', 'w',
               encoding='utf-8') as f:
         json.dump(content, f, ensure_ascii=False, indent=4)
 

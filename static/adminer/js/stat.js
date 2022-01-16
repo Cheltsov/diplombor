@@ -8,14 +8,22 @@ $(document).ready(function () {
     });
     // Запрос на получение статистики
     function sendAjax() {
+        category = [];
+        category[0] = parseInt($('.select_category[data-id="1"]').val());
+        category[1] = parseInt($('.select_category[data-id="2"]').val());
+
         $.ajax({
             headers: {"X-CSRFToken": $('#csrfmiddlewaretoken').text()},
             type: 'post',
             url: '/admin/polls/stat_ajax/' + $('.h_poll').attr('data-id') + '/',
             dataType: 'json',
-            data: {'id_category': $('.select_category').val()},
+            data: {'id_category': JSON.stringify(category)},
             success: function (response) {
                 console.log(response)
+                if (!response){
+                    alert('Файл не найден')
+                    return false;
+                }
                 $("#chart_div").empty();
                 $('.tr_question').remove();
                 $('.renderChartRemove').remove();
@@ -29,6 +37,7 @@ $(document).ready(function () {
                     $('.math5').text(response.coord);
                     renderCountMark(response.count_mark, response.list_q_mark)
                 }
+
             }
         });
     }
@@ -133,7 +142,7 @@ $(document).ready(function () {
             headers: {"X-CSRFToken": $('#csrfmiddlewaretoken').text()},
             type: 'post',
             url: '/admin/polls/create_pdf/' + $('.h_poll').attr('data-id') + '/',
-            data: {'id_category': $('.select_category').val()},
+            data: {'id_category': $('.select_category[data-id="1"]').val()},
             dataType: 'json',
             success: function (response) {
                  window.open(response);

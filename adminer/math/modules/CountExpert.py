@@ -22,7 +22,7 @@ class CountExpert(Math):
             list_cost = []
             for i in range(3, len(experts) + 1):
                 list_cost = self.getCostUserAnswersRow(id_question=question['id_question_id'],
-                                                       id_category=self.id_category, limit=i)
+                                                       users=self.users_in_category, limit=i)
                 variance = np.var(np.array(list_cost))
                 list_cost.append(math.ceil((variance / self.cheb)))
             list_oo.append(list_cost)

@@ -11,23 +11,37 @@ from adminer.math.expert_competence_analysis import mainer
 
 
 def index(request, id):
-    if Polls.objects.filter(id=id, date_start__isnull=False, date_end__isnull=True).exists():
-        poll = Polls.objects.get(id=id)
+    poll = Polls.objects.get(id=id)
 
-        list_category_id = []
-        categories = poll.categorypolls_set.all()
-        for item_category in categories:
-            list_category_id.append(item_category.id_category_id)
+    list_category_id = []
+    categories = poll.categorypolls_set.all()
+    for item_category in categories:
+        list_category_id.append(item_category.id_category_id)
 
-        list_question = createJsonQuestion(Question.objects.filter(id_category_id__in=list_category_id))
+    list_question = createJsonQuestion(Question.objects.filter(id_category_id__in=list_category_id))
 
-        content = {
-            'poll': createJsonPolls([poll])[0],
-            'categories_question': list_question
-        }
-        return render(request, 'user/base.html', content)
-    else:
-        return HttpResponseNotFound('<h1>Page not found</h1>')
+    content = {
+        'poll': createJsonPolls([poll])[0],
+        'categories_question': list_question
+    }
+    return render(request, 'user/base.html', content)
+    # if Polls.objects.filter(id=id, date_start__isnull=False, date_end__isnull=True).exists():
+    #     poll = Polls.objects.get(id=id)
+    #
+    #     list_category_id = []
+    #     categories = poll.categorypolls_set.all()
+    #     for item_category in categories:
+    #         list_category_id.append(item_category.id_category_id)
+    #
+    #     list_question = createJsonQuestion(Question.objects.filter(id_category_id__in=list_category_id))
+    #
+    #     content = {
+    #         'poll': createJsonPolls([poll])[0],
+    #         'categories_question': list_question
+    #     }
+    #     return render(request, 'user/base.html', content)
+    # else:
+    #     return HttpResponseNotFound('<h1>Page not found</h1>')
 
 
 def create_user_answer(request, id):
