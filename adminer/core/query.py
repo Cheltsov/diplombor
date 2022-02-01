@@ -64,8 +64,11 @@ def createQuestionAnswerByCategory(request_category, id_category):
             ques = Question(title=question['title'], id_category_id=id_category)
             ques.save()
             list_answer = []
+            i = 1
             for answer in question['answers']:
-                list_answer.append(Answer(title=answer, id_question_id=ques.id))
+                last_id = Answer.objects.latest('id').id + i
+                list_answer.append(Answer(id=last_id, title=answer, id_question_id=ques.id))
+                i = i + 1
             Answer.objects.bulk_create(list_answer)
             if not calculateAnswer(id_question=ques.id):
                 return False
