@@ -49,24 +49,32 @@ def create_user_answer(request, id):
         response = 'false'
         request_user_answer = getPostJson(request, 'getdata')
         list_user_answer = []
+        UserAnswerI = 1
         for item in request_user_answer:
+            lastUserAnswer = UserAnswer.objects.latest('id').id + UserAnswerI
             answer = Answer.objects.get(id=item['id_answer'])
-            list_user_answer.append(UserAnswer(id_polls_id=id,
+            list_user_answer.append(UserAnswer(id=lastUserAnswer,
+                                               id_polls_id=id,
                                                id_question_id=item['id_question'],
                                                id_answer_id=item['id_answer'],
                                                user=item['user'],
                                                is_category=item['is_category'],
                                                id_category_id=item['id_category'],
                                                answer_cost=answer.cost / 100))
+            UserAnswerI += 1
         if UserAnswer.objects.bulk_create(list_user_answer):
             response = 'true'
 
         request_user_answer_other = getPostJson(request, 'data_other')
         list_user_answer_other = []
+        UserAnswerOtherI = 1
         for item in request_user_answer_other:
-            list_user_answer_other.append(UserAnswerOther(id_question_id=item['id_question'],
+            lastUserAnswerOther = UserAnswerOther.objects.latest('id').id + UserAnswerOtherI
+            list_user_answer_other.append(UserAnswerOther(id=lastUserAnswerOther,
+                                                          id_question_id=item['id_question'],
                                                           user=item['user'],
                                                           other_text=item['other_text']))
+            UserAnswerOtherI += 1
         UserAnswerOther.objects.bulk_create(list_user_answer_other)
 
         return HttpResponse(response)
