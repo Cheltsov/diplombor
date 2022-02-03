@@ -60,9 +60,12 @@ def deleteQuestionAnswerByCategory(category):
 
 def createQuestionAnswerByCategory(request_category, id_category):
     try:
+        QuestionI = 1
         for question in request_category:
-            ques = Question(title=question['title'], id_category_id=id_category)
+            lastQuestion_id = Question.objects.latest('id').id + QuestionI
+            ques = Question(id=lastQuestion_id, title=question['title'], id_category_id=id_category)
             ques.save()
+            QuestionI = QuestionI + 1
             list_answer = []
             i = 1
             for answer in question['answers']:
