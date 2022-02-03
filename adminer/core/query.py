@@ -98,8 +98,11 @@ def addCategoryInPattern(request_category, id_pattern):
     try:
         CategoryPattern.objects.filter(id_pattern_id=id_pattern).delete()
         list_category_pattern = []
+        CategoryPatternI = 1
         for item in request_category:
-            list_category_pattern.append(CategoryPattern(id_category_id=item, id_pattern_id=id_pattern))
+            lastCategoryPatternId = CategoryPattern.objects.latest('id').id + CategoryPatternI
+            list_category_pattern.append(CategoryPattern(id=lastCategoryPatternId, id_category_id=item, id_pattern_id=id_pattern))
+            CategoryPatternI += 1
         CategoryPattern.objects.bulk_create(list_category_pattern)
         return True
     except Exception as ex:
@@ -142,8 +145,11 @@ def addCategoryInPolls(request_category, id_polls):
     try:
         CategoryPolls.objects.filter(id_polls_id=id_polls).delete()
         list_category_polls = []
+        CategoryPollsI = 1
         for item in request_category:
-            list_category_polls.append(CategoryPolls(id_category_id=item, id_polls_id=id_polls))
+            lastCategoryPolls = CategoryPolls.objects.latest('id').id + CategoryPollsI
+            list_category_polls.append(CategoryPolls(id=lastCategoryPolls, id_category_id=item, id_polls_id=id_polls))
+            CategoryPollsI += 1
         CategoryPolls.objects.bulk_create(list_category_polls)
         return True
     except Exception as ex:
