@@ -216,7 +216,7 @@ def getStatAllCategory(id_poll):
 
     listCategoryByQuestion = getCategoryInPoll(id_poll=id_poll)
     if len(listCategoryByQuestion) == 0:
-        return False
+        return True
     elif len(listCategoryByQuestion) == 1:
         listCategory = listCategoryByQuestion[0]
     elif len(listCategoryByQuestion) == 2:
@@ -224,7 +224,7 @@ def getStatAllCategory(id_poll):
     elif len(listCategoryByQuestion) == 3:
         listCategory = listCategoryByQuestion[0] + listCategoryByQuestion[1] + listCategoryByQuestion[2]
     else:
-        return False
+        return True
 
     for item in listCategory:
         getStat(id_poll, [item.id])
