@@ -69,6 +69,7 @@
                 });
             });
             $('#end_poll').click(function(){
+                alert("Выполняется генерация файлов статистики. Дождитесь обновления страницы");
                 $.ajax({
                     type: 'get',
                     url: '/admin/polls/end/'+$(this).attr('data-id')+'/',
@@ -76,6 +77,8 @@
                         console.log(response);
                         if(response === 'true'){
                             window.location.reload();
+                        } else {
+                            alert('Завершение выполнено, НО файлы статистики не создались');
                         }
                     }
                 });

@@ -142,7 +142,10 @@ def polls_end(request, id):
         poll = Polls.objects.get(id=id)
         poll.date_end = datetime.now()
         poll.save()
-        return HttpResponse('true')
+        if getStatAllCategory(id):
+            return HttpResponse('true')
+        else:
+            return HttpResponse('false')
     else:
         return redirect('auth:auth')
 
@@ -165,7 +168,8 @@ def stat_ajax(request, id):
 
     strCategory = ''
     for item in id_category:
-        strCategory = strCategory + str(item) + '_' if item != 0 else ''
+        if item:
+            strCategory = strCategory + str(item) + '_' if item != 0 else ''
 
     my_file = 'staticfiles/adminer/report/' + str(id) + '_' + strCategory + 'data.json'
 
@@ -206,13 +210,21 @@ def split_list(a_list):
 
 def getStatAllCategory(id_poll):
     start_time = datetime.now()
-    listCategoryByQuestion = getCategoryInPoll(id_poll=id_poll)
-    if len(listCategoryByQuestion) == 0:
-        return False
-    listCategory = listCategoryByQuestion[0] + listCategoryByQuestion[1]
 
     getStat(id_poll)
     print(datetime.now() - start_time)
+
+    listCategoryByQuestion = getCategoryInPoll(id_poll=id_poll)
+    if len(listCategoryByQuestion) == 0:
+        return False
+    elif len(listCategoryByQuestion) == 1:
+        listCategory = listCategoryByQuestion[0]
+    elif len(listCategoryByQuestion) == 2:
+        listCategory = listCategoryByQuestion[0] + listCategoryByQuestion[1]
+    elif len(listCategoryByQuestion) == 3:
+        listCategory = listCategoryByQuestion[0] + listCategoryByQuestion[1] + listCategoryByQuestion[2]
+    else:
+        return False
 
     for item in listCategory:
         getStat(id_poll, [item.id])

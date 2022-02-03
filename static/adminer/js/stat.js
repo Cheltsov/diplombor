@@ -160,7 +160,7 @@ $(document).ready(function () {
                  if(response == 'true') {
                      window.location.reload();
                  } else {
-                     alert('Ошибка')
+                     alert('Ошибка обновления')
                  }
             }
         });
