@@ -16,16 +16,29 @@ def deleteQuestionAnswerByPatternOrPolls(pattern):
 
 def createQuestionAnswerByPattern(request_pattern, id_pattern):
     try:
+        QuestionI = 1
         for question in request_pattern:
-            ques = Question(title=question['title'], id_pattern_id=id_pattern, is_verbal=question['is_verbal'], sort=question['sort'])
+            lastIdQuestion = Question.objects.latest('id') + QuestionI
+            ques = Question(id=lastIdQuestion,
+                            title=question['title'],
+                            id_pattern_id=id_pattern,
+                            is_verbal=question['is_verbal'],
+                            sort=question['sort'])
             ques.save()
+            QuestionI = QuestionI + 1
             list_answer = []
             if ques.is_verbal == '1':
+                AnswerI = 1
                 for answer in question['answers']:
-                    list_answer.append(Answer(title=answer['title'], sort=answer['sort'], id_question_id=ques.id))
+                    lastIdAnswer = Answer.objects.lastest('id') + AnswerI
+                    list_answer.append(Answer(id=lastIdAnswer, title=answer['title'], sort=answer['sort'], id_question_id=ques.id))
+                    AnswerI = AnswerI + 1
             else:
+                AnswerI = 1
                 for answer in range(int(question['answers'][0])):
-                    list_answer.append(Answer(title=(answer + 1), id_question_id=ques.id))
+                    lastIdAnswer = Answer.objects.lastest('id') + AnswerI
+                    list_answer.append(Answer(id=lastIdAnswer, title=(answer + 1), id_question_id=ques.id))
+                    AnswerI = AnswerI + 1
 
             Answer.objects.bulk_create(list_answer)
             if not calculateAnswer(id_question=ques.id):

@@ -24,7 +24,8 @@ def category_create(request):
         if request.method == 'POST':
             response = 'false'
             request_category = getPostJson(request, 'getdata')
-            obj_category = Category.objects.create(title=request.POST['category_title'])
+            lastId = Category.objects.latest('id').id + 1
+            obj_category = Category.objects.create(id=lastId, title=request.POST['category_title'])
             obj_category.save()
             if createQuestionAnswerByCategory(request_category, obj_category.id):
                 response = 'true'
