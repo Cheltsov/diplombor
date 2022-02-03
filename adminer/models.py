@@ -32,24 +32,35 @@ class Polls(models.Model):
     def copy(self):
         questions = self.question_set.all()
         categories = self.categorypolls_set.all()
-        obj = Polls(title=self.title, description=self.description, date_start=None, date_end=None)
+        lastPoll = Polls.objects.latest('id').id + 1
+        obj = Polls(id=lastPoll, title=self.title, description=self.description, date_start=None, date_end=None)
         obj.save()
+        QuestionI = 1
         for item_question in questions:
             answers = item_question.answer_set.all()
+            lastQuestion = Question.objects.latest('id').id + QuestionI
             obj_question = Question(
+                id=lastQuestion,
                 title=item_question.title,
                 id_pattern_id=item_question.id_pattern_id,
                 id_category_id=item_question.id_category_id,
                 id_polls_id=obj.id,
                 is_verbal=item_question.is_verbal)
+            QuestionI += 1
             obj_question.save()
+            AnswerI = 1
             for item_answer in answers:
-                obj_answer = Answer(title=item_answer.title, cost=item_answer.cost, id_question_id=obj_question.id)
+                lastAnswer = Answer.objects.latest('id').id + AnswerI
+                obj_answer = Answer(id=lastAnswer, title=item_answer.title, cost=item_answer.cost, id_question_id=obj_question.id)
                 obj_answer.save()
+                AnswerI += 1
 
+        CategoryI = 1
         for item_category in categories:
-            obj_categories = CategoryPolls(id_category_id=item_category.id_category_id, id_polls_id=obj.id)
+            lastCategory = CategoryPolls.objects.latest('id').id + CategoryI
+            obj_categories = CategoryPolls(id=lastCategory, id_category_id=item_category.id_category_id, id_polls_id=obj.id)
             obj_categories.save()
+            CategoryI += 1
 
     def getCountUserAnswer(self):
         return self.useranswer_set.values('user').annotate(count_user=Count('user')).count()
