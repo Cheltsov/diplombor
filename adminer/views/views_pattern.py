@@ -21,7 +21,7 @@ def pattern_create(request):
         if request.method == 'POST':
             response = 'false'
             request_pattern = getPostJson(request, 'getdata')
-            lastId = Pattern.objects.latest('id') + 1
+            lastId = Pattern.objects.latest('id').id + 1
             obj_pattern = Pattern.objects.create(id=lastId, title=request.POST['pattern_title'])
             obj_pattern.save()
             if createQuestionAnswerByPattern(request_pattern, obj_pattern.id):

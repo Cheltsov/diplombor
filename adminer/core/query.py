@@ -18,7 +18,7 @@ def createQuestionAnswerByPattern(request_pattern, id_pattern):
     try:
         QuestionI = 1
         for question in request_pattern:
-            lastIdQuestion = Question.objects.latest('id') + QuestionI
+            lastIdQuestion = Question.objects.latest('id').id + QuestionI
             ques = Question(id=lastIdQuestion,
                             title=question['title'],
                             id_pattern_id=id_pattern,
@@ -30,13 +30,13 @@ def createQuestionAnswerByPattern(request_pattern, id_pattern):
             if ques.is_verbal == '1':
                 AnswerI = 1
                 for answer in question['answers']:
-                    lastIdAnswer = Answer.objects.lastest('id') + AnswerI
+                    lastIdAnswer = Answer.objects.lastest('id').id + AnswerI
                     list_answer.append(Answer(id=lastIdAnswer, title=answer['title'], sort=answer['sort'], id_question_id=ques.id))
                     AnswerI = AnswerI + 1
             else:
                 AnswerI = 1
                 for answer in range(int(question['answers'][0])):
-                    lastIdAnswer = Answer.objects.lastest('id') + AnswerI
+                    lastIdAnswer = Answer.objects.lastest('id').id + AnswerI
                     list_answer.append(Answer(id=lastIdAnswer, title=(answer + 1), id_question_id=ques.id))
                     AnswerI = AnswerI + 1
 
