@@ -109,16 +109,25 @@ def addCategoryInPattern(request_category, id_pattern):
 
 def createQuestionAnswerByPolls(request_polls, id_polls):
     try:
+        QuestionI = 1
         for question in request_polls:
-            ques = Question(title=question['title'], id_polls_id=id_polls, is_verbal=question['is_verbal'], sort=question['sort'])
+            lastQuestion = Question.objects.latest('id').id + QuestionI
+            ques = Question(id=lastQuestion, title=question['title'], id_polls_id=id_polls, is_verbal=question['is_verbal'], sort=question['sort'])
             ques.save()
+            QuestionI += 1
             list_answer = []
             if ques.is_verbal == '1':
+                AnswerI = 1
                 for answer in question['answers']:
-                    list_answer.append(Answer(title=answer['title'], sort=answer['sort'], id_question_id=ques.id))
+                    lastAnswer = Answer.objects.latest('id').id + AnswerI
+                    list_answer.append(Answer(id=lastAnswer, title=answer['title'], sort=answer['sort'], id_question_id=ques.id))
+                    AnswerI += 1
             else:
+                AnswerI = 1
                 for answer in range(int(question['answers'][0])):
-                    list_answer.append(Answer(title=(answer + 1), sort=answer, id_question_id=ques.id))
+                    lastAnswer = Answer.objects.latest('id').id + AnswerI
+                    list_answer.append(Answer(id=lastAnswer, title=(answer + 1), sort=answer, id_question_id=ques.id))
+                    AnswerI += 1
 
             Answer.objects.bulk_create(list_answer)
             if not calculateAnswer(id_question=ques.id):

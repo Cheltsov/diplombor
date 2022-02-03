@@ -38,7 +38,8 @@ def polls_create(request):
         if request.method == 'POST':
             response = 'false'
             request_polls = getPostJson(request, 'getdata')
-            obj_polls = Polls.objects.create(title=request.POST['polls_title'], description=request.POST['polls_desc'])
+            lastPoll = Polls.objects.latest('id').id + 1
+            obj_polls = Polls.objects.create(id=lastPoll, title=request.POST['polls_title'], description=request.POST['polls_desc'])
             obj_polls.save()
             if createQuestionAnswerByPolls(request_polls, obj_polls.id) and \
                     addCategoryInPolls(getPostJson(request, 'polls_category'), obj_polls.id):
